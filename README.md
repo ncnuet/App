@@ -1,6 +1,6 @@
 # Magic Post Management System
 
-Đây dự án bài tập lớn môn lập trình Web. Đặc tả dự án được mô tả tại: [MagicPost](https://itest.com.vn/lects/webappdev/mockproj/magic-post.htm)
+Đây là dự án bài tập lớn môn lập trình Web. Đặc tả dự án được mô tả tại: [MagicPost](https://itest.com.vn/lects/webappdev/mockproj/magic-post.htm)
 
 ![preview tracking view](./assets//Tracking%201.png)
 # Nhóm 36

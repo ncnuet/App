@@ -1,7 +1,6 @@
 import mysql from 'mysql2';
-import config from "./config_env";
+import config from "./env";
 
-// create the connection to database
 const connection = mysql.createPool({
     port: Number(config.DB_PORT),
     host: config.DB_HOST,

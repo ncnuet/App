@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import * as jwt from "jsonwebtoken";
-import config from "@/configs/config_env";
+import config from "@/configs/env";
 import { JWTPayload } from "@/types/auth";
 
 export function checkJWT(req: Request, res: Response, next: NextFunction) {

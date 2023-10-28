@@ -1,26 +1,23 @@
-import express, { Express } from 'express';
+import express from 'express';
 import helmet from "helmet";
-import session from "express-session";
-import passport from "passport";
 import * as cors from "cors";
 import morgan from "morgan";
 
-import route from './routes';
-import "./configs/login_fb";
-import config from './configs/config_env';
-
-// cookieParser
-// SQLlite
+import route from '@/routes';
+import config, { env } from '@/configs/env';
+import database from '@/configs/database';
+import * as redis from '@/configs/redis';
 
 // Initialize application
-const app: Express = express();
+const app = express();
 const port = config.PORT;
 
 // Initialize middleware
-app.use(morgan(process.env.NODE_ENV === 'dev' ? "dev" : "tiny"));
+app.use(morgan(env === 'dev' ? "dev" : "tiny")); // Logger
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(helmet()); // protection middleware
+
+app.use(helmet()); // Protect known attack types
 app.use(cors.default({
   origin: config.CORS_ORIGIN,
   credentials: true,
@@ -29,23 +26,17 @@ app.use(cors.default({
   allowedHeaders: ['Content-Type, Authorization']
 }))
 
-// save session login in memory storage. This setting is required by fb authentication
-app.use(session({
-  secret: config.JWT_KEY,
-  resave: false, // don't save session if unmodified
-  saveUninitialized: false, // don't create session until something stored
-}));
-
-// Initialize some tasks (assign functions, variables to req,...)
-app.use(passport.initialize());
-
-// Initialize routes
+// Initialize app's routes
 route(app);
 
 if (require.main === module) { // true if file is executed by cmd. This lines for testing purposes
   // Start application
-  app.listen(port, () => {
-    console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+  app.listen(port, async () => {
+    await redis.startup();
+    console.log("📕 [database]: Connected to redis");
+    await database.getConnection()
+    console.log("📒 [database]: Connected to mysql");
+    console.log(`✅ [server]: Server is running at http://localhost:${port}`);
   });
 }
 

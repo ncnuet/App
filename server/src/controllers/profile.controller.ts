@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import database from "@/configs/connect_db";
+import database from "@/configs/database";
 
 class Profile {
     async getProfile(req: Request, res: Response) {

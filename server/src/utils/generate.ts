@@ -1,24 +1,50 @@
-import * as jwt from "jsonwebtoken";
-import config from "@/configs/config_env";
-import { JWTOpt, JWTRefreshOpt } from "@/configs/jwt";
+import {sign} from "jsonwebtoken";
+import config from "@/configs/env";
+import { JWTTokenOpt, JWTRefreshOpt } from "@/configs/jwt";
+import { IUser } from "@/types/auth";
 
+interface IUserPayload extends IUser {
+    iat?: number
+    exp?: number
+}
+
+/**
+ * Generate a number satisfying [min <= n <= max]
+ * @param min 
+ * @param max 
+ * @returns 
+ */
 function generateMinMax(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-export function generate_uid(length: number = 6): string {
-    length = (length > 0) ? length : 6;
+/**
+ * Generate an UID with given length
+ * @param length 
+ * @returns 
+ */
+export function generate_uid(length: number = 8): string {
+    length = (length > 0) ? length : 8;
 
     return [...new Array(length)].map(() => generateMinMax(0, 9).toString()).join("");
 }
 
-export function generate_token(unencryptedData: any, gen_RT?: boolean) {
-    const accessToken = jwt.sign(unencryptedData, config.JWT_KEY, JWTOpt);
-    const refreshToken = (gen_RT) ? jwt.sign(unencryptedData, config.JWT_REFRESH_KEY, JWTRefreshOpt) : undefined;
+/**
+ * 
+ * @param data Generate token
+ * @param hasRefr true if generate refresh token 
+ * @returns 
+ */
+export function generate_token(user: IUserPayload, gen_RT?: boolean) {
+    const { iat, exp, ...data } = user as IUserPayload;
+    
+    const accessToken = sign(data, config.JWT_KEY, JWTTokenOpt);
+    const refreshToken = gen_RT && sign(data, config.JWT_REFRESH_KEY, JWTRefreshOpt)
 
     return { accessToken, refreshToken }
 }
 
+// ⚠️
 export function generate_password(length: number = 8): string {
     length = (length > 0) ? length : 8;
 
