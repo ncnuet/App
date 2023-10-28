@@ -17,7 +17,7 @@ class TokenModel {
         }
     }
 
-    /**
+    /** ⚠️
      * Checks if the refresh token is stored in the database.
      * @param refreshToken 
      * @returns 

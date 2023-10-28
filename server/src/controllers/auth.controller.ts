@@ -41,6 +41,24 @@ class AuthController {
             }
         })
     }
+
+    /**
+     * Logout
+     * @param req 
+     * @param res 
+     * @param next 
+     */
+    async logout(req: Request, res: Response) {
+        const user = res.locals.user;
+
+        await handleError(res, async () => {
+            tokenModel.deleteRefreshToken(user.uid);
+            tokenModel.updateVersion(user.uid);
+            res.cookie("token", null, setAge(0));
+            res.cookie("refresh_token", null, setAge(0));
+            res.sendStatus(200);
+        });
+    }
 }
 
 export default new AuthController()

@@ -2,7 +2,7 @@ import express from 'express';
 import helmet from "helmet";
 import * as cors from "cors";
 import morgan from "morgan";
-
+import cookieParser from 'cookie-parser';
 import route from '@/routes';
 import config, { env } from '@/configs/env';
 import database from '@/configs/database';
@@ -16,6 +16,7 @@ const port = config.PORT;
 app.use(morgan(env === 'dev' ? "dev" : "tiny")); // Logger
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.use(helmet()); // Protect known attack types
 app.use(cors.default({
