@@ -5,8 +5,8 @@
 ![preview tracking view](./assets//Tracking%201.png)
 # Nhóm 36
 Nhóm học sinh bao gồm:
-- Nguyễn Hải Long - 
-- Trần Quý Mạnh - 
+- Nguyễn Hải Long - 21020349
+- Trần Quý Mạnh - 21020352
 - Đỗ Tuấn Nghĩa - 21020365
 
 # Tài liệu thiết kế dự án
