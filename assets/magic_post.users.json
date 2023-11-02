@@ -1,0 +1,13 @@
+[{
+  "_id": {
+    "$oid": "6543ba90a330e1fd418b6105"
+  },
+  "uid": "21020365",
+  "username": "nghiacangao",
+  "password": "$2a$10$NDUsbs1wxg1GqJAk95R7ieQEkTFNzat1apy5MCXpFiQ8JplL9..9C",
+  "role": "admin",
+  "version": 0,
+  "__v": 0,
+  "email": "fakenoname02@gmail.com",
+  "phone": "0123456789"
+}]
