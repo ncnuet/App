@@ -1,6 +1,6 @@
-import {sign} from "jsonwebtoken";
+import { sign } from "jsonwebtoken";
 import config from "@/configs/env";
-import { JWTTokenOpt, JWTRefreshOpt } from "@/configs/jwt";
+import { JWTTokenOpt, JWTRefreshOpt, JWTResetOpt } from "@/configs/jwt";
 import { IUser } from "@/types/auth";
 
 interface IUserPayload extends IUser {
@@ -35,13 +35,23 @@ export function generate_uid(length: number = 8): string {
  * @param hasRefr true if generate refresh token 
  * @returns 
  */
-export function generate_token(user: IUserPayload, gen_RT?: boolean) {
+export function generateToken(user: IUserPayload, gen_RT?: boolean) {
     const { iat, exp, ...data } = user as IUserPayload;
-    
+
     const accessToken = sign(data, config.JWT_KEY, JWTTokenOpt);
     const refreshToken = gen_RT && sign(data, config.JWT_REFRESH_KEY, JWTRefreshOpt)
 
     return { accessToken, refreshToken }
+}
+
+/**
+ * Generate reset token
+ * @param data 
+ * @returns 
+ */
+export function generateResetToken(user: IUserPayload) {
+    const { iat, exp, ...data } = user as IUserPayload;
+    return sign(data, config.JWT_RESET_KEY, JWTResetOpt);
 }
 
 // ⚠️

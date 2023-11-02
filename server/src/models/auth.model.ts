@@ -1,9 +1,7 @@
 import { RowDataPacket } from "mysql2";
 import * as bcrypt from "bcryptjs";
 import { UserModel } from "./schema/user.schema";
-import { Email, IUserDetail, IUserWithoutVersion, Phone, UID, Username } from "@/types/auth";
-
-type QueryInfo = Phone | Email | UID | Username | IUserDetail
+import { IQueryableUser, IUserWithoutVersion } from "@/types/auth";
 interface IAccountReponseData extends IUserWithoutVersion {
     hashPassword: string
 }
@@ -15,7 +13,7 @@ class AuthModel {
      * @param _password 
      * @returns IUser if the user exists or undefined otherwise
      */
-    async findAccountByPassword(_username: string, _password: string): Promise<IUserWithoutVersion> {
+    async findUserByPassword(_username: string, _password: string): Promise<IUserWithoutVersion> {
         const user = await UserModel.findOne(
             { username: _username },
             { uid: 1, role: 1, username: 1, password: 1 })
@@ -34,20 +32,38 @@ class AuthModel {
      * @param email 
      * @returns UID if the user exists or undefined otherwise
      */
-    // async findEmailByInfo(info: QueryInfo): Promise<IUserDetail> {
-    //     const query = `
-    //         SELECT email, username, uid, phone
-    //         FROM account_details 
-    //         WHERE username=? OR uid=? OR phone=? OR email=?
-    //         LIMIT 1`;
+    async findUserByInfo(info: IQueryableUser): Promise<IQueryableUser> {
+        const user = await UserModel.findOne(
+            {
+                $or: [
+                    { username: info.username },
+                    { email: info.email },
+                    { phone: info.phone },
+                    { uid: info.uid }
+                ]
+            },
+            { email: true, username: true, phone: true, uid: true })
+            .exec()
 
-    //     const [results] = await database.execute<RowDataPacket[]>(
-    //         query,
-    //         [info, info, info, info]);
+        if (!user) return undefined;
+        const { username, phone, uid, email } = user;
 
-    //     if (!results.length) return undefined;
-    //     return results.map(row => row["uid"])[0];
-    // }
+        return { username, phone, uid, email };
+    }
+
+    /**
+     * Reset password 
+     * @param uid 
+     * @param password 
+     * @returns 
+     */
+    async updatePassword(uid: string, password: string): Promise<any> {
+        const user = UserModel.updateOne({ uid }, { password: await bcrypt.hash(password, 10) }).exec();
+
+        if (!user) return undefined;
+    }
+
+    
 }
 
 export default new AuthModel()

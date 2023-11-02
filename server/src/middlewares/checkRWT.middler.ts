@@ -2,7 +2,7 @@ import { NextFunction } from "express";
 import { Request, Response } from "@/types/controller";
 import * as jwt from "jsonwebtoken";
 import config from "@/configs/env";
-import { generate_token } from "@/utils/generate";
+import { generateToken } from "@/utils/generate";
 import tokenModel from "@/models/token.model";
 import { setAge } from "@/configs/cookie";
 import handleError from "@/utils/handle_error";
@@ -20,7 +20,7 @@ export async function checkRWT(req: Request, res: Response, next: NextFunction) 
             const user = <IUser>jwt.verify(refresh, config.JWT_REFRESH_KEY);
             user.role = await tokenModel.getRole(user.uid);
             user.version = await tokenModel.getVersion(user.uid);
-            const token = generate_token(user, true);
+            const token = generateToken(user, true);
             await tokenModel.insertRefreshToken(token.refreshToken, user.uid, user.role)
 
             res.cookie("refresh_token", token.refreshToken, setAge(86400 * 1000))

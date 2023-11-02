@@ -1,16 +1,17 @@
 import express, { Router } from 'express'
 import AuthControler from "@/controllers/auth.controller"
 import { checkJWT } from '@/middlewares/checkJWT.middler';
+import { checkReset } from '@/middlewares/checkReset.middler';
 
 const router: Router = express.Router();
 
 router.post('/login', AuthControler.loginByPassword);
 router.post('/logout', [checkJWT], AuthControler.logout);
-router.post('/requestReset', AuthControler.requestReset)
-// router.put('/changePassword', [checkJWT], AuthControler.changePassword);
-// router.post('/resetPassword', [checkJWT.bind({ type: "reset" })], AuthControler.resetPassword);
-// router.post('/create', AuthControler.createAccount);
+router.post('/reset', AuthControler.requestReset)
+router.get('/reset', [checkReset], AuthControler.verifyReset)
+router.put('/reset', [checkReset], AuthControler.resetPassword)
 
-// router.get('/checkJWT', [checkJWTReset], Login.resetPassword);
+// router.put('/changePassword', [checkJWT], AuthControler.changePassword);
+// router.post('/create', AuthControler.createAccount);
 
 export default router;

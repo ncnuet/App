@@ -1,10 +1,17 @@
-import { Request, Response } from "@/types/controller"
+import { ILocalData, Request, Response } from "@/types/controller"
 import { setAge } from '@/configs/cookie';
-import { generate_token } from '@/utils/generate';
+import { generateResetToken, generateToken } from '@/utils/generate';
 import handleError from '@/utils/handle_error';
-import authValidator, { ILoginByPassword, IRequestReset } from "@/validators/auth.validator";
+import authValidator, { ILoginByPassword, IRequestReset, IResetPassword } from "@/validators/auth.validator";
 import authModel from '@/models/auth.model';
 import tokenModel from "@/models/token.model";
+import { sendForgetPasswordMail } from "@/utils/send_mail";
+import env from "@/configs/env";
+import { IUser } from "@/types/auth";
+
+interface IUserWithEpx extends IUser {
+    exp: number;
+}
 
 function setToken(res: Response, accessToken: string, refreshToken?: string) {
     refreshToken && res.cookie("refresh_token", refreshToken, setAge(86400 * 1000))
@@ -27,10 +34,10 @@ class AuthController {
 
         await handleError(res, async () => {
             authValidator.validateLoginPassword(data);
-            const user = await authModel.findAccountByPassword(data.username, data.password);
+            const user = await authModel.findUserByPassword(data.username, data.password);
             if (user) {
                 const version = (await tokenModel.getVersion(user.uid)) || "0";
-                const token = generate_token({ ...user, version }, true);
+                const token = generateToken({ ...user, version }, true);
                 await tokenModel.insertRefreshToken(token.refreshToken, user.uid, user.role)
                 setToken(res, token.accessToken, token.refreshToken);
             } else {
@@ -65,38 +72,53 @@ class AuthController {
      * @param res 
      */
     async requestReset(req: Request, res: Response) {
-        // const data = <IRequestReset>req.body;
-        // console.log(data);
+        const data = <IRequestReset>req.body;
+        console.log(data);
 
-        // await handleError(res, async () => {
-        //     authValidator.validateRequestReset(data);
+        await handleError(res, async () => {
+            authValidator.validateRequestReset(data);
+            const user = await authModel.findUserByInfo(data);
+            if (user) {
+                const { username, uid } = user;
+                const token = generateResetToken({ username, uid, role: "admin", version: "0" });
 
-        //     const user = await authModel.findEmailByInfo(data.username);
+                await sendForgetPasswordMail(user, token);
 
-        //     if (user) {
-        //         const token = await generate_reset_token(user);
+                res.status(200).json({ message: "Email đã được gửi thành công tới " + user.email });
+            } else {
+                res.status(400).json({
+                    message: "Không tồn tại email",
+                    name: "email"
+                })
+            }
+        })
+    }
 
-        //         // Send mail
-        //         await mailer.sendMail({
-        //             from: `"${config.APP_NAME}" <${config.MAIL_USER}>`,
-        //             to: user.email,
-        //             subject: `[Reset Password] on ${config.APP_NAME}}`,
-        //             html: renderTemplate(
-        //                 "/src/templates/forgot-password-email.html",
-        //                 {
-        //                     url: `${config.BACKEND}/auth/resetPassword?token=${token}`,
-        //                     name: user.username
-        //                 })
-        //         });
+    /**
+     * Verify link and redirect to front-end 
+     * @param req 
+     * @param res 
+     */
+    async verifyReset(req: Request, res: Response<any, ILocalData<IUserWithEpx>>) {
+        const username = res.locals.user.username;
+        const timeExp = res.locals.user.exp * 1000;
+        const remaining = Math.floor((timeExp - new Date().getTime()) / 1000);
 
-        //         res.status(200).json({ message: "Email đã được gửi thành công" });
-        //     } else {
-        //         res.status(400).json({
-        //             message: "Không tồn tại email",
-        //             name: "email"
-        //         })
-        //     }
-        // })
+        res
+            .cookie("token", req.query.token, setAge(180 * 1000))
+            .redirect(env.FRONTEND + "/resetPassword?ttl=" + remaining + "&user=" + username)
+    }
+
+    async resetPassword(req: Request, res: Response) {
+        const data = <IResetPassword>req.body;
+
+        await handleError(res, async () => {
+            authValidator.validateReset(data);
+            const user = <IUser>res.locals.user;
+
+            await authModel.updatePassword(user.uid, data.password)
+            res.json({ message: "Password changed successfully" });
+        })
     }
 }
 

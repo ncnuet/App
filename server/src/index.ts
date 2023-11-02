@@ -7,7 +7,7 @@ import route from '@/routes';
 import config, { env } from '@/configs/env';
 import * as database from '@/configs/database';
 import * as redis from './configs/redis';
-import { UserModel } from './models/schema/user.schema';
+import * as mailer from "@/utils/send_mail";
 
 // Initialize application
 const app = express();
@@ -38,6 +38,8 @@ if (require.main === module) { // true if file is executed by cmd. This lines fo
     console.log("📕 [database]: Connected to redis");
     await database.connect();
     console.log("📒 [database]: Connected to mysql");
+    // await mailer.startup();
+    // console.log("💌 [database]: Connected to mailer");
 
     console.log(`✅ [server]: Server is running at http://localhost:${port}`);
   });
