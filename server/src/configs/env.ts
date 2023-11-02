@@ -8,11 +8,9 @@ interface ENV_VAL extends DotenvParseOutput {
     PORT: string
     CORS_ORIGIN: string
 
-    DB_PORT: string
-    DB_HOST: string
-    DB_USER: string
-    DB_PASSWORD: string
-    DB_NAME: string
+    MG_HOST: string
+    MG_PORT: string
+    MG_NAME: string
 
     JWT_KEY: string
     JWT_REFRESH_KEY: string

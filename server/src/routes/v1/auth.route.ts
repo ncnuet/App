@@ -6,8 +6,8 @@ const router: Router = express.Router();
 
 router.post('/login', AuthControler.loginByPassword);
 router.post('/logout', [checkJWT], AuthControler.logout);
+router.post('/requestReset', AuthControler.requestReset)
 // router.put('/changePassword', [checkJWT], AuthControler.changePassword);
-// router.post('/requestReset', AuthControler.requestReset)
 // router.post('/resetPassword', [checkJWT.bind({ type: "reset" })], AuthControler.resetPassword);
 // router.post('/create', AuthControler.createAccount);
 

@@ -5,12 +5,28 @@ export interface ILoginByPassword {
     password: string
 }
 
+export interface IRequestReset {
+    username: string
+}
+
 class AuthValidator {
-    validateLoginPassword(data: ILoginByPassword) {
-        if (!data.username || data.username.length < 3 || data.username.length > 50)
+    private validateUsername(username: string) {
+        if (!username || username.length < 3 || username.length > 50)
             throw new InputError("Username có độ dài từ 3 đến 50 ký tự", "username");
-        if (!data.password || data.password.length < 8 || data.password.length > 50)
+    }
+
+    private validatePassword(password: string) {
+        if (!password || password.length < 8 || password.length > 50)
             throw new InputError("Mật khẩu có độ dài từ 8 đến 50 ký tự", "password");
+    }
+
+    validateLoginPassword(data: ILoginByPassword) {
+        this.validateUsername(data.username)
+        this.validatePassword(data.password)
+    }
+
+    validateRequestReset(data: IRequestReset) {
+        this.validateUsername(data.username)
     }
 }
 

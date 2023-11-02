@@ -2,11 +2,11 @@ import { NextFunction } from "express";
 import { Request, Response } from "@/types/controller";
 import * as jwt from "jsonwebtoken";
 import config from "@/configs/env";
-import { IUser } from "@/types/auth";
 import { generate_token } from "@/utils/generate";
 import tokenModel from "@/models/token.model";
 import { setAge } from "@/configs/cookie";
 import handleError from "@/utils/handle_error";
+import { IUser } from "@/types/auth";
 
 export async function checkRWT(req: Request, res: Response, next: NextFunction) {
     const refresh = req.cookies.refresh_token;

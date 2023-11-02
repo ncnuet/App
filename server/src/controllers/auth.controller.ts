@@ -2,7 +2,7 @@ import { Request, Response } from "@/types/controller"
 import { setAge } from '@/configs/cookie';
 import { generate_token } from '@/utils/generate';
 import handleError from '@/utils/handle_error';
-import authValidator, { ILoginByPassword } from "@/validators/auth.validator";
+import authValidator, { ILoginByPassword, IRequestReset } from "@/validators/auth.validator";
 import authModel from '@/models/auth.model';
 import tokenModel from "@/models/token.model";
 
@@ -29,7 +29,7 @@ class AuthController {
             authValidator.validateLoginPassword(data);
             const user = await authModel.findAccountByPassword(data.username, data.password);
             if (user) {
-                const version = await tokenModel.getVersion(user.uid);
+                const version = (await tokenModel.getVersion(user.uid)) || "0";
                 const token = generate_token({ ...user, version }, true);
                 await tokenModel.insertRefreshToken(token.refreshToken, user.uid, user.role)
                 setToken(res, token.accessToken, token.refreshToken);
@@ -46,7 +46,6 @@ class AuthController {
      * Logout
      * @param req 
      * @param res 
-     * @param next 
      */
     async logout(req: Request, res: Response) {
         const user = res.locals.user;
@@ -58,6 +57,46 @@ class AuthController {
             res.cookie("refresh_token", null, setAge(0));
             res.sendStatus(200);
         });
+    }
+
+    /**
+     * Request reset password
+     * @param req 
+     * @param res 
+     */
+    async requestReset(req: Request, res: Response) {
+        // const data = <IRequestReset>req.body;
+        // console.log(data);
+
+        // await handleError(res, async () => {
+        //     authValidator.validateRequestReset(data);
+
+        //     const user = await authModel.findEmailByInfo(data.username);
+
+        //     if (user) {
+        //         const token = await generate_reset_token(user);
+
+        //         // Send mail
+        //         await mailer.sendMail({
+        //             from: `"${config.APP_NAME}" <${config.MAIL_USER}>`,
+        //             to: user.email,
+        //             subject: `[Reset Password] on ${config.APP_NAME}}`,
+        //             html: renderTemplate(
+        //                 "/src/templates/forgot-password-email.html",
+        //                 {
+        //                     url: `${config.BACKEND}/auth/resetPassword?token=${token}`,
+        //                     name: user.username
+        //                 })
+        //         });
+
+        //         res.status(200).json({ message: "Email đã được gửi thành công" });
+        //     } else {
+        //         res.status(400).json({
+        //             message: "Không tồn tại email",
+        //             name: "email"
+        //         })
+        //     }
+        // })
     }
 }
 

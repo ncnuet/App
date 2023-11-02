@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "@/types/controller";
 import * as jwt from "jsonwebtoken";
 import config from "@/configs/env";
-import { IUser } from "@/types/auth";
 import { checkRWT } from "./checkRWT.middler";
 import tokenModel from "@/models/token.model";
+import { IUser } from "@/types/auth";
 
 interface ICheckJWT {
     tokenOn?: "query" | "cookie"
@@ -21,7 +21,6 @@ export async function checkJWT(this: ICheckJWT | void, req: Request, res: Respon
         const user = <IUser>jwt.verify(token, config.JWT_KEY);
         const version = await tokenModel.getVersion(user.uid);
 
-        // console.log(user, version, user.version);
         if (version && version !== user.version) return res.sendStatus(401);
 
         // if valid, pass resolve data to local response and continue processing.

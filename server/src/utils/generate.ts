@@ -30,8 +30,8 @@ export function generate_uid(length: number = 8): string {
 }
 
 /**
- * 
- * @param data Generate token
+ * Generate token
+ * @param data 
  * @param hasRefr true if generate refresh token 
  * @returns 
  */

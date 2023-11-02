@@ -1,5 +1,5 @@
-import { IUser } from "./auth";
 import { Response as _Response, Request as _Request, NextFunction as _NextFunction } from "express"
+import { IUser } from "./auth";
 
 export interface ILocalData<T extends IUser = IUser> {
     user: T

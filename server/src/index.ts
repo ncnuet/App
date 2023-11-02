@@ -5,8 +5,9 @@ import morgan from "morgan";
 import cookieParser from 'cookie-parser';
 import route from '@/routes';
 import config, { env } from '@/configs/env';
-import database from '@/configs/database';
-import * as redis from '@/configs/redis';
+import * as database from '@/configs/database';
+import * as redis from './configs/redis';
+import { UserModel } from './models/schema/user.schema';
 
 // Initialize application
 const app = express();
@@ -35,8 +36,9 @@ if (require.main === module) { // true if file is executed by cmd. This lines fo
   app.listen(port, async () => {
     await redis.startup();
     console.log("📕 [database]: Connected to redis");
-    await database.getConnection()
+    await database.connect();
     console.log("📒 [database]: Connected to mysql");
+
     console.log(`✅ [server]: Server is running at http://localhost:${port}`);
   });
 }

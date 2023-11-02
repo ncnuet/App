@@ -17,7 +17,7 @@ class TokenModel {
         }
     }
 
-    /** ⚠️
+    /**
      * Checks if the refresh token is stored in the database.
      * @param refreshToken 
      * @returns 
@@ -27,7 +27,7 @@ class TokenModel {
     }
 
     /**
-     * 
+     * Delete all resfresh token when user logout 
      * @param uid 
      * @returns 
      */
@@ -39,7 +39,7 @@ class TokenModel {
     }
 
     /**
-     * 
+     * Increase version by one when logging out
      * @param uid 
      * @returns 
      */
@@ -50,10 +50,20 @@ class TokenModel {
         }
     }
 
+    /**
+     * Get version of session
+     * @param uid 
+     * @returns 
+     */
     async getVersion(uid: string) {
         return await redis.get(getKey(uid, NameType.USER_VERSION));
     }
 
+    /**
+     * 
+     * @param uid Get user's role
+     * @returns 
+     */
     async getRole(uid: string): Promise<IUserRole> {
         return <IUserRole>await redis.get(getKey(uid, NameType.USER_ROLE));
     }
