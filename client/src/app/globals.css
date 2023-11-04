@@ -13,3 +13,7 @@ body {
   animation-iteration-count: 1;
   animation-duration: 500ms;
 }
+
+input[type]:focus {
+  box-shadow: none;
+}

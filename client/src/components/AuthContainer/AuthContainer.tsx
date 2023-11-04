@@ -1,13 +1,23 @@
 import Logo from "@/icons/Logo";
 import Image from "next/image";
 import React from "react";
-import LoginContent from "../LoginContent";
+import FormWrapper from "../FormWrapper";
 
-type Props = {};
+type Props = {
+  left?: boolean;
+  children: React.ReactNode;
+};
 
-const LoginWrapper = (props: Props) => {
+const AuthContainer = ({
+  left = true,
+  children = "Xác thực thông tin",
+}: Props) => {
   return (
-    <main className="max-w-[1024px] h-[628px] z-10 transform translate-y-[4%] p-[8px] rounded-[10px] bg-white flex flex-row-reverse">
+    <main
+      className={`max-w-[1024px] h-[628px] z-10 transform translate-y-[4%] p-[8px] rounded-[10px] bg-white flex ${
+        left ? "flex-row-reverse" : "flex-row"
+      }`}
+    >
       <section className="relative w-[56%] h-full overflow-hidden rounded-[10px]">
         <Image
           objectFit="cover"
@@ -32,11 +42,11 @@ const LoginWrapper = (props: Props) => {
           </span>
         </div>
       </section>
-      <section className=" flex-1 py-[50px] px-[40px]">
-        <LoginContent></LoginContent>
+      <section className=" flex-1 pt-[50px] px-[40px]">
+        <FormWrapper>{children}</FormWrapper>
       </section>
     </main>
   );
 };
 
-export default LoginWrapper;
+export default AuthContainer;

@@ -1,6 +1,10 @@
-import LoginWrapper from "@/components/LoginWrapper";
-
-const PageLogin = () => {
-  return <LoginWrapper></LoginWrapper>;
+import AuthContainer from "@/components/AuthContainer";
+import LoginContent from "@/layouts/login/LoginContent";
+const LoginPage = () => {
+  return (
+    <AuthContainer>
+      <LoginContent></LoginContent>
+    </AuthContainer>
+  );
 };
-export default PageLogin;
+export default LoginPage;
