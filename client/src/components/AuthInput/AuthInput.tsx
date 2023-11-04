@@ -10,6 +10,8 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons/faCheck";
 type Props = {
   heading: string;
   placeholder: string;
+  onFocus: any;
+  onChangeText: any;
   user?: boolean;
   lock?: boolean;
   isError?: boolean;
@@ -19,6 +21,8 @@ type Props = {
 function AuthInput({
   heading,
   placeholder,
+  onFocus,
+  onChangeText = () => {},
   user = false,
   lock = false,
   isError = false,
@@ -31,10 +35,10 @@ function AuthInput({
       <div
         className={`py-2 pl-4 pr-2 bg-gray-100 flex flex-row items-center rounded-sm border ${
           isError
-            ? "text-error border-error"
+            ? "text-cred-400 border-cred-400"
             : isSuccess
-            ? "text-success border-success"
-            : "text-normal"
+            ? "text-cgreen-600 border-cgreen-600"
+            : "text-cgray-500"
         }`}
       >
         {user && <User width="24" height="24" className={"mr-[16px]"}></User>}
@@ -43,12 +47,14 @@ function AuthInput({
           type={lock ? (isCloseEye ? "password" : "text") : "text"}
           placeholder={placeholder}
           spellCheck={false}
+          onFocus={onFocus}
+          onChange={(e) => onChangeText(e.target.value)}
           className={`w-full h-[32px] border-none bg-transparent text-[16px] outline-none leading-[100%] ${
             isError
-              ? "placeholder-error"
+              ? "placeholder-cred-400"
               : isSuccess
-              ? "placeholder-success"
-              : "text-normal"
+              ? "placeholder-cgreen-600"
+              : "text-cgray-500"
           }`}
         ></input>
         {lock && (
@@ -64,13 +70,13 @@ function AuthInput({
             {!isCloseEye && (
               <FontAwesomeIcon
                 icon={faEye}
-                className="w-6 h-6"
+                className="w-5 h-5"
               ></FontAwesomeIcon>
             )}
             {isCloseEye && (
               <FontAwesomeIcon
                 icon={faEyeSlash}
-                className="w-6 h-6"
+                className="w-5 h-5"
               ></FontAwesomeIcon>
             )}
           </div>

@@ -1,15 +1,17 @@
 "use client";
 import AuthContainer from "@/components/AuthContainer";
-import LoginContent from "@/layouts/login/LoginContent";
+import ForgotContent from "@/layouts/forgot/ForgotContent";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-const LoginPage = () => {
+
+const ForgotPage = () => {
   const succesNotify = () => {
-    toast.success("Đăng nhập thành công");
+    toast.success("Gửi email reset password thành công tới fake***@gmail.com");
   };
   const errorNotify = () => {
-    toast.error("Đăng nhập thất bại. Vui lòng thử lại");
+    toast.error("Tên đăng nhập không tồn tại. Vui lòng thử lại");
   };
+
   return (
     <>
       <ToastContainer
@@ -26,13 +28,13 @@ const LoginPage = () => {
         theme="light"
         className={"text-[14px]"}
       />
-      <AuthContainer>
-        <LoginContent
-          onSuccessNotify={succesNotify}
+      <AuthContainer left={false}>
+        <ForgotContent
           onErrorNotify={errorNotify}
-        ></LoginContent>
+          onSuccessNotify={succesNotify}
+        ></ForgotContent>
       </AuthContainer>
     </>
   );
 };
-export default LoginPage;
+export default ForgotPage;

@@ -1,7 +1,7 @@
 import Logo from "@/icons/Logo";
 import Image from "next/image";
 import React from "react";
-import FormWrapper from "../FormWrapper";
+import FormWrapper from "@/components/FormWrapper";
 
 type Props = {
   left?: boolean;
