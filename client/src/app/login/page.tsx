@@ -1,5 +1,5 @@
 import AuthContainer from "@/components/AuthContainer";
-import LoginContent from "@/layouts/login/LoginContent";
+import LoginContent from "@/components/pagecoms/login/LoginContent";
 const LoginPage = () => {
   return (
     <AuthContainer>

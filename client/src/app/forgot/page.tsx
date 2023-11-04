@@ -1,6 +1,6 @@
 import AuthContainer from "@/components/AuthContainer";
-import ForgotContent from "@/layouts/forgot/ForgotContent";
-import LoginContent from "@/layouts/login/LoginContent";
+import ForgotContent from "@/components/pagecoms/forgot/ForgotContent";
+
 const ForgotPage = () => {
   return (
     <AuthContainer left={false}>

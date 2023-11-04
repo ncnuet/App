@@ -2,8 +2,8 @@
 import { useState } from "react";
 import Lock from "@/icons/Lock";
 import User from "@/icons/User";
-import { faEye } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye } from "@fortawesome/free-regular-svg-icons";
 import { faEyeSlash } from "@fortawesome/free-regular-svg-icons/faEyeSlash";
 import { faCheck } from "@fortawesome/free-solid-svg-icons/faCheck";
 
