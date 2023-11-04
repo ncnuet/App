@@ -10,15 +10,19 @@
   'opsz' 24
 }
 
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+::-webkit-scrollbar {
+  width: 5px;
 }
 
-.image-animation {
-  animation-iteration-count: 1;
-  animation-duration: 500ms;
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 99px;
+}
+
+.list:hover::-webkit-scrollbar-thumb {
+  background: #FDB813;
 }
