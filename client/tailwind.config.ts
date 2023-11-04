@@ -19,7 +19,8 @@ const config: Config = {
           500: "#FDB813",
           600: "#FFA800"
         },
-        cgray:{
+        cgray: {
+          100: "#F3F2F2",
           200: "#F9F9F9",
           400: "#838383",
           500: "#4D4D4D",
@@ -31,15 +32,18 @@ const config: Config = {
         cgreen: {
           600: "#6C9D5E"
         },
-        cred:{
+        cred: {
           400: "#FF6961"
         }
       },
-      scale:{
+      scale: {
         '-100': '-1'
       },
-      screens:{
+      screens: {
         xs: "480px"
+      },
+      boxShadow: {
+        "sd1": "0px 10px 15px -3px rgba(0, 0, 0, 0.10)"
       }
     },
   }

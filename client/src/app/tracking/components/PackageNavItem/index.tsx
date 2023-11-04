@@ -6,8 +6,8 @@ export default function PackageNavItem({ selected }: IProps) {
     return (
         <div
             className={
-                "flex flex-col gap-1 px-7 py-3 rounded-xl hover:bg-white cursor-pointer hover:shadow-xl " +
-                (selected ? "bg-white shadow-xl" : "")}>
+                "flex flex-col gap-1 px-7 py-3 rounded-xl hover:bg-white cursor-pointer hover:shadow-sd1 " +
+                (selected ? "bg-white shadow-sd1" : "")}>
             <div className="flex items-center justify-between">
                 <div>
                     <p className="text-xs text-cgray-400">Mã bưu kiện</p>

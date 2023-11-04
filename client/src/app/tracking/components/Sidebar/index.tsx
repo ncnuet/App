@@ -4,7 +4,7 @@ import PackageNavItem from "../PackageNavItem";
 
 export default function Sidebar() {
     return (
-        <aside className="bg-cgray-200 h-screen flex flex-col w-[400px]">
+        <aside className="bg-cgray-200 h-screen flex flex-col w-[400px] flex-none relative">
             <header className="flex-non p-7">
                 <div className="flex items-center justify-start mb-5">
                     <div className="h-7">
@@ -19,7 +19,7 @@ export default function Sidebar() {
                 <h1 className="font-bold text-center text-3xl text-cblue-600">Tra cứu bưu gửi</h1>
             </header>
 
-            <div className="flex-none p-7">
+            <div className="flex-none p-7 py-5">
                 <label
                     htmlFor="package_id"
                     className="text-sm ml-5 mb-2 text-cgray-500 block">
