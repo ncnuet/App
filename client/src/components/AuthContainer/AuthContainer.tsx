@@ -2,7 +2,7 @@ import Logo from "@/icons/Logo";
 import Image from "next/image";
 import React from "react";
 import FormWrapper from "@/components/FormWrapper";
-import StorageImg from "@/assets/images/storage.png"
+import StorageImg from "@/assets/images/storage.png";
 
 type Props = {
   left?: boolean;
@@ -15,7 +15,7 @@ const AuthContainer = ({
 }: Props) => {
   return (
     <main
-      className={`max-w-[1024px] h-[628px] z-10 transform translate-y-[4%] p-[8px] rounded-[10px] bg-white flex ${
+      className={`max-w-[1024px] h-[628px] z-10 transform translate-y-[4%] p-[8px] rounded-[10px] bg-white shadow-sd1 flex ${
         left ? "flex-row-reverse" : "flex-row"
       }`}
     >

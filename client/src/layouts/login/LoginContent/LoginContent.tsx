@@ -77,7 +77,7 @@ function LoginContent({ onSuccessNotify, onErrorNotify }: Props) {
   return (
     <main>
       <div className="flex flex-col mb-[30px]">
-        <span className="text-[20px] text-[#FFA800] font-bold pb-[2px]">
+        <span className="text-2xl text-[#FFA800] font-bold pb-[2px]">
           Chào mừng trở lại
         </span>
         <span className="text-[12px] text-[#838383] font-regular ">
