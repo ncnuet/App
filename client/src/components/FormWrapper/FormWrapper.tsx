@@ -16,7 +16,7 @@ const FormWrapper = ({ children }: Props) => {
         </div>
       </header>
       {children}
-      <footer className="mt-auto flex flex-row items-center gap-4 justify-start text-[12px] text-gray-400 font-medium select-none ">
+      <footer className="mt-auto mb-4 flex flex-row items-center gap-4 justify-start text-[12px] text-gray-400 font-medium select-none ">
         <span className="hover:cursor-pointer hover:opacity-60 active:opacity-80">
           @devbygroup6
         </span>
