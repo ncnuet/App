@@ -27,14 +27,17 @@ const config: Config = {
           600: "#333333"
         },
         cblue: {
+          300: "#0295FF",
           600: "#2D3748"
         },
         cgreen: {
+          400: "#77DD77",
           600: "#6C9D5E"
         },
         cred: {
           400: "#FF6961"
-        }
+        },
+        "stroke-color": "#CCD7E2"
       },
       scale: {
         '-100': '-1'

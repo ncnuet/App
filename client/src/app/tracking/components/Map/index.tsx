@@ -19,7 +19,6 @@ export function Map() {
             {...viewport}
             height="100vh"
             width="auto"
-            mapStyle="https://tiles.goong.io/assets/goong_map_dark.json"
             onViewportChange={setViewport}
             goongApiAccessToken={GOONG_MAPTILES_KEY}
         />
