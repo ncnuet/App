@@ -1,6 +1,5 @@
 "use client";
 import { memo } from "react";
-import Spinner from "@/icons/Spinner";
 
 type Props = {
   title: string;
@@ -9,7 +8,6 @@ type Props = {
 };
 
 function AuthButton({ title, onNavigate, isPending }: Props) {
-  console.log("hello");
   const handleClick = () => {
     onNavigate();
   };
@@ -23,11 +21,9 @@ function AuthButton({ title, onNavigate, isPending }: Props) {
       onClick={handleClick}
     >
       {isPending && (
-        <Spinner
-          width="24"
-          height="24"
-          className={"mr-2 animate-spin"}
-        ></Spinner>
+        <span className="material-symbols-outlined mr-2 animate-spin">
+          progress_activity
+        </span>
       )}
       {title}
     </button>

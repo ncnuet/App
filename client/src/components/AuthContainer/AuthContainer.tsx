@@ -25,7 +25,7 @@ const AuthContainer = ({
           width={562}
           height={628}
           alt="storage"
-          className="w-full h-full animate-pulse image-animation"
+          className="w-full h-full animate-pulse storage-animation"
           loading="lazy"
         ></Image>
         <div className="absolute bg-gradient-to-b from-[#FDB712F2] to-[#FDB7124F] top-0 left-0 right-0 bottom-0 flex flex-col items-center select-none">

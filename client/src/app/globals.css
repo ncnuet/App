@@ -9,8 +9,8 @@ body {
       rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 }
 
-.image-animation {
-  animation-iteration-count: 1;
+.storage-animation {
+  animation-iteration-count: 1 !important;
   animation-duration: 500ms;
 }
 

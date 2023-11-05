@@ -106,7 +106,7 @@ function LoginContent({ onSuccessNotify, onErrorNotify }: Props) {
       </div>
       {isError && (
         <span className=" text-cred-400 text-[11px] font-semibold">
-          Tên đăng nhập hoặc Mật khẩu không chính xác
+          Tên đăng nhập hoặc mật khẩu không chính xác
         </span>
       )}
       {/* forgot password */}

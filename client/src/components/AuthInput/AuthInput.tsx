@@ -1,11 +1,5 @@
 "use client";
 import { useState } from "react";
-import Lock from "@/icons/Lock";
-import User from "@/icons/User";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-regular-svg-icons";
-import { faEyeSlash } from "@fortawesome/free-regular-svg-icons/faEyeSlash";
-import { faCheck } from "@fortawesome/free-solid-svg-icons/faCheck";
 
 type Props = {
   heading: string;
@@ -41,8 +35,8 @@ function AuthInput({
             : "text-cgray-500"
         }`}
       >
-        {user && <User width="24" height="24" className={"mr-[16px]"}></User>}
-        {lock && <Lock width="24" height="24" className={"mr-[16px]"}></Lock>}
+        {user && <span className="material-symbols-outlined mr-4">person</span>}
+        {lock && <span className="material-symbols-outlined mr-4">lock</span>}
         <input
           type={lock ? (isCloseEye ? "password" : "text") : "text"}
           placeholder={placeholder}
@@ -58,32 +52,21 @@ function AuthInput({
           }`}
         ></input>
         {lock && (
-          // <OpenEye
-          //   width="24"
-          //   height="24"
-          //   className={"ml-4 hover:cursor-pointer hover:opacity-80"}
-          // ></OpenEye>
           <div
             className="px-2 ml-2 flex justify-center items-center hover:cursor-pointer hover:opacity-80"
             onClick={() => setIsCloseEye(!isCloseEye)}
           >
             {!isCloseEye && (
-              <FontAwesomeIcon
-                icon={faEye}
-                className="w-5 h-5"
-              ></FontAwesomeIcon>
+              <span className="material-symbols-outlined">visibility</span>
             )}
             {isCloseEye && (
-              <FontAwesomeIcon
-                icon={faEyeSlash}
-                className="w-5 h-5"
-              ></FontAwesomeIcon>
+              <span className="material-symbols-outlined">visibility_off</span>
             )}
           </div>
         )}
         {user && isSuccess && (
           <div className="px-2 ml-2 flex justify-center items-center">
-            <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
+            <span className="material-symbols-outlined">check</span>
           </div>
         )}
       </div>
