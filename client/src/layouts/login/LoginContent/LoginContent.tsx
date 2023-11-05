@@ -125,7 +125,8 @@ function LoginContent({ onSuccessNotify, onErrorNotify }: Props) {
             type="checkbox"
             className="sr-only peer"
             onClick={(e) => e.stopPropagation()}
-            checked={isRememberPass}
+            // checked={isRememberPass}
+            defaultChecked
           />
           <div className="w-8 h-4 bg-gray-200 rounded peer peer-checked:after:translate-x-[128%] after:content-[''] after:absolute  after:top-1/2 after:left-[2px] after:-translate-y-1/2 after:bg-gray-400 peer-checked:after:bg-[#FDB813] after:rounded after:h-3 after:w-3 after:transition-all peer-checked:bg-[#FDB81380]"></div>
         </label>

@@ -2,6 +2,7 @@ import Logo from "@/icons/Logo";
 import Image from "next/image";
 import React from "react";
 import FormWrapper from "@/components/FormWrapper";
+import StorageImg from "@/assets/images/storage.png"
 
 type Props = {
   left?: boolean;
@@ -20,8 +21,7 @@ const AuthContainer = ({
     >
       <section className="relative w-[56%] h-full overflow-hidden rounded-[10px]">
         <Image
-          objectFit="cover"
-          src={"/storage.png"}
+          src={StorageImg}
           width={562}
           height={628}
           alt="storage"
