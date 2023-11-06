@@ -1,10 +1,7 @@
-import { RowDataPacket } from "mysql2";
 import * as bcrypt from "bcryptjs";
-import { UserModel } from "./schema/user.schema";
+import { UserBaseModel } from "./schema/user.schema";
 import { IQueryableUser, IUserWithoutVersion } from "@/types/auth";
-interface IAccountReponseData extends IUserWithoutVersion {
-    hashPassword: string
-}
+
 class AuthModel {
     /**
      * Checks if the user is existed in the database. 
@@ -14,7 +11,7 @@ class AuthModel {
      * @returns IUser if the user exists or undefined otherwise
      */
     async findUserByPassword(_username: string, _password: string): Promise<IUserWithoutVersion> {
-        const user = await UserModel.findOne(
+        const user = await UserBaseModel.findOne(
             { username: _username },
             { uid: 1, role: 1, username: 1, password: 1 })
             .exec();
@@ -33,7 +30,7 @@ class AuthModel {
      * @returns UID if the user exists or undefined otherwise
      */
     async findUserByInfo(info: IQueryableUser): Promise<IQueryableUser> {
-        const user = await UserModel.findOne(
+        const user = await UserBaseModel.findOne(
             {
                 $or: [
                     { username: info.username },
@@ -58,7 +55,7 @@ class AuthModel {
      * @returns 
      */
     async updatePassword(uid: string, password: string): Promise<any> {
-        const user = UserModel.updateOne({ uid }, { password: await bcrypt.hash(password, 10) }).exec();
+        const user = UserBaseModel.updateOne({ uid }, { password: await bcrypt.hash(password, 10) }).exec();
 
         if (!user) return undefined;
     }
