@@ -8,7 +8,7 @@ import ParcelBill from "@/layouts/gdv/ParcelBill";
 const GdvPage = () => {
   return (
     <main className="my-10 w-[1096px] max-w-full bg-white p-[50px] shadow-sd1">
-      <header className="flex flex-row items-center gap-[200px] mb-2">
+      <header className="flex flex-row items-center gap-0 md:gap-[200px] mb-2">
         <div className="flex-1 flex flex-row items-center justify-center">
           <Logo width="100" height="52" className={"text-cyellow-500"}></Logo>
           <div className="flex flex-col ml-2">

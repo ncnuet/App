@@ -10,7 +10,7 @@ export default function CheckBox({ isChecked, content = "" }: CheckBoxProps) {
         {isChecked && <span className="material-symbols-outlined">check</span>}
       </div>
       {content && (
-        <span className=" text-[15px] text-black font-light ml-2">
+        <span className=" text-[15px] text-black font-normal ml-2">
           {content}
         </span>
       )}

@@ -36,9 +36,10 @@ input[type]:focus {
   box-shadow: none;
 }
 
-tr,
-th,
-td {
-  border: 1px solid black;
-  border-collapse: collapse;
+.parcel-bill__content {
+  @apply text-[15px] text-black font-normal;
+}
+
+.parcel-bill__heading {
+  @apply text-base text-black font-semibold;
 }
