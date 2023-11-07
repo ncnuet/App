@@ -49,6 +49,7 @@ const config: Config = {
       },
       boxShadow: {
         sd1: "0px 10px 15px -3px rgba(0, 0, 0, 0.10)",
+        sd2: "0px 3.500000238418579px 5.500000476837158px 0px #00000005",
       },
     },
   },
