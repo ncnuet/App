@@ -27,6 +27,10 @@
   background: #FDB813;
 }
 
+.gdv-item:hover::-webkit-scrollbar-thumb {
+  background: #FDB813;
+}
+
 .storage-animation {
   animation-iteration-count: 1 !important;
   animation-duration: 500ms;
