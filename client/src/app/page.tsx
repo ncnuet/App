@@ -59,7 +59,7 @@ export default function Home() {
             Lịch sử tra cứu
           </Link>
           <Link
-            href="#"
+            href="/login"
             className="text-cyellow-600 font-semibold underline text-sm block min-w-fit">
             Đăng nhập
           </Link>

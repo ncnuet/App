@@ -5,12 +5,7 @@ import AuthButton from "@/components/AuthButton";
 import AuthInput from "@/components/AuthInput";
 import { toast } from 'react-toastify'
 
-// type Props = {
-//   onSuccessNotify: any;
-//   onErrorNotify: any;
-// };
-
-function LoginContent() {
+const LoginPage = () => {
   const router = useRouter();
   const pendingRef: { current: NodeJS.Timeout | null } = useRef(null);
   const [userName, setUserName] = useState("");
@@ -24,7 +19,7 @@ function LoginContent() {
     toast.error("ABC")
   }
 
-  function onSuccessNotify(){
+  function onSuccessNotify() {
     toast.success("Success");
   }
 
@@ -157,6 +152,5 @@ function LoginContent() {
       ></AuthButton>
     </main>
   );
-}
-
-export default LoginContent;
+};
+export default LoginPage;

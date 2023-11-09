@@ -1,7 +1,6 @@
 "use client";
-import AuthContainer from "@/components/AuthContainer";
 import ForgotContent from "@/layouts/forgot/ForgotContent";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const ForgotPage = () => {
@@ -13,14 +12,10 @@ const ForgotPage = () => {
   };
 
   return (
-    <>
-      <AuthContainer left={false}>
-        <ForgotContent
-          onErrorNotify={errorNotify}
-          onSuccessNotify={succesNotify}
-        ></ForgotContent>
-      </AuthContainer>
-    </>
+    <ForgotContent
+      onErrorNotify={errorNotify}
+      onSuccessNotify={succesNotify}
+    ></ForgotContent>
   );
 };
 export default ForgotPage;

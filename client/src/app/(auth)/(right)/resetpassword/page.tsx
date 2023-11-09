@@ -1,7 +1,6 @@
 "use client";
-import AuthContainer from "@/components/AuthContainer";
 import ResetContent from "@/layouts/forgot/ResetContent";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const ForgotPage = () => {
   const succesNotify = () => {
@@ -13,14 +12,10 @@ const ForgotPage = () => {
     toast.error("Mật khẩu không hợp lệ. Vui lòng thử lại");
   };
   return (
-    <>
-      <AuthContainer left={false}>
-        <ResetContent
-          onErrorNotify={errorNotify}
-          onSuccessNotify={succesNotify}
-        ></ResetContent>
-      </AuthContainer>
-    </>
+    <ResetContent
+      onErrorNotify={errorNotify}
+      onSuccessNotify={succesNotify}
+    ></ResetContent>
   );
 };
 export default ForgotPage;
