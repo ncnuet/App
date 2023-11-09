@@ -6,7 +6,7 @@ import Image from "next/image"
 export default function Home() {
   return (
     <main className="bg-cyellow-100 min-h-screen w-screen flex xs:items-center p-0 xs:p-10 sm:p-28 relative">
-      <div id="_bg" className="absolute w-full h-full top-0 left-0 overflow-hidden">
+      <div className="absolute w-full h-full top-0 left-0 overflow-hidden">
         <h1 className="select-none text-[268px] font-extrabold text-center whitespace-nowrap -mt-14 text-cyellow-300">MAGIC POST
         </h1>
 
@@ -19,7 +19,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="w-[550px] relative z-40 p-10 bg-[#ffffffc9] backdrop-blur-sm xs:backdrop-blur-lg xs:rounded-2xl shadow-lg 2xl:bg-transparent 2xl:shadow-none 2xl:backdrop-blur-none">
+      <div className="w-[550px] relative z-40 p-10 bg-[#ffffffc9] backdrop-blur-sm xs:backdrop-blur-lg xs:rounded-2xl shadow-lg">
 
         <div className="flex sm:hidden w-full justify-center items-center pb-10">
           <div className="h-10">

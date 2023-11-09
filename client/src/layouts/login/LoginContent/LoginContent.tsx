@@ -3,11 +3,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import AuthButton from "@/components/AuthButton";
 import AuthInput from "@/components/AuthInput";
-type Props = {
-  onSuccessNotify: any;
-  onErrorNotify: any;
-};
-function LoginContent({ onSuccessNotify, onErrorNotify }: Props) {
+import { toast } from 'react-toastify'
+
+// type Props = {
+//   onSuccessNotify: any;
+//   onErrorNotify: any;
+// };
+
+function LoginContent() {
   const router = useRouter();
   const pendingRef: { current: NodeJS.Timeout | null } = useRef(null);
   const [userName, setUserName] = useState("");
@@ -16,6 +19,14 @@ function LoginContent({ onSuccessNotify, onErrorNotify }: Props) {
   const [isSuccess, setisSuccess] = useState<boolean | null>(null);
   const [isRememberPass, setIsRememberPass] = useState(false);
   const [isPending, setIsPending] = useState(false);
+
+  function onErrorNotify() {
+    toast.error("ABC")
+  }
+
+  function onSuccessNotify(){
+    toast.success("Success");
+  }
 
   const onPassword = (password: string) => {
     setPassword(password);
@@ -111,9 +122,8 @@ function LoginContent({ onSuccessNotify, onErrorNotify }: Props) {
       )}
       {/* forgot password */}
       <div
-        className={`flex flex-row items-center select-none mb-7 ${
-          isError ? "pt-0" : "pt-3"
-        }`}
+        className={`flex flex-row items-center select-none mb-7 ${isError ? "pt-0" : "pt-3"
+          }`}
       >
         <label
           className="relative inline-flex items-center cursor-pointer"

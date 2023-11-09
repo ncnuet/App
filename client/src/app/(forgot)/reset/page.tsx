@@ -14,20 +14,6 @@ const ForgotPage = () => {
 
   return (
     <>
-      <ToastContainer
-        limit={1}
-        position="top-center"
-        autoClose={1500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover={false}
-        theme="light"
-        className={"text-[14px]"}
-      />
       <AuthContainer left={false}>
         <ForgotContent
           onErrorNotify={errorNotify}

@@ -2,6 +2,7 @@ import "./globals.css";
 import "material-symbols";
 import type { Metadata } from "next";
 import { Lexend } from "next/font/google";
+import { ToastContainer } from "react-toastify";
 
 const inter = Lexend({ subsets: ["latin"] });
 
@@ -18,7 +19,23 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
         <link href='https://cdn.jsdelivr.net/npm/@goongmaps/goong-js@1.0.9/dist/goong-js.css' rel='stylesheet' />
 
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <ToastContainer
+          limit={1}
+          position="top-center"
+          autoClose={1500}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover={false}
+          theme="light"
+          className={"text-[14px]"}
+        />
+        {children}
+      </body>
     </html>
   );
 }
