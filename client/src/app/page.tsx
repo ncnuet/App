@@ -2,6 +2,7 @@ import CarImg from "@/assets/images/car.png"
 import BoxesImg from "@/assets/images/boxes.png"
 import LogoImg from "@/assets/images/logo.png"
 import Image from "next/image"
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -52,8 +53,16 @@ export default function Home() {
         </div>
 
         <div className="pl-5 mt-5 flex gap-3 flex-wrap justify-center sm:justify-start">
-          <a href="#" className="text-cyellow-600 font-semibold underline text-sm block min-w-fit">Lịch sử tra cứu</a>
-          <a href="#" className="text-cyellow-600 font-semibold underline text-sm block min-w-fit">Đăng nhập</a>
+          <Link
+            href="/tracking"
+            className="text-cyellow-600 font-semibold underline text-sm block min-w-fit">
+            Lịch sử tra cứu
+          </Link>
+          <Link
+            href="#"
+            className="text-cyellow-600 font-semibold underline text-sm block min-w-fit">
+            Đăng nhập
+          </Link>
           <a href="#" className="text-cyellow-600 font-semibold underline text-sm block min-w-fit">Chính sách</a>
           <a href="#" className="text-cyellow-600 font-semibold underline text-sm block min-w-fit">FAQ</a>
         </div>
