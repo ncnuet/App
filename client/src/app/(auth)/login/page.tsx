@@ -1,12 +1,13 @@
 "use client";
 import { FormEvent, useState } from "react";
-import AuthButton from "@/components/AuthButton";
-import AuthInput from "@/components/AuthInput";
 import { toast } from 'react-toastify'
 import { InputStatus } from "@/components/AuthInput/AuthInput";
-import axios from "@/utils/axios";
 import { useRouter } from 'next/navigation'
+import axios from "@/utils/axios";
+import AuthButton from "@/components/AuthButton";
+import AuthInput from "@/components/AuthInput";
 import Link from "next/link";
+import AuthSwitch from "@/components/AuthSwitch";
 
 interface ResponseData {
   name: string;
@@ -15,7 +16,6 @@ interface ResponseData {
 
 const LoginPage = () => {
   const router = useRouter()
-  const [isRememberPass, setIsRememberPass] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [status, setStatus] = useState<InputStatus>("normal")
   const [errorText, setErrorText] = useState<ResponseData>();
@@ -27,6 +27,7 @@ const LoginPage = () => {
     try {
       const formData = new FormData(event.target as HTMLFormElement);
       const body = Object.fromEntries(formData.entries());
+      body.remember = !!body.remember as unknown as FormDataEntryValue;
 
       const res = await axios.post("/auth/login", body);
 
@@ -81,27 +82,11 @@ const LoginPage = () => {
 
         {/* forgot password */}
         <div className={`flex flex-row items-center select-none mt-3 mb-7`}>
-          <label
-            className="relative inline-flex items-center cursor-pointer"
-            onClick={() => {
-              setIsRememberPass((prev) => !prev);
-            }}
-          >
-            <input
-              type="checkbox"
-              className="sr-only peer"
-              onClick={(e) => e.stopPropagation()}
-              defaultChecked
-            />
-            <div className="w-8 h-4 bg-gray-200 rounded peer peer-checked:after:translate-x-[128%] after:content-[''] after:absolute  after:top-1/2 after:left-[2px] after:-translate-y-1/2 after:bg-gray-400 peer-checked:after:bg-[#FDB813] after:rounded after:h-3 after:w-3 after:transition-all peer-checked:bg-cyellow-300"></div>
-          </label>
-          <span className="text-[12px] text-gray-400 font-medium pl-2">
-            Ghi nhớ đăng nhập
-          </span>
+          <AuthSwitch name="remember" />
 
           <Link
             href="/reset"
-            className="font-semibold text-[12px] text-cyellow-600 ml-auto cursor-pointer py-1 hover:opacity-70">
+            className="font-semibold text-[12px] text-cyellow-600 ml-auto cursor-pointer py-1 hover:opacity-70 truncate">
             Quên mật khẩu
           </Link>
         </div>

@@ -1,7 +1,7 @@
 "use client";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { FormEvent, useEffect, useState } from "react";
 import AuthInput from "@/components/AuthInput";
 import AuthButton from "@/components/AuthButton";
 import Link from "next/link";
@@ -12,10 +12,25 @@ import axios, { ResponseData } from "@/utils/axios";
 
 const ForgotPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams()
+
+  const user = searchParams.get('user');
+  const ttl = Number(searchParams.get('ttl') || "0");
 
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<InputStatus>("normal");
   const [errorText, setErrorText] = useState<ResponseData>();
+  const [timer, setTimer] = useState<number>(ttl);
+
+  useEffect(() => {
+    const interval = setInterval(() => setTimer(timer => timer - 1), 1000)
+    console.log(interval);
+    return () => clearInterval(interval);
+  }, [])
+
+  useEffect(() => {
+    if (timer <= 0) { router.replace("/") }
+  }, [timer])
 
   async function submitHander(event: FormEvent) {
     event.preventDefault();
@@ -53,7 +68,10 @@ const ForgotPage = () => {
           Khôi phục mật khẩu
         </span>
         <span className="text-[12px] text-cgray-400 font-regular ">
-          Đừng lo, chúng tôi sẽ giúp bạn lấy lại mật khẩu nhanh thôi
+          {`Gần xong rồi, `}
+          <span className="font-semibold">{user ? user + "," : ""}</span>
+          {` hãy hoàn tất quá trình này trong `}
+          <span className="text-cred-400 font-bold">{timer}s</span>
         </span>
       </div>
 
@@ -69,7 +87,7 @@ const ForgotPage = () => {
           />
           <AuthInput
             type="password"
-            name="repassword"
+            name="re_password"
             title="Nhập lại mật khẩu"
             placeholder="password"
             status={status}

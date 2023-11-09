@@ -1,5 +1,4 @@
 import "./globals.css";
-import "@/assets/css/goongjs.css";
 import "react-toastify/dist/ReactToastify.css";
 
 import type { Metadata } from "next";

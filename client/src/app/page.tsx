@@ -3,6 +3,7 @@ import BoxesImg from "@/assets/images/boxes.png"
 import LogoImg from "@/assets/images/logo.png"
 import Image from "next/image"
 import Link from "next/link";
+import { HiArrowLongRight } from "react-icons/hi2";
 
 export default function Home() {
   return (
@@ -48,7 +49,7 @@ export default function Home() {
           </div>
 
           <button className="w-16 h-16 items-center justify-center rounded-full bg-cyellow-600 flex-none hidden xs:flex">
-            <span className="text-3xl material-symbols-rounded"> arrow_right_alt </span>
+            <span className="text-3xl"><HiArrowLongRight></HiArrowLongRight></span>
           </button>
         </div>
 

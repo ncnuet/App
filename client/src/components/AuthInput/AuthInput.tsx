@@ -1,6 +1,7 @@
 "use client";
 import { TextInputProps } from "flowbite-react";
 import { useEffect, useState } from "react";
+import { MdLock, MdPerson, MdVisibility, MdVisibilityOff } from "react-icons/md"
 
 export type InputStatus = "success" | "failure" | "normal";
 
@@ -51,8 +52,8 @@ function AuthInput({
 
         {/* Icon */}
         {
-          type === "password" && <span className="material-symbols-outlined mr-4">lock</span> ||
-          <span className="material-symbols-outlined mr-4">person</span>
+          type === "password" && <span className="mr-4 text-xl"><MdLock></MdLock></span> ||
+          <span className="mr-4 text-xl"><MdPerson></MdPerson></span>
         }
 
         {/* Input area */}
@@ -78,12 +79,10 @@ function AuthInput({
             className="px-2 ml-2 flex justify-center items-center hover:cursor-pointer hover:opacity-80"
             onClick={() => setIsCloseEye(!isCloseEye)}
           >
-            {!isCloseEye && (
-              <span className="material-symbols-outlined">visibility</span>
-            )}
-            {isCloseEye && (
-              <span className="material-symbols-outlined">visibility_off</span>
-            )}
+            {!isCloseEye
+              ? <span className="text-xl"><MdVisibility></MdVisibility></span>
+              : <span className="text-xl"><MdVisibilityOff></MdVisibilityOff></span>
+            }
           </div>
         )}
 

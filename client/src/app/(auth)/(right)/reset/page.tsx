@@ -1,13 +1,12 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { toast } from "react-toastify";
+import { FormEvent, useState } from "react";
+import { InputStatus } from "@/components/AuthInput/AuthInput";
+import axios from "@/utils/axios";
 import AuthInput from "@/components/AuthInput";
 import AuthButton from "@/components/AuthButton";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { InputStatus } from "@/components/AuthInput/AuthInput";
 import Link from "next/link";
-import axios from "@/utils/axios";
 
 interface ResponseData {
   name: string;
@@ -77,7 +76,7 @@ const ForgotPage = () => {
           className={`flex flex-row items-center select-none mt-3 mb-7`}>
           <Link
             href="/login"
-            className="text-[12px] text-[#FFA800] ml-auto cursor-pointer font-medium py-1">
+            className="text-[12px] text-cyellow-600 ml-auto cursor-pointer font-medium py-1">
             Vừa nhớ ra mật khẩu, đăng nhập
           </Link>
         </div>
