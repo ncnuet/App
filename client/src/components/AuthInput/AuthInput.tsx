@@ -27,7 +27,7 @@ function AuthInput({
     <div>
       <h3 className="text-[12px] text-gray-600 font-[500] pb-2">{heading}</h3>
       <div
-        className={`py-2 pl-4 pr-2 bg-gray-100 flex flex-row items-center rounded-sm border ${
+        className={`py-2 pl-4 pr-2 bg-gray-100 flex flex-row items-center rounded border ${
           isError
             ? "text-cred-400 border-cred-400"
             : isSuccess

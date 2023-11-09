@@ -16,11 +16,11 @@ const FormWrapper = ({ children }: Props) => {
         </div>
       </header>
       {children}
-      <footer className="mt-auto flex flex-row items-cente justify-between text-[12px] text-gray-400 font-medium select-none ">
+      <footer className="mt-auto mb-4 flex flex-row items-center gap-4 justify-start text-[12px] text-gray-400 font-medium select-none ">
         <span className="hover:cursor-pointer hover:opacity-60 active:opacity-80">
           @devbygroup6
         </span>
-        <span className="flex flex-row items-center ml-4 hover:cursor-pointer hover:opacity-60 active:opacity-80">
+        <span className="flex flex-row items-center hover:cursor-pointer hover:opacity-60 active:opacity-80">
           <FontAwesomeIcon
             icon={faGithub}
             className="w-4 h-4 text-gray-400 mr-1"
@@ -28,7 +28,7 @@ const FormWrapper = ({ children }: Props) => {
           github
         </span>
         <span className="hover:cursor-pointer hover:opacity-60 active:opacity-80">
-          <span className="ml-4 text-[12px] font-semibold">SOS</span>
+          <span className="text-[12px] font-semibold">SOS</span>
           <span className="ml-1">Liên hệ kỹ thuật</span>
         </span>
       </footer>

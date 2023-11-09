@@ -1,12 +1,9 @@
-const Logo = ({
-  className,
-  width = "173",
-  height = "87",
-}: {
+export interface IconProps {
   className: any;
   width: string;
   height: string;
-}) => {
+}
+const Logo = ({ className, width = "173", height = "87" }: IconProps) => {
   return (
     <svg
       width={width}
