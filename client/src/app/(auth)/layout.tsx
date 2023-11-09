@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { ReactNode } from "react";
-import FormWrapper from "@/components/FormWrapper";
 import StorageImg from "@/assets/images/storage.png";
 import Logo from "@/icons/Logo";
 import React from "react";

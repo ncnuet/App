@@ -94,7 +94,7 @@ function ResetContent({ onSuccessNotify, onErrorNotify }: Props) {
           onChangeText={onPassword}
           heading="Mật khẩu mới"
           placeholder="password"
-          lock
+          disable
           isError={isError || false}
           isSuccess={isSuccess || false}
           onFocus={onFocus}
@@ -103,7 +103,7 @@ function ResetContent({ onSuccessNotify, onErrorNotify }: Props) {
           onChangeText={onConfirmPassword}
           heading="Nhập lại mật khẩu"
           placeholder="password"
-          lock
+          disable
           isError={isError || false}
           isSuccess={isSuccess || false}
           onFocus={onFocus}
