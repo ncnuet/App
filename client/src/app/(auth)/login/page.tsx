@@ -20,7 +20,7 @@ const LoginPage = () => {
   const [status, setStatus] = useState<InputStatus>("normal")
   const [errorText, setErrorText] = useState<ResponseData>();
 
-  async function onSubmitHander(event: FormEvent) {
+  async function submitHander(event: FormEvent) {
     event.preventDefault();
     setLoading(true);
 
@@ -41,7 +41,6 @@ const LoginPage = () => {
       }
     } catch (error) {
       console.log(error);
-
       toast.error("Lỗi server!")
     } finally {
       setLoading(false);
@@ -59,7 +58,7 @@ const LoginPage = () => {
         </span>
       </div>
 
-      <form onSubmit={onSubmitHander}>
+      <form onSubmit={submitHander}>
         <div className="flex flex-col gap-4">
           <AuthInput
             name="username"
@@ -81,7 +80,7 @@ const LoginPage = () => {
 
 
         {/* forgot password */}
-        <div className={`flex flex-row items-center select-none my-3`}>
+        <div className={`flex flex-row items-center select-none mt-3 mb-7`}>
           <label
             className="relative inline-flex items-center cursor-pointer"
             onClick={() => {
@@ -102,7 +101,7 @@ const LoginPage = () => {
 
           <Link
             href="/reset"
-            className="font-semibold text-[12px] text-cyellow-500 ml-auto cursor-pointer py-1 hover:opacity-70">
+            className="font-semibold text-[12px] text-cyellow-600 ml-auto cursor-pointer py-1 hover:opacity-70">
             Quên mật khẩu
           </Link>
         </div>
