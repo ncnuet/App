@@ -13,13 +13,16 @@ const GdvStatus = ({
 }: Props) => {
   return (
     <button
-      className={`outline-none h-[26px] px-[10px] py-1 flex flex-row items-center ${
-        isAccepted
-          ? "bg-cgreen-600"
-          : isDelivering
-          ? "bg-cyellow-500"
-          : "bg-cblue-300"
-      } rounded-full text-sm font-bold text-white hover:cursor-default`}
+      className={
+        `outline-none h-[26px] px-[10px] py-1 flex flex-row items-center flex-none ` +
+        `${
+          isAccepted
+            ? "bg-cgreen-600"
+            : isDelivering
+            ? "bg-cyellow-500"
+            : "bg-cblue-300"
+        } rounded-full text-sm font-bold text-white hover:cursor-default`
+      }
     >
       {isAccepted
         ? "Chấp nhận gửi"

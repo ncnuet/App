@@ -3,10 +3,10 @@ import Logo from "@/icons/Logo";
 
 const GdvSidebar = () => {
   return (
-    <aside className="flex flex-col select-none">
+    <aside className="hidden xs:flex flex-col select-none flex-none">
       <div className="flex flex-row items-center gap-3 pb-[30px]">
         <Logo width="48" height="24" className={"text-cyellow-500"}></Logo>
-        <strong className="text-base text-cblue-600 font-bold">
+        <strong className="hidden md:block text-base text-cblue-600 font-bold">
           Quản lý chuyển phát{" "}
         </strong>
       </div>
@@ -18,7 +18,7 @@ const GdvSidebar = () => {
             <div className="w-[30px] h-[30px] rounded-[10px] bg-cyellow-500 flex justify-center items-center">
               <span className="material-symbols-outlined text-white">home</span>
             </div>
-            <h2 className="text-sm font-bold">Dashboard</h2>
+            <h2 className="hidden md:block text-sm font-bold">Dashboard</h2>
           </div>
         </div>
         <div className="w-full p-[10px] bg-transparent rounded-lg shadow-none">
@@ -28,7 +28,7 @@ const GdvSidebar = () => {
                 home
               </span>
             </div>
-            <h2 className="text-sm font-medium">Dashboard</h2>
+            <h2 className="hidden md:block text-sm font-medium">Dashboard</h2>
           </div>
         </div>
         <div className="w-full p-[10px] bg-transparent rounded-lg shadow-none">
@@ -38,7 +38,7 @@ const GdvSidebar = () => {
                 home
               </span>
             </div>
-            <h2 className="text-sm font-medium">Dashboard</h2>
+            <h2 className="hidden md:block text-sm font-medium">Dashboard</h2>
           </div>
         </div>
       </div>
