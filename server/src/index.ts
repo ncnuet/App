@@ -21,7 +21,7 @@ app.use(cookieParser());
 
 app.use(helmet()); // Protect known attack types
 app.use(cors.default({
-  origin: "http://localhost:3000",
+  origin: config.FRONTEND,
   credentials: true,
   methods: ['GET', 'PUT', 'POST', 'DELETE'],
   optionsSuccessStatus: 200,
