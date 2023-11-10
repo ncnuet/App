@@ -1,5 +1,8 @@
 {
-  "devDependencies": {
+  "scripts": {
+    "compile_server": "cd ./server && npm run build && npm run add-build"
+  },
+  "dependencies": {
     "pre-commit": "^1.2.2"
   }
 }
