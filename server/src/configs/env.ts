@@ -15,6 +15,7 @@ interface ENV_VAL extends DotenvParseOutput {
     MG_NAME: string
     MG_USERNAME: string
     MG_PASSWORD: string
+    MONGODB_URI:string
 
     RD_PORT: string
     RD_HOST: string
