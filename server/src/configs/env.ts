@@ -13,6 +13,14 @@ interface ENV_VAL extends DotenvParseOutput {
     MG_HOST: string
     MG_PORT: string
     MG_NAME: string
+    MG_USERNAME: string
+    MG_PASSWORD: string
+
+    RD_PORT: string
+    RD_HOST: string
+    RD_PASSWORD: string
+    RD_USERNAME: string
+
 
     JWT_KEY: string
     JWT_REFRESH_KEY: string
