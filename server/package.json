@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon",
-    "start:prod": "node ./build/index.js",
-    "build": "rimraf build && webpack",
+    "start:prod": "node ./dist/index.js",
+    "build": "rimraf dist && webpack",
     "build:tsc": "rimraf dist && tsc && tsc-alias",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "add-build": "git add dist"
   },
-  "author": "",
+  "author": "coodengoo",
   "license": "ISC",
   "dependencies": {
     "@types/cookie-parser": "^1.4.5",
