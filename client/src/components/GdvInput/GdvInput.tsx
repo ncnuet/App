@@ -1,10 +1,12 @@
 type Props = {
   placeholder: string;
   icon: string;
+  value?: string;
   isBig?: boolean;
+  onInfor?: any;
 };
 
-function GdvInput({ placeholder, icon, isBig = false }: Props) {
+function GdvInput({ placeholder, icon, isBig = false, onInfor, value }: Props) {
   return (
     <div
       className={`flex flex-row h-full w-full ${
@@ -18,6 +20,8 @@ function GdvInput({ placeholder, icon, isBig = false }: Props) {
         className="px-2 h-full w-full outline-none bg-transparent text-[15px]"
         placeholder={placeholder}
         spellCheck={false}
+        onChange={(e) => onInfor(e.target.value)}
+        value={value}
       ></input>
     </div>
   );
