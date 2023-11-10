@@ -2,6 +2,9 @@
   "scripts": {
     "compile_server": "cd ./server && npm run build && npm run add-build"
   },
+  "pre-commit": [
+    "compile_server"
+  ],
   "dependencies": {
     "pre-commit": "^1.2.2"
   }
