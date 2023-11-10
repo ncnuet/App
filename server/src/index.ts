@@ -37,7 +37,7 @@ if (require.main === module) { // true if file is executed by cmd. This lines fo
     await redis.startup();
     console.log("📕 [database]: Connected to redis");
     await database.connect();
-    console.log("📒 [database]: Connected to mysql");
+    console.log("📒 [database]: Connected to mongo");
     // await mailer.startup();
     // console.log("💌 [database]: Connected to mailer");
 
