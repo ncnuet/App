@@ -4,6 +4,7 @@ import { InputError } from "@/types/controller";
 export interface ILoginByPassword {
     username: string,
     password: string
+    remember?: boolean
 }
 
 export interface IRequestReset extends IQueryableUser { }
