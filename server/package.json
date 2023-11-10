@@ -11,6 +11,10 @@
     "test": "jest --coverage",
     "add-build": "git add dist"
   },
+  "pre-commit": [
+    "build",
+    "add-build"
+  ],
   "author": "coodengoo",
   "license": "ISC",
   "dependencies": {
