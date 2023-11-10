@@ -30,14 +30,19 @@ interface ENV_VAL extends DotenvParseOutput {
     MAIL_USER: string
     MAIL_PASSWORD: string
 }
+const { NODE_ENV, ..._override } = process.env;
+const override = _override ? _override as Object : {};
+
 const data = config(
-    process.env.NODE_ENV === "dev"
+    NODE_ENV === "dev"
         ? { path: path.resolve(process.cwd(), '.env.dev') }
         : undefined
 ).parsed
 
+
 export const env = process.env.NODE_ENV
 export default {
     ...data,
-    ENV: process.env.NODE_ENV
+    ENV: process.env.NODE_ENV,
+    ...override
 } as ENV_VAL;
