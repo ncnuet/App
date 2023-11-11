@@ -8,6 +8,8 @@ import config, { env } from '@/configs/env';
 import * as database from '@/configs/database';
 import * as redis from './configs/redis';
 import * as mailer from "@/utils/send_mail";
+import addGrapQl from './schema';
+
 
 // Initialize application
 const app = express();
@@ -18,6 +20,8 @@ app.use(morgan(env === 'dev' ? "dev" : "tiny")); // Logger
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+// Add GraphQL
+addGrapQl(app);
 
 app.use(helmet()); // Protect known attack types
 app.use(cors.default({
@@ -42,6 +46,7 @@ if (require.main === module) { // true if file is executed by cmd. This lines fo
     // console.log("💌 [database]: Connected to mailer");
 
     console.log(`✅ [server]: Server is running at http://localhost:${port}`);
+    console.log(`✅ [GrapQl]: GraphQL API server is running at http://localhost:${port}/graphql`);
   });
 }
 
