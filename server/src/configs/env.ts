@@ -6,7 +6,6 @@ interface ENV_VAL extends DotenvParseOutput {
     APP_NAME: string
     BACKEND: string
     FRONTEND: string
-    HOSTNAME: string
     PORT: string
     CORS_ORIGIN: string
 
