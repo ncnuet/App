@@ -31,18 +31,18 @@ app.use(cors.default({
 // Initialize app's routes
 route(app);
 
-if (require.main === module) { // true if file is executed by cmd. This lines for testing purposes
-  // Start application
-  app.listen(port, async () => {
-    await redis.startup();
-    console.log("📕 [database]: Connected to redis");
-    await database.connect();
-    console.log("📒 [database]: Connected to mongo");
-    // await mailer.startup();
-    // console.log("💌 [database]: Connected to mailer");
+// if (require.main === module) { // true if file is executed by cmd. This lines for testing purposes
+// Start application
+app.listen(port, async () => {
+  await redis.startup();
+  console.log("📕 [database]: Connected to redis");
+  await database.connect();
+  console.log("📒 [database]: Connected to mongo");
+  // await mailer.startup();
+  // console.log("💌 [database]: Connected to mailer");
 
-    console.log(`✅ [server]: Server is running at http://localhost:${port}`);
-  });
-}
+  console.log(`✅ [server]: Server is running at http://localhost:${port}`);
+});
+// }
 
 export default app;
