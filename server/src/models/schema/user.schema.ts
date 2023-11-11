@@ -22,4 +22,4 @@ const userSchema = new Schema<IUserSchema>({
     phone: { type: String, unique: true, index: true }
 });
 
-export const UserModel = model<IUserSchema>('User', userSchema);
+export const UserBaseModel = model<IUserSchema>('User', userSchema);

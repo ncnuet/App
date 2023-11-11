@@ -20,3 +20,7 @@ Nhóm học sinh bao gồm:
 - Report bugs at: [Issue](https://github.com/ncnuet/magic_post/issues)
 - API documentation: [Document](https://documenter.getpostman.com/view/17430943/2s9YXe6j47)
  and [Postman](https://www.postman.com/cloudy-station-852069/workspace/web/collection/17430943-980d996d-ef65-4542-8873-72a3871fa77e?action=share&creator=17430943)
+
+# Delpoyment:
+  - Frontend: Vercel [magic.nghiacangao.io.vn](https://magic.nghiacangao.io.vn/)
+  - Backend: Render [api.magic.nghiacangao.io.vn](https://api.magic.nghiacangao.io.vn/)

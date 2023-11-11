@@ -4,6 +4,7 @@ import { setTokenIndex } from '@/models/schema/token.schema';
 
 export const redis = createClient({
     password: config.RD_PASSWORD,
+    username: config.RD_USERNAME,
     socket: {
         host: config.RD_HOST,
         port: Number(config.RD_PORT)

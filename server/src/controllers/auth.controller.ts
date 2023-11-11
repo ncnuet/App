@@ -1,5 +1,5 @@
 import { ILocalData, Request, Response } from "@/types/controller"
-import { setAge } from '@/configs/cookie';
+import { withAge, withSession } from '@/configs/cookie';
 import { generateResetToken, generateToken } from '@/utils/generate';
 import handleError from '@/utils/handle_error';
 import authValidator, { ILoginByPassword, IRequestReset, IResetPassword } from "@/validators/auth.validator";
@@ -13,11 +13,11 @@ interface IUserWithEpx extends IUser {
     exp: number;
 }
 
-function setToken(res: Response, accessToken: string, refreshToken?: string) {
-    refreshToken && res.cookie("refresh_token", refreshToken, setAge(86400 * 1000))
+function setToken(res: Response, remember: boolean, accessToken: string, refreshToken?: string) {
+    refreshToken && res.cookie("refresh_token", refreshToken, withAge(86400 * 1000))
     res
         .status(200)
-        .cookie("token", accessToken, setAge(3600 * 1000))
+        .cookie("token", accessToken, withAge(remember ? 3600 * 1000 : void 0))
         .json({ message: "success", data: { accessToken, refreshToken } })
         .send();
 }
@@ -37,9 +37,9 @@ class AuthController {
             const user = await authModel.findUserByPassword(data.username, data.password);
             if (user) {
                 const version = (await tokenModel.getVersion(user.uid)) || "0";
-                const token = generateToken({ ...user, version }, true);
+                const token = generateToken({ ...user, version, remember: data.remember }, true);
                 await tokenModel.insertRefreshToken(token.refreshToken, user.uid, user.role)
-                setToken(res, token.accessToken, token.refreshToken);
+                setToken(res, data.remember, token.accessToken, token.refreshToken);
             } else {
                 res.status(401).json({
                     message: "Tài khoản hoặc mật khẩu không chính xác",
@@ -60,8 +60,8 @@ class AuthController {
         await handleError(res, async () => {
             tokenModel.deleteRefreshToken(user.uid);
             tokenModel.updateVersion(user.uid);
-            res.cookie("token", null, setAge(0));
-            res.cookie("refresh_token", null, setAge(0));
+            res.cookie("token", null, withAge(0));
+            res.cookie("refresh_token", null, withAge(0));
             res.sendStatus(200);
         });
     }
@@ -80,7 +80,12 @@ class AuthController {
             const user = await authModel.findUserByInfo(data);
             if (user) {
                 const { username, uid } = user;
-                const token = generateResetToken({ username, uid, role: "admin", version: "0" });
+                const token = generateResetToken({
+                    username, uid,
+                    role: "admin",
+                    version: "0",
+                    remember: false
+                });
 
                 await sendForgetPasswordMail(user, token);
 
@@ -105,8 +110,8 @@ class AuthController {
         const remaining = Math.floor((timeExp - new Date().getTime()) / 1000);
 
         res
-            .cookie("token", req.query.token, setAge(180 * 1000))
-            .redirect(env.FRONTEND + "/resetPassword?ttl=" + remaining + "&user=" + username)
+            .cookie("token", req.query.token, withAge(180 * 1000))
+            .redirect(env.FRONTEND + "/resetpassword?ttl=" + remaining + "&user=" + username)
     }
 
     async resetPassword(req: Request, res: Response) {

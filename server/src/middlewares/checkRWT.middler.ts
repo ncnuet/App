@@ -4,7 +4,7 @@ import * as jwt from "jsonwebtoken";
 import config from "@/configs/env";
 import { generateToken } from "@/utils/generate";
 import tokenModel from "@/models/token.model";
-import { setAge } from "@/configs/cookie";
+import { withAge, withSession } from "@/configs/cookie";
 import handleError from "@/utils/handle_error";
 import { IUser } from "@/types/auth";
 
@@ -23,8 +23,8 @@ export async function checkRWT(req: Request, res: Response, next: NextFunction) 
             const token = generateToken(user, true);
             await tokenModel.insertRefreshToken(token.refreshToken, user.uid, user.role)
 
-            res.cookie("refresh_token", token.refreshToken, setAge(86400 * 1000))
-                .cookie("token", token.accessToken, setAge(3600 * 1000))
+            res.cookie("refresh_token", token.refreshToken, withAge(86400 * 1000))
+                .cookie("token", token.accessToken, withAge(user.remember ? 3600 * 1000 : void 0))
                 .locals.user = user;
 
             next();

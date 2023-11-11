@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from 'react';
+import "@/assets/css/goongjs.css";
 import { useState } from 'react';
 import MapGL from '@goongmaps/goong-map-react';
 const GOONG_MAPTILES_KEY = 'NADV4fh80lHQdzy2l4QHrffZMJKuzxPPsFtR4Ro9';

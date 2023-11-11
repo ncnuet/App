@@ -1,6 +1,6 @@
 node_modules
 .env.dev
-dist
+.env
 dev
 build
 coverage
