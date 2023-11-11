@@ -1,15 +1,44 @@
 import CheckBox from "@/components/CheckBox";
+import { Infor, goods } from "../ParcelContent/ParcelContent";
+export interface IParcelBill {
+  goods: goods[];
+  grossValue: goods | undefined;
+  isDocument: boolean;
+  isGood: boolean;
+  senderInfor: Infor;
+  receiverInfor: Infor;
+  note: string;
+  actualWeight: string;
+  covertWeight: string;
+}
+const ParcelBill = ({ ...props }: IParcelBill) => {
+  const formatNumber = (amount: string) => {
+    let number = parseFloat(amount);
 
-const ParcelBill = () => {
+    if (isNaN(number)) {
+      // If the input is not a valid number, return the input as is
+      return amount;
+    }
+
+    if (number >= 1000000) {
+      return (number / 1000000).toFixed(2).toString() + "m";
+    } else if (number >= 1000) {
+      return (number / 1000).toFixed(2).toString() + "k";
+    } else {
+      return number.toString();
+    }
+  };
   return (
     <section className="flex flex-col border border-black">
       <div className="flex flex-col sm:flex-row border border-b border-b-black">
         <div className="sm:w-1/2 p-2 border-b border-b-black sm:border-b-[0px]  sm:border-r-[1px] sm:border-r-black">
           <h2 className="parcel-bill__heading">1. Họ tên địa chỉ người gửi</h2>
           <div className="px-[18px] flex flex-col mb-4">
-            <span className="parcel-bill__content">Hà Mã Tấu</span>
             <span className="parcel-bill__content">
-              Dịch Vọng Hậu - Cầu Giấy - Hà Nội
+              {props.senderInfor.name || "Trống"}
+            </span>
+            <span className="parcel-bill__content">
+              {props.senderInfor.address || "Trống"}
             </span>
           </div>
           <div className="px-[18px] flex flex-col">
@@ -20,7 +49,9 @@ const ParcelBill = () => {
             <div className="flex flex-col justify-start  lg:flex-row lg:items-center">
               <div className="flex-1 flex-row items-center">
                 <span className="parcel-bill__heading pr-3">Điện thoại:</span>
-                <span className="parcel-bill__content">0123456789</span>
+                <span className="parcel-bill__content">
+                  {props.senderInfor.phone}
+                </span>
               </div>
               <div className="flex-1 flex-row items-center">
                 <span className="parcel-bill__heading pr-3">Mã bưu chính:</span>
@@ -32,9 +63,11 @@ const ParcelBill = () => {
         <div className="sm:w-1/2 p-2">
           <h2 className="parcel-bill__heading">2. Họ tên địa chỉ người nhận</h2>
           <div className="px-[18px] flex flex-col mb-4">
-            <span className="parcel-bill__content">Hà Mã Tấu</span>
             <span className="parcel-bill__content">
-              Dịch Vọng Hậu - Cầu Giấy - Hà Nội
+              {props.receiverInfor.name || "Trống"}
+            </span>
+            <span className="parcel-bill__content">
+              {props.receiverInfor.address || "Trống"}
             </span>
           </div>
           <div className="px-[18px] flex flex-col">
@@ -45,7 +78,9 @@ const ParcelBill = () => {
             <div className="flex flex-col justify-start  lg:flex-row lg:items-center">
               <div className="flex-1 flex-row items-center">
                 <span className="parcel-bill__heading pr-3">Điện thoại:</span>
-                <span className="parcel-bill__content">0123456789</span>
+                <span className="parcel-bill__content">
+                  {props.receiverInfor.phone}
+                </span>
               </div>
               <div className="flex-1 flex-row items-center">
                 <span className="parcel-bill__heading pr-3">Mã bưu chính:</span>
@@ -62,10 +97,16 @@ const ParcelBill = () => {
               <h2 className="parcel-bill__heading mb-2">3. Loại hàng gửi</h2>
               <div className="flex flex-row items-center">
                 <div className="flex-1 flex flex-row justify-center">
-                  <CheckBox isChecked={false} content="Tài liệu"></CheckBox>
+                  <CheckBox
+                    isChecked={props.isDocument}
+                    content="Tài liệu"
+                  ></CheckBox>
                 </div>
                 <div className="flex-1 flex flex-row justify-center">
-                  <CheckBox isChecked={true} content="Hàng hóa"></CheckBox>
+                  <CheckBox
+                    isChecked={props.isGood}
+                    content="Hàng hóa"
+                  ></CheckBox>
                 </div>
               </div>
             </div>
@@ -88,29 +129,31 @@ const ParcelBill = () => {
                     Giấy tờ đính kèm
                   </div>
                 </div>
-                <div className="flex flex-row">
-                  <div className="w-2/5 flex flex-row justify-center items-center parcel-bill__content border-r border-black py-[2px]">
-                    IP promax 15
+                {props.goods.map((good, index) => (
+                  <div className="flex flex-row" key={index}>
+                    <div className="w-2/5 flex flex-row justify-center items-center parcel-bill__content border-r border-black py-[2px]">
+                      {good.content}
+                    </div>
+                    <div className="w-1/5 flex flex-row justify-center items-center parcel-bill__content border-r border-black py-[2px]">
+                      {formatNumber(good.value)}
+                    </div>
+                    <div className="w-1/5 flex flex-row justify-center items-center parcel-bill__content border-r border-black py-[2px]">
+                      {good.amount}
+                    </div>
+                    <div className="w-2/5 flex flex-row justify-center items-center parcel-bill__content py-[2px]">
+                      {good.document}
+                    </div>
                   </div>
-                  <div className="w-1/5 flex flex-row justify-center items-center parcel-bill__content border-r border-black py-[2px]">
-                    300k
-                  </div>
-                  <div className="w-1/5 flex flex-row justify-center items-center parcel-bill__content border-r border-black py-[2px]">
-                    1
-                  </div>
-                  <div className="w-2/5 flex flex-row justify-center items-center parcel-bill__content py-[2px]">
-                    Phiếu bảo hành
-                  </div>
-                </div>
+                ))}
                 <div className="flex flex-row">
                   <div className="w-2/5 flex flex-row justify-center items-center parcel-bill__content border-r border-black py-[2px]">
                     Tổng
                   </div>
                   <div className="w-1/5 flex flex-row justify-center items-center parcel-bill__content border-r border-black py-[2px]">
-                    300k
+                    {formatNumber(props.grossValue?.value || "0")}
                   </div>
                   <div className="w-1/5 flex flex-row justify-center items-center parcel-bill__content border-r border-black py-[2px]">
-                    1
+                    {props.grossValue?.amount || 0}
                   </div>
                   <div className="w-2/5 flex flex-row justify-center items-center parcel-bill__content py-[2px]"></div>
                 </div>
@@ -246,7 +289,7 @@ const ParcelBill = () => {
                       Khối lượng thực thế
                     </div>
                     <div className="col-span-1 text-right parcel-bill__content border-l border-black p-1">
-                      30
+                      {props.actualWeight}
                     </div>
                   </div>
                   <div className="grid grid-cols-4 bg-cgray-100">
@@ -254,15 +297,16 @@ const ParcelBill = () => {
                       Khối lượng quy đổi
                     </div>
                     <div className="col-span-1 text-right parcel-bill__heading border-l border-black p-1">
-                      0
+                      {props.covertWeight}
                     </div>
                   </div>
                 </div>
               </div>
               <div className="p-2">
-                <h2 className="parcel-bill__heading pb-12 sm:mb-1">
+                <h2 className="parcel-bill__heading sm:mb-1">
                   12. Chú dẫn nghiệp vụ
                 </h2>
+                <span className="parcel-bill__content">{props.note}</span>
               </div>
             </div>
           </div>

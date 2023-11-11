@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { memo } from "react";
 import GdvInput from "@/components/GdvInput";
 import { Infor } from "../ParcelContent";
 

@@ -2,12 +2,11 @@ import Logo from "@/icons/Logo";
 import QR from "@/assets/images/qr-code.png";
 import Image from "next/image";
 import ParcelBill from "@/layouts/gdv/ParcelBill";
-// interface GdvPageProps {
-//   children: React.ReactNode;
-// }
-const GdvPage = () => {
+import { IParcelBill } from "@/layouts/gdv/ParcelBill/ParcelBill";
+
+const GdvPage = ({ ...props }: IParcelBill) => {
   return (
-    <main className="my-10 w-[1096px] max-w-full bg-white p-[50px] shadow-sd1">
+    <main className="my-12 w-[1096px] max-w-full bg-white p-[50px] shadow-sd1">
       <header className="flex flex-row items-center gap-0 md:gap-[200px] mb-2">
         <div className="flex-1 flex flex-row items-center justify-center">
           <Logo width="100" height="52" className={"text-cyellow-500"}></Logo>
@@ -31,7 +30,7 @@ const GdvPage = () => {
           </span>
         </div>
       </header>
-      <ParcelBill></ParcelBill>
+      <ParcelBill {...props}></ParcelBill>
       <footer className="mt-[10px] flex flex-row items-center justify-center">
         <p className="text-base font-semibold ">
           Hotline: 1900 5454 33 - Website: magicpost.com - Email:

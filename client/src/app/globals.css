@@ -40,11 +40,19 @@
 }
 
 .gdv-animation {
-  animation: GdvAnimation 0.2s linear;
+  animation: GdvAnimation 0.2s linear forwards;
 }
 
 .gdv-hidden-animation {
-  animation: GdvHiddenAnimation 0.2s linear;
+  animation: GdvHiddenAnimation 0.2s linear forwards;
+}
+
+.gdv-animation__preview {
+  animation: GdvPreview 0.2s linear forwards;
+}
+
+.gdv-hidden-animation__preview {
+  animation: GdvHiddenPreview 0.2s linear forwards;
 }
 
 .storage-animation {
@@ -62,6 +70,26 @@ input[type]:focus {
 
 .parcel-bill__heading {
   @apply text-base text-black font-semibold;
+}
+
+@keyframes GdvPreview {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes GdvHiddenPreview {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
 }
 
 @keyframes GdvAnimation {

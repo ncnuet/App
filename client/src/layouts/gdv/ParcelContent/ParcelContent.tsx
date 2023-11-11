@@ -1,11 +1,20 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import GdvInput from "@/components/GdvInput";
 import ParcelBasisInfor from "./ParcelBasisInfor";
 import ParcelGoods from "./ParcelGoods/ParcelGoods.tsx/ParcelGoods";
+import ParcelSave from "./ParcelSave";
+import ParcelWeight from "./ParcelWeight";
+import PreviewLayout from "@/app/gdv/[pid]/preview/layout";
+import GdvPage from "@/app/gdv/[pid]/preview/page";
 
 interface IParcelContent {
   isCancel: boolean | null;
+  isModal: boolean;
+  isPreview: boolean;
+  onSave: any;
+  onChangeModal: any;
+  onChangePreview: any;
 }
 
 export interface goods {
@@ -23,30 +32,27 @@ export interface Infor {
 
 const emptyGood: goods = { content: "", value: "0", amount: "0", document: "" };
 const emptyInfor: Infor = { name: "", phone: "", address: "" };
-const ParcelContent = ({ isCancel }: IParcelContent) => {
+const ParcelContent = ({
+  isCancel,
+  isModal,
+  isPreview,
+  onChangeModal,
+  onSave,
+  onChangePreview,
+}: IParcelContent) => {
+  const previewRef = useRef<HTMLDivElement>(null);
+  const timeoutRef: { current: NodeJS.Timeout | null } = useRef(null);
   const [goods, setGoods] = useState<goods[]>([]);
   const [grossValue, setGrossValue] = useState<goods>();
   const [isDocument, setIsDocument] = useState<boolean>(false);
   const [isGood, setIsGood] = useState<boolean>(false);
   const [senderInfor, setSenderInfor] = useState<Infor>(emptyInfor);
   const [receiverInfor, setReceiverInfor] = useState<Infor>(emptyInfor);
-  const [note, setNote] = useState("");
-  const [actualWeight, setActualWeight] = useState("");
-  const [covertWeight, setConverWeight] = useState("");
+  const [note, setNote] = useState<string>("");
+  const [actualWeight, setActualWeight] = useState<string>("");
+  const [covertWeight, setConverWeight] = useState<string>("");
+
   // remove everything
-  useEffect(() => {
-    if (isCancel) {
-      setSenderInfor(emptyInfor);
-      setReceiverInfor(emptyInfor);
-      setGoods([]);
-      setGrossValue(undefined);
-      setIsGood(false);
-      setIsDocument(false);
-      setNote("");
-      setActualWeight("");
-      setConverWeight("");
-    }
-  }, [isCancel]);
 
   const onNote = useCallback((result: string) => {
     setNote(result);
@@ -142,6 +148,14 @@ const ParcelContent = ({ isCancel }: IParcelContent) => {
     setIsGood((prev) => !prev);
   }, []);
 
+  const onActualWeight = useCallback((result: string) => {
+    setActualWeight(result);
+  }, []);
+
+  const onConvertWeight = useCallback((result: string) => {
+    setConverWeight(result);
+  }, []);
+
   const parcelGoodProps = {
     isDocument,
     isGood,
@@ -156,6 +170,44 @@ const ParcelContent = ({ isCancel }: IParcelContent) => {
     onNote,
   };
 
+  const previewProps = {
+    goods,
+    grossValue,
+    isDocument,
+    isGood,
+    senderInfor,
+    receiverInfor,
+    note,
+    actualWeight,
+    covertWeight,
+  };
+
+  const onClosePreview = () => {
+    previewRef.current?.classList.toggle("gdv-hidden-animation__preview");
+    timeoutRef.current = setTimeout(() => {
+      previewRef.current?.classList.toggle("gdv-hidden-animation__preview");
+      onChangePreview();
+    }, 200);
+  };
+
+  useEffect(() => {
+    return () => clearTimeout(timeoutRef.current as NodeJS.Timeout);
+  }, []);
+
+  useEffect(() => {
+    if (isCancel) {
+      setSenderInfor(emptyInfor);
+      setReceiverInfor(emptyInfor);
+      setGoods([]);
+      setGrossValue(undefined);
+      setIsGood(false);
+      setIsDocument(false);
+      setNote("");
+      setActualWeight("");
+      setConverWeight("");
+    }
+  }, [isCancel]);
+
   return (
     <main className="xs:pl-0 pl-1 overflow-y-scroll flex-grow w-full flex flex-col gap-5 gdv-parcel pr-1">
       <ParcelBasisInfor
@@ -166,123 +218,40 @@ const ParcelContent = ({ isCancel }: IParcelContent) => {
       ></ParcelBasisInfor>
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <ParcelGoods {...parcelGoodProps}></ParcelGoods>
-        <div className="flex-1 flex flex-col gap-5">
-          <div className="p-6 rounded-[15px] bg-white flex flex-col gap-3">
-            <h2 className="text-lg text-cblue-600 font-bold">
-              Khối lượng thực tế
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className=" flex-1 flex flex-col gap-2">
-                <h3 className="text-sm text-cblue-600 font-semibold">
-                  Họ tên khách gửi
-                </h3>
-                <div className="w-full">
-                  <GdvInput
-                    placeholder="20 gam"
-                    icon="scale"
-                    isBig
-                    onInfor={(result: string) => setActualWeight(result)}
-                    value={actualWeight}
-                  ></GdvInput>
-                </div>
-                <span className="text-[11px] text-cgray-400 font-normal">
-                  Khối lượng hàng thực tế
-                </span>
-              </div>
-              <div className="flex-1 flex flex-col gap-2">
-                <h3 className="text-sm text-cblue-600 font-semibold">
-                  Khối lượng quy dổi
-                </h3>
-                <div className="w-full">
-                  <GdvInput
-                    placeholder="0 gam"
-                    icon="scale"
-                    isBig
-                    onInfor={(result: string) => setConverWeight(result)}
-                    value={covertWeight}
-                  ></GdvInput>
-                </div>
-                <span className="text-[11px] text-cgray-400 font-normal">
-                  Khối lượng hàng quy đổi
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className="p-6 rounded-[15px] bg-white flex flex-col gap-2">
-            <div className="flex flex-row items-center justify-between">
-              <h2 className="text-lg text-cblue-600 font-bold">Cước phí</h2>
-              <div className="flex flex-row gap-[6px]">
-                <div className="w-5 h-5 flex flex-row justify-center items-center rounded-md border-cblue-600 bg-cyellow-500">
-                  <span className="material-symbols-outlined text-lg text-white">
-                    check
-                  </span>
-                </div>
-                <span className=" text-sm  text-black font-semibold">
-                  Người nhận thanh toán
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-1">
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm text-cblue-600 font-semibold">
-                  Cước chính
-                </span>
-                <span className="text-[15px] text-cgray-500 font-semibold">
-                  9.500
-                </span>
-              </div>
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm text-cblue-600 font-semibold">
-                  Phụ phí
-                </span>
-                <span className="text-[15px] text-cgray-500 font-semibold">
-                  1.900
-                </span>
-              </div>
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm text-cblue-600 font-semibold">
-                  Phí thu hộ (COD)
-                </span>
-                <span className="text-[15px] text-cgray-500 font-semibold">
-                  0
-                </span>
-              </div>
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm text-cblue-600 font-semibold">
-                  Cước GTGT
-                </span>
-                <span className="text-[15px] text-cgray-500 font-semibold">
-                  0
-                </span>
-              </div>
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm text-cblue-600 font-semibold">
-                  Tổng cước (gồm VAT)
-                </span>
-                <span className="text-[15px] text-cgray-500 font-semibold">
-                  12.312
-                </span>
-              </div>
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm text-cblue-600 font-semibold">
-                  Thu khác
-                </span>
-                <span className="text-[15px] text-cgray-500 font-semibold">
-                  0
-                </span>
-              </div>
-              <div className="flex flex-row items-center justify-between">
-                <span className="text-sm text-cblue-600 font-semibold">
-                  Tổng thu
-                </span>
-                <span className="text-[15px] text-cgray-500 font-semibold rounded-full px-[10px] py-[1px] bg-cyellow-500">
-                  13.312
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ParcelWeight
+          actualWeight={actualWeight}
+          covertWeight={covertWeight}
+          onActualWeight={onActualWeight}
+          onConvertWeight={onConvertWeight}
+        ></ParcelWeight>
       </section>
+      {isModal && (
+        <ParcelSave
+          isModal={isModal}
+          onSave={onSave}
+          onChangeModal={onChangeModal}
+          onPreview={onChangePreview}
+        ></ParcelSave>
+      )}
+      {isPreview && (
+        <div
+          ref={previewRef}
+          className="absolute top-0 left-0 right-0 bottom-0 gdv-animation__preview"
+        >
+          <PreviewLayout>
+            <button
+              onClick={onClosePreview}
+              className="absolute top-3 left-4 min-w-[76px] px-[10px] py-[5px] rounded-lg flex flex-row items-center gap-1 bg-transparent text-black hover:opacity-60 active:opacity-90"
+            >
+              <span className="material-symbols-outlined text-[22px]">
+                arrow_back_ios
+              </span>
+              <span className="text-[16px] font-medium">Trở lại</span>
+            </button>
+            <GdvPage {...previewProps}></GdvPage>
+          </PreviewLayout>
+        </div>
+      )}
     </main>
   );
 };

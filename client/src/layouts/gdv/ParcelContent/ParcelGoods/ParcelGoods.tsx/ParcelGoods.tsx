@@ -1,6 +1,5 @@
-import { useState, memo } from "react";
+import { memo } from "react";
 import { goods } from "../../ParcelContent";
-import { noAuto } from "@fortawesome/fontawesome-svg-core";
 
 interface IParcelGoods {
   isDocument: boolean;
@@ -33,7 +32,6 @@ const ParcelGoods = ({ ...props }: IParcelGoods) => {
       return number.toString();
     }
   };
-  console.log("goods rerender");
   return (
     <div className="flex-1 flex flex-col gap-5">
       <div className="p-6 rounded-[15px] bg-white flex flex-col gap-1">
