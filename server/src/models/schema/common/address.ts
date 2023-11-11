@@ -1,11 +1,8 @@
-interface Address {
-    country: String;
-    district : String;
-    commune: String;
-    detail: String;
-    lat: Number;
-    long: Number;
+export interface Address {
+    country: string;
+    district: string;
+    commune: string;
+    detail: string;
+    lat: number;
+    long: number;
 }
-
-
-export { Address };

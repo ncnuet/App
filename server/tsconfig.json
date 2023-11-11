@@ -16,7 +16,7 @@
         "removeComments": true,
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
-        "outDir": "dist",
+        "outDir": "dist"
     },
     "include": [
         "./src/**/*",

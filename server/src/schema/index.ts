@@ -1,14 +1,18 @@
-import { Express } from "express"
-import { graphqlHTTP } from "express-graphql"
-import schema from "./schema"
+import { GraphQLObjectType, GraphQLSchema } from 'graphql';
+import { gatherPostOffices, transPostOffices } from "./queries/postOfficeQuery";
+
+const RootQueryType = new GraphQLObjectType({
+    name: 'Query',
+    description: 'Root Query',
+    fields: () => ({
+        gatherPostOffices,
+        transPostOffices
+    })
+});
+
+const schema: GraphQLSchema = new GraphQLSchema({
+    query: RootQueryType
+});
 
 
-export default function addGrapQl (app: Express){
-    app.use(
-        "/graphql",
-        graphqlHTTP({
-          schema: schema,
-          graphiql: true,
-        })
-      )
-}
+export default schema;

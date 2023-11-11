@@ -8,7 +8,8 @@ import config, { env } from '@/configs/env';
 import * as database from '@/configs/database';
 import * as redis from './configs/redis';
 import * as mailer from "@/utils/send_mail";
-import addGrapQl from './schema';
+import { graphqlHTTP } from 'express-graphql';
+import schema from './schema';
 
 
 // Initialize application
@@ -20,10 +21,8 @@ app.use(morgan(env === 'dev' ? "dev" : "tiny")); // Logger
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-// Add GraphQL
-addGrapQl(app);
 
-app.use(helmet()); // Protect known attack types
+// app.use(helmet()); // Protect known attack types
 app.use(cors.default({
   origin: config.FRONTEND,
   credentials: true,
@@ -34,6 +33,12 @@ app.use(cors.default({
 
 // Initialize app's routes
 route(app);
+
+app.use("/graphql",
+  graphqlHTTP({
+    schema: schema,
+    graphiql: true,
+  }))
 
 if (require.main === module) { // true if file is executed by cmd. This lines for testing purposes
   // Start application

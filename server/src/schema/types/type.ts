@@ -1,6 +1,4 @@
-enum PostOfficeType {
+export enum PostOfficeType {
     Gather = "gathering",
     Transaction = "transaction",  
 }
-
-export {PostOfficeType};
