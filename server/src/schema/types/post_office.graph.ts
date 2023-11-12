@@ -12,7 +12,7 @@ const PostOfficeTypeEnum: GraphQLEnumType = new GraphQLEnumType({
 });
 
 const PostOfficeGraph: GraphQLObjectType = new GraphQLObjectType({
-    name: 'Post Office Graph',
+    name: 'PostOfficeGraph',
     description: 'This is a represent all post offices',
     
     fields: () => ({

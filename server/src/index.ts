@@ -8,7 +8,7 @@ import config, { env } from '@/configs/env';
 import * as database from '@/configs/database';
 import * as redis from './configs/redis';
 import * as mailer from "@/utils/send_mail";
-import { graphqlHTTP } from 'express-graphql';
+import { createHandler } from 'graphql-http/lib/use/express';
 import schema from './schema';
 
 
@@ -33,12 +33,8 @@ app.use(cors.default({
 
 // Initialize app's routes
 route(app);
-
-app.use("/graphql",
-  graphqlHTTP({
-    schema: schema,
-    graphiql: true,
-  }))
+// Apply graphql
+app.all('/graphql', createHandler({ schema }));
 
 if (require.main === module) { // true if file is executed by cmd. This lines for testing purposes
   // Start application
@@ -51,7 +47,6 @@ if (require.main === module) { // true if file is executed by cmd. This lines fo
     // console.log("💌 [database]: Connected to mailer");
 
     console.log(`✅ [server]: Server is running at http://localhost:${port}`);
-    console.log(`✅ [GrapQl]: GraphQL API server is running at http://localhost:${port}/graphql`);
   });
 }
 

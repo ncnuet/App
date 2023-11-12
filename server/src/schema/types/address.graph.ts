@@ -1,7 +1,7 @@
 import { GraphQLFloat, GraphQLObjectType, GraphQLString } from "graphql";
 
 export const AddressGraph = new GraphQLObjectType({
-    name: 'Address',
+    name: 'AddressGraph',
     description: 'This is add an address',
     fields: () => ({
         country: { type: GraphQLString },
