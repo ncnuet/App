@@ -1,7 +1,7 @@
-import { GraphQLEnumType, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString } from "graphql";
+import { GraphQLEnumType, GraphQLList, GraphQLObjectType, GraphQLString } from "graphql";
 import { PostOfficeType } from "@/types/post_office";
 import { AddressGraph } from "@/schema/types/address.graph";
-import PostOffice from '@/models/post_office.model';
+import PostOfficeModel from '@/models/post_office.model';
 
 const PostOfficeTypeEnum: GraphQLEnumType = new GraphQLEnumType({
     name: 'PostOfficeTypeEnum',
@@ -11,9 +11,10 @@ const PostOfficeTypeEnum: GraphQLEnumType = new GraphQLEnumType({
     },
 });
 
-const GatherPostOfficeType: GraphQLObjectType = new GraphQLObjectType({
-    name: 'gather_post_office',
-    description: 'This is a represent all gather post offices',
+const PostOfficeGraph: GraphQLObjectType = new GraphQLObjectType({
+    name: 'Post Office Graph',
+    description: 'This is a represent all post offices',
+    
     fields: () => ({
         poid: { type: GraphQLString },
         name: { type: GraphQLString },
@@ -26,9 +27,10 @@ const GatherPostOfficeType: GraphQLObjectType = new GraphQLObjectType({
         post_office_id: { type: GraphQLString },
 
         tranPostOffice: {
-            type: new GraphQLList(GatherPostOfficeType),
-            resolve: (parent, args, context) => {
-                return PostOffice.getPostOffices(PostOfficeType.Transaction, {
+            type: new GraphQLList(PostOfficeGraph),
+            resolve: (parent, args) => {
+                return PostOfficeModel.getPostOffices(
+                    PostOfficeType.Transaction, {
                     post_office_id: parent.poid,
                 })
             }
@@ -36,4 +38,4 @@ const GatherPostOfficeType: GraphQLObjectType = new GraphQLObjectType({
     })
 });
 
-export { GatherPostOfficeType, PostOfficeTypeEnum };
+export { PostOfficeGraph, PostOfficeTypeEnum };

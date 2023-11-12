@@ -1,8 +1,8 @@
-import { PostOfficeType } from "@/schema/types/type";
+import { PostOfficeType } from "@/types/post_office";
 import { IPostOffice, PostOfficeBaseModel } from "./schema/post_office.chema";
 import { FilterQuery } from "mongoose";
 
-class PostOffice {
+class PostOfficeModel {
     async createPostOffice(args: any) {
 
         const newPostOffice = new PostOfficeBaseModel(args);
@@ -25,4 +25,4 @@ class PostOffice {
     }
 }
 
-export default new PostOffice();
+export default new PostOfficeModel();
