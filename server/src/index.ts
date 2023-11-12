@@ -10,6 +10,7 @@ import * as redis from './configs/redis';
 import * as mailer from "@/utils/send_mail";
 import { createHandler } from 'graphql-http/lib/use/express';
 import schema from './schema';
+import { graphqlHTTP } from 'express-graphql';
 
 
 // Initialize application
@@ -34,7 +35,12 @@ app.use(cors.default({
 // Initialize app's routes
 route(app);
 // Apply graphql
-app.all('/graphql', createHandler({ schema }));
+// app.all('/graphql', createHandler({ schema }));
+app.use("/graphql/",
+  graphqlHTTP({
+    schema,
+    graphiql: true
+  }));
 
 if (require.main === module) { // true if file is executed by cmd. This lines for testing purposes
   // Start application

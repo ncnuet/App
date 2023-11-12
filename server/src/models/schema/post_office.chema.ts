@@ -1,11 +1,11 @@
 import { IPostOfficeType } from "@/types/post_office";
-import { Address } from "./common/address";
+import { IAddress } from "./address.schema";
 import { Schema, model } from 'mongoose';
 
 export interface IPostOffice {
     poid: String,
     name: String,
-    address: Address,
+    address: IAddress,
     managerId: String,
     hotline: String,
     fax: String,

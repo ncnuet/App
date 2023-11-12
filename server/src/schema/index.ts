@@ -1,13 +1,15 @@
 import { GraphQLObjectType, GraphQLSchema } from 'graphql';
-import { gatherPostOffices, transPostOffices } from "./queries/post_office.query";
+import { gatherPostOfficesQuery, transPostOfficesQuery } from "./queries/post_office.query";
+import { parcelsQuery } from './queries/parcel.query';
 
 const RootQueryType = new GraphQLObjectType({
     name: 'Query',
     description: 'Root Query',
-    
+
     fields: () => ({
-        gatherPostOffices,
-        transPostOffices
+        gatherPostOffices: gatherPostOfficesQuery,
+        transPostOffices: transPostOfficesQuery,
+        parcels: parcelsQuery
     })
 });
 

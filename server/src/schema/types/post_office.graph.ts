@@ -5,6 +5,8 @@ import PostOfficeModel from '@/models/post_office.model';
 
 const PostOfficeTypeEnum: GraphQLEnumType = new GraphQLEnumType({
     name: 'PostOfficeTypeEnum',
+    description: "Post Office Type Enum",
+
     values: {
         TRANSACTION: { value: PostOfficeType.Transaction },
         GATHERING: { value: PostOfficeType.Gather },
@@ -13,7 +15,7 @@ const PostOfficeTypeEnum: GraphQLEnumType = new GraphQLEnumType({
 
 const PostOfficeGraph: GraphQLObjectType = new GraphQLObjectType({
     name: 'PostOfficeGraph',
-    description: 'This is a represent all post offices',
+    description: 'Post Office Graph',
     
     fields: () => ({
         poid: { type: GraphQLString },

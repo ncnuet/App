@@ -5,8 +5,8 @@ import { PostOfficeType } from "@/types/post_office";
 import { FilterQuery } from "mongoose";
 import { IPostOffice } from "@/models/schema/post_office.chema";
 
-const gatherPostOffices: GraphQLFieldConfig<any, any, FilterQuery<IPostOffice>> = {
-    type: new GraphQLList(PostOfficeGraph),
+export const gatherPostOfficesQuery: GraphQLFieldConfig<any, any, FilterQuery<IPostOffice>> = {
+    type: GraphQLList(PostOfficeGraph),
     description: 'List of all gathering post offices statifying filter.',
     args: {
         poid: { type: GraphQLString }
@@ -18,8 +18,8 @@ const gatherPostOffices: GraphQLFieldConfig<any, any, FilterQuery<IPostOffice>> 
     }
 };
 
-const transPostOffices: GraphQLFieldConfig<any, any, FilterQuery<IPostOffice>> = {
-    type: new GraphQLList(PostOfficeGraph),
+export const transPostOfficesQuery: GraphQLFieldConfig<any, any, FilterQuery<IPostOffice>> = {
+    type: GraphQLList(PostOfficeGraph),
     description: 'List of all transaction post offices statifying filter.',
     args: {
         poid: { type: GraphQLString }
@@ -30,5 +30,3 @@ const transPostOffices: GraphQLFieldConfig<any, any, FilterQuery<IPostOffice>> =
         return postOffices;
     }
 };
-
-export { gatherPostOffices, transPostOffices };

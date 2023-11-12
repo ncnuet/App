@@ -12,7 +12,7 @@ interface IUserSchema {
     phone: string;
 }
 
-const userSchema = new Schema<IUserSchema>({
+const UserSchema = new Schema<IUserSchema>({
     uid: { type: String, required: true, unique: true, index: true },
     username: { type: String, required: true, unique: true, index: true },
     password: { type: String, required: true },
@@ -22,4 +22,4 @@ const userSchema = new Schema<IUserSchema>({
     phone: { type: String, unique: true, index: true }
 });
 
-export const UserBaseModel = model<IUserSchema>('User', userSchema);
+export const UserBaseModel = model<IUserSchema>('User', UserSchema);
