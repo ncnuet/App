@@ -1,3 +1,4 @@
+import { EGoodsCategory } from "@/models/schema/goods.chema";
 import { GraphQLEnumType, GraphQLInt, GraphQLObjectType, GraphQLString } from "graphql";
 
 const GoodsCategoryEnum: GraphQLEnumType = new GraphQLEnumType({
@@ -5,7 +6,7 @@ const GoodsCategoryEnum: GraphQLEnumType = new GraphQLEnumType({
     description: "Goods Category Enum",
 
     values: {
-        
+        ELECTRONICE_DEVICE: { value: EGoodsCategory.ELECTRONICE_DEVICE }
     },
 });
 

@@ -1,12 +1,12 @@
 import { Schema } from "mongoose";
 
-export enum EGoodCategory {
+export enum EGoodsCategory {
     ELECTRONICE_DEVICE = "Electronic Devices",
 }
 
 export interface IGoods {
     name: string;
-    category: EGoodCategory;
+    category: EGoodsCategory;
     quantity: number;
     weight: number;
     value: number;

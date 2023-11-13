@@ -5,8 +5,8 @@ import { GoodsGraph } from "./goods.graph";
 import { EParcelStatus } from "@/models/schema/parcel.schema";
 
 const ParcelStatusEnum: GraphQLEnumType = new GraphQLEnumType({
-    name: 'GoodsCategoryEnum',
-    description: "Goods Category Enum",
+    name: 'ParcelStatusEnum',
+    description: "Parcel Status Enum",
 
     values: {
         DELIVERING: { value: EParcelStatus.DELIVERING },
