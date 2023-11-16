@@ -1,6 +1,7 @@
 import { PostOfficeType } from "@/types/post_office";
-import { IPostOffice, PostOfficeBaseModel } from "./schema/post_office.chema";
+import { IPostOffice } from "./schema/post_office.schema";
 import { FilterQuery } from "mongoose";
+import { PostOfficeBaseModel } from "./base/post_office.base";
 
 class PostOfficeModel {
     async createPostOffice(args: any) {

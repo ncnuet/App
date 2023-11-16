@@ -1,8 +1,8 @@
 import { IPostOfficeType } from "@/types/post_office";
 import { IAddress } from "./address.schema";
-import { Schema, model } from 'mongoose';
+import { Document, Schema, model } from 'mongoose';
 
-export interface IPostOffice {
+export interface IPostOffice extends Document {
     poid: String,
     name: String,
     address: IAddress,
@@ -14,7 +14,7 @@ export interface IPostOffice {
     post_office_id: String, // TODO: rename
 }
 
-const postOfficeSchema = new Schema<IPostOffice>({
+export const PostOfficeSchema = new Schema<IPostOffice>({
     poid: { type: String, required: true, unique: true, index: true },
     name: { type: String, required: true },
     address: { type: Object, required: true },
@@ -25,5 +25,3 @@ const postOfficeSchema = new Schema<IPostOffice>({
     post_office_type: { type: String, required: true },
     post_office_id: { type: String },
 })
-
-export const PostOfficeBaseModel = model<IPostOffice>('post_office', postOfficeSchema);

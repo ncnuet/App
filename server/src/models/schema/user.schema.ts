@@ -1,9 +1,8 @@
 
-import { IUserRole, UID } from '@/types/auth';
-import { Schema, model } from 'mongoose';
+import { IUserRole } from '@/types/auth';
+import { Document, Schema, model } from 'mongoose';
 
-interface IUserSchema {
-    uid: UID;
+export interface IUserSchema extends Document {
     username: string;
     password: string;
     role: IUserRole;
@@ -12,14 +11,13 @@ interface IUserSchema {
     phone: string;
 }
 
-const UserSchema = new Schema<IUserSchema>({
-    uid: { type: String, required: true, unique: true, index: true },
-    username: { type: String, required: true, unique: true, index: true },
-    password: { type: String, required: true },
-    role: { type: String, required: true },
-    version: { type: Number, required: true },
-    email: { type: String, unique: true, index: true },
-    phone: { type: String, unique: true, index: true }
-});
-
-export const UserBaseModel = model<IUserSchema>('User', UserSchema);
+export const UserSchema = new Schema<IUserSchema>(
+    {
+        username: { type: String, required: true, unique: true, index: true },
+        password: { type: String, required: true },
+        role: { type: String, required: true },
+        version: { type: Number, required: true },
+        email: { type: String, unique: true, index: true },
+        phone: { type: String, unique: true, index: true }
+    },
+    { timestamps: true });

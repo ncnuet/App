@@ -1,10 +1,10 @@
-import { Schema } from "mongoose";
+import { Document, Schema } from "mongoose";
 
 export enum EGoodsCategory {
     ELECTRONICE_DEVICE = "Electronic Devices",
 }
 
-export interface IGoods {
+export interface IGoods extends Document {
     name: string;
     category: EGoodsCategory;
     quantity: number;
@@ -20,5 +20,4 @@ export const GoodsSchema = new Schema<IGoods>({
     value: { type: Number },
     weight: { type: Number },
     attached: { type: String },
-
 })

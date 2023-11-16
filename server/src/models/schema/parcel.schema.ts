@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Document, Schema, model } from "mongoose";
 import { AddressSchema, IAddress } from "./address.schema"
 import { ICustomer, CustomerSchema } from "./customer.schema";
 import { GoodsSchema, IGoods } from "./goods.chema"
@@ -9,7 +9,7 @@ export enum EParcelStatus {
     FAILED = "failed"
 }
 
-export interface IParcel {
+export interface IParcel extends Document {
     pid: string;
     sending_add: IAddress;
     receiving_add: IAddress;
@@ -19,7 +19,7 @@ export interface IParcel {
     goods: IGoods;
 }
 
-const ParcelSchema = new Schema<IParcel>({
+export const ParcelSchema = new Schema<IParcel>({
     pid: { type: String, required: true, unique: true, index: true },
     sending_add: { type: AddressSchema, required: true },
     receiving_add: { type: AddressSchema, required: true },
@@ -28,5 +28,3 @@ const ParcelSchema = new Schema<IParcel>({
     status: { type: String, required: true },
     goods: { type: GoodsSchema, required: true }
 })
-
-export const ParcelBaseModel = model<IParcel>("Parcel", ParcelSchema);

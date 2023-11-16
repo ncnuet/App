@@ -1,11 +1,11 @@
-import { Schema } from "mongoose";
+import { Document, Schema } from "mongoose";
 
 export interface IAddressLevel {
     id: string;
     name: string;
 }
 
-export interface IAddress {
+export interface IAddress extends Document {
     country: IAddressLevel;
     province: IAddressLevel;
     district: IAddressLevel;

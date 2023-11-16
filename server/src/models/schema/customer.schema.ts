@@ -1,6 +1,6 @@
-import { Schema } from "mongoose";
+import { Document, Schema } from "mongoose";
 
-export interface ICustomer {
+export interface ICustomer extends Document {
     name: string;
     phone: string;
 }

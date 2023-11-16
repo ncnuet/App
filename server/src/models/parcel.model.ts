@@ -1,4 +1,4 @@
-import { ParcelBaseModel } from "./schema/parcel.schema";
+import { ParcelBaseModel } from "./base/parcel.base";
 
 class ParcelModel {
     async getParcel(ids: string | string[]) {
