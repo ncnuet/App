@@ -7,8 +7,8 @@ const RootQueryType = new GraphQLObjectType({
     description: 'Root Query',
 
     fields: () => ({
-        gatherPostOffices: gatherPostOfficesQuery,
-        transPostOffices: transPostOfficesQuery,
+        // gatherPostOffices: gatherPostOfficesQuery,
+        // transPostOffices: transPostOfficesQuery,
         parcels: parcelsQuery
     })
 });

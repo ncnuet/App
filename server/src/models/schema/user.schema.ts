@@ -9,6 +9,7 @@ export interface IUserSchema extends Document {
     version: number;
     email: string;
     phone: string;
+    name: string;
 }
 
 export const UserSchema = new Schema<IUserSchema>(
@@ -18,6 +19,7 @@ export const UserSchema = new Schema<IUserSchema>(
         role: { type: String, required: true },
         version: { type: Number, required: true },
         email: { type: String, unique: true, index: true },
-        phone: { type: String, unique: true, index: true }
+        phone: { type: String, unique: true, index: true },
+        name: { type: String },
     },
     { timestamps: true });

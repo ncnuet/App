@@ -1,7 +1,7 @@
 import { GraphQLFieldConfig, GraphQLList, GraphQLString } from "graphql";
 import { PostOfficeGraph } from "@/schema/types/post_office.graph";
 import PostOfficeModel from '@/models/post_office.model';
-import { PostOfficeType } from "@/types/post_office";
+import { EPostOfficeType } from "@/types/post_office";
 
 export const gatherPostOfficesQuery: GraphQLFieldConfig<any, any> = {
     type: GraphQLList(PostOfficeGraph),
@@ -11,7 +11,7 @@ export const gatherPostOfficesQuery: GraphQLFieldConfig<any, any> = {
     },
 
     resolve: async (source, args) => {
-        let postOffices = await PostOfficeModel.getPostOffices(PostOfficeType.Gather, args);
+        let postOffices = await PostOfficeModel.getPostOffices(EPostOfficeType.Gather, args);
         return postOffices;
     }
 };
@@ -24,7 +24,7 @@ export const transPostOfficesQuery: GraphQLFieldConfig<any, any> = {
     },
 
     resolve: async (source, args) => {
-        let postOffices = await PostOfficeModel.getPostOffices(PostOfficeType.Transaction, args);
+        let postOffices = await PostOfficeModel.getPostOffices(EPostOfficeType.Transaction, args);
         return postOffices;
     }
 };

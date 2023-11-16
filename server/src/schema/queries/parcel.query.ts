@@ -9,7 +9,7 @@ interface IArgs {
 
 export const parcelsQuery: GraphQLFieldConfig<any, any, IArgs> = {
     type: GraphQLList(ParcelGraph),
-    description: "List all parcels statifying filter.",
+    description: "Parcel Query",
     args: {
         pid: { type: GraphQLString },
         pids: { type: GraphQLList(GraphQLString) }
@@ -18,7 +18,7 @@ export const parcelsQuery: GraphQLFieldConfig<any, any, IArgs> = {
     resolve: async (source, args) => {
         if (args.pid) {
             return await parcelModel.getParcel(args.pid);
-        } else if (args.pids) {
+        } else if (args.pids && Array.isArray(args.pids)) {
             return await parcelModel.getParcel(args.pids);
         } else {
             return []

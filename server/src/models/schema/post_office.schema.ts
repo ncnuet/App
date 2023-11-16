@@ -1,27 +1,24 @@
-import { IPostOfficeType } from "@/types/post_office";
+import { EPostOfficeType } from "@/types/post_office";
 import { IAddress } from "./address.schema";
-import { Document, Schema, model } from 'mongoose';
+import { Document, ObjectId, Schema } from 'mongoose';
+import { UserBaseModel } from "../base/user.base";
+import { ContactSchema, IContact } from "./contact.schema";
+import { PostOfficeBaseModel } from "../base/post_office.base";
 
 export interface IPostOffice extends Document {
-    poid: String,
     name: String,
     address: IAddress,
-    managerId: String,
-    hotline: String,
-    fax: String,
-    email: String,
-    post_office_type: IPostOfficeType,
-    post_office_id: String, // TODO: rename
+    manager: ObjectId,
+    contact: IContact,
+    post_office_type: EPostOfficeType,
+    gather_office: ObjectId,
 }
 
-export const PostOfficeSchema = new Schema<IPostOffice>({
-    poid: { type: String, required: true, unique: true, index: true },
+export const PostOfficeSchema: Schema = new Schema<IPostOffice>({
     name: { type: String, required: true },
     address: { type: Object, required: true },
-    managerId: { type: String, required: true },
-    hotline: { type: String },
-    fax: { type: String },
-    email: { type: String },
+    manager: { type: Schema.Types.ObjectId, required: true, ref: UserBaseModel },
+    contact: { type: ContactSchema, required: true },
     post_office_type: { type: String, required: true },
-    post_office_id: { type: String },
+    gather_office: { type: Schema.Types.ObjectId, required: true, ref: PostOfficeBaseModel }
 })

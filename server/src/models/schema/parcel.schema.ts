@@ -1,7 +1,8 @@
-import { Document, Schema, model } from "mongoose";
+import { Document, ObjectId, Schema, model } from "mongoose";
 import { AddressSchema, IAddress } from "./address.schema"
 import { ICustomer, CustomerSchema } from "./customer.schema";
 import { GoodsSchema, IGoods } from "./goods.chema"
+import { PostOfficeBaseModel } from "../base/post_office.base";
 
 export enum EParcelStatus {
     DELIVERING = "delivering",
@@ -11,20 +12,26 @@ export enum EParcelStatus {
 
 export interface IParcel extends Document {
     pid: string;
-    sending_add: IAddress;
-    receiving_add: IAddress;
     sender: ICustomer;
+    sending_add: IAddress;
+    sending_office: ObjectId;
     receiver: ICustomer;
+    receiving_add: IAddress;
+    receiving_office: ObjectId;
     status: EParcelStatus;
-    goods: IGoods;
+    goods: IGoods[];
+    notes: string;
 }
 
 export const ParcelSchema = new Schema<IParcel>({
     pid: { type: String, required: true, unique: true, index: true },
-    sending_add: { type: AddressSchema, required: true },
-    receiving_add: { type: AddressSchema, required: true },
-    receiver: { type: CustomerSchema, required: true },
     sender: { type: CustomerSchema, required: true },
+    sending_add: { type: AddressSchema, required: true },
+    sending_office: { type: Schema.Types.ObjectId, require: true, ref: PostOfficeBaseModel },
+    receiver: { type: CustomerSchema, required: true },
+    receiving_add: { type: AddressSchema, required: true },
+    receiving_office: { type: Schema.Types.ObjectId, require: true, ref: PostOfficeBaseModel },
     status: { type: String, required: true },
-    goods: { type: GoodsSchema, required: true }
+    goods: { type: [GoodsSchema], required: true },
+    notes: { type: String }
 })
