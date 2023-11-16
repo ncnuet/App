@@ -9,7 +9,7 @@
     "build": "rimraf dist && webpack",
     "build:tsc": "rimraf dist && tsc && tsc-alias",
     "test": "jest --coverage",
-    "add-build": "git add dist"
+    "add-build": "cp -r ./src/templates ./dist && git add dist"
   },
   "author": "coodengoo",
   "license": "ISC",
