@@ -1,6 +1,15 @@
 import { EGoodsCategory } from "@/models/schema/goods.chema";
 import { GraphQLEnumType, GraphQLInt, GraphQLObjectType, GraphQLString } from "graphql";
 
+export interface IGoodsOutputGraph {
+    name: string;
+    category: EGoodsCategory;
+    quantity: number;
+    value: number;
+    weight: number;
+    attached: string;
+}
+
 const GoodsCategoryEnum: GraphQLEnumType = new GraphQLEnumType({
     name: 'GoodsCategoryEnum',
     description: "Goods Category Enum",
@@ -10,14 +19,6 @@ const GoodsCategoryEnum: GraphQLEnumType = new GraphQLEnumType({
     },
 });
 
-export interface IGoodsOutputGraph {
-    name: string;
-    category: EGoodsCategory;
-    quantity: number;
-    value: number;
-    weight: number;
-    attached: string;
-}
 
 export const GoodsGraph = new GraphQLObjectType<IGoodsOutputGraph>({
     name: "GoodsGraph",

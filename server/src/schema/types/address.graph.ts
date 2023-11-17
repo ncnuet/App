@@ -5,6 +5,16 @@ export interface IAddressLevelOutputGraph {
     name: string;
 }
 
+export interface IAddressOutputGraph {
+    country: IAddressLevelOutputGraph
+    province: IAddressLevelOutputGraph
+    district: IAddressLevelOutputGraph
+    commune: IAddressLevelOutputGraph
+    detail: string
+    lat: number
+    long: number
+}
+
 export const AddressLevelGraph = new GraphQLObjectType<IAddressLevelOutputGraph>({
     name: "AddressLevelGraph",
     description: "Address Level Graph",
@@ -15,15 +25,7 @@ export const AddressLevelGraph = new GraphQLObjectType<IAddressLevelOutputGraph>
     }
 })
 
-export interface IAddressOutputGraph {
-    country: IAddressLevelOutputGraph
-    province: IAddressLevelOutputGraph
-    district: IAddressLevelOutputGraph
-    commune: IAddressLevelOutputGraph
-    detail: string
-    lat: number
-    long: number
-}
+
 
 export const AddressGraph = new GraphQLObjectType<IAddressOutputGraph>({
     name: 'AddressGraph',

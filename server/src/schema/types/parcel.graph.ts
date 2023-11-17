@@ -6,17 +6,6 @@ import { EParcelStatus } from "@/models/schema/parcel.schema";
 import { PostOfficeGraph } from "./post_office.graph";
 import PostOfficeModel from '@/models/postOffice.model';
 
-const ParcelStatusEnum: GraphQLEnumType = new GraphQLEnumType({
-    name: 'ParcelStatusEnum',
-    description: "Parcel Status Enum",
-
-    values: {
-        DELIVERING: { value: EParcelStatus.DELIVERING },
-        DELIVERED: { value: EParcelStatus.DELIVERED },
-        FAILED: { value: EParcelStatus.FAILED }
-    },
-});
-
 export interface IParcelOutputGraph {
     pid: string;
     sender: string;
@@ -29,6 +18,19 @@ export interface IParcelOutputGraph {
     sending_office: string;
     receiving_office: string;
 }
+
+const ParcelStatusEnum: GraphQLEnumType = new GraphQLEnumType({
+    name: 'ParcelStatusEnum',
+    description: "Parcel Status Enum",
+
+    values: {
+        DELIVERING: { value: EParcelStatus.DELIVERING },
+        DELIVERED: { value: EParcelStatus.DELIVERED },
+        FAILED: { value: EParcelStatus.FAILED }
+    },
+});
+
+
 
 const StatusGraph: GraphQLObjectType = new GraphQLObjectType({
     name: "StatusGraph",

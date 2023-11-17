@@ -6,16 +6,6 @@ import { ContactGraph, IContactOutputGraph } from "./contact.graph";
 import { IUserOutputGraph, UserGraph } from "./user.graph";
 import userModel from "@/models/user.model";
 
-const PostOfficeTypeEnum: GraphQLEnumType = new GraphQLEnumType({
-    name: 'PostOfficeTypeEnum',
-    description: "Post Office Type Enum",
-
-    values: {
-        TRANSACTION: { value: EPostOfficeType.Transaction },
-        GATHERING: { value: EPostOfficeType.Gather },
-    },
-});
-
 export interface IPostOfficeOutputGraph {
     poid: string;
     name: string;
@@ -25,6 +15,17 @@ export interface IPostOfficeOutputGraph {
     post_office_type: EPostOfficeType
     gather_office: string
 }
+
+
+const PostOfficeTypeEnum: GraphQLEnumType = new GraphQLEnumType({
+    name: 'PostOfficeTypeEnum',
+    description: "Post Office Type Enum",
+
+    values: {
+        TRANSACTION: { value: EPostOfficeType.Transaction },
+        GATHERING: { value: EPostOfficeType.Gather },
+    },
+});
 
 const PostOfficeGraph: GraphQLObjectType = new GraphQLObjectType<IPostOfficeOutputGraph>({
     name: 'PostOfficeGraph',
