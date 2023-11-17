@@ -15,16 +15,16 @@ export interface IAddress extends Document {
     long: number;
 }
 
-export const AddressLevelSchema = new Schema<IAddressLevel>({
+export const addressLevelSchema = new Schema<IAddressLevel>({
     id: { type: String, required: true },
     name: { type: String, required: true }
 })
 
-export const AddressSchema = new Schema<IAddress>({
-    country: { type: AddressLevelSchema, required: true },
-    province: { type: AddressLevelSchema, required: true },
-    district: { type: AddressLevelSchema, required: true },
-    commune: { type: AddressLevelSchema, required: true },
+export const addressSchema = new Schema<IAddress>({
+    country: { type: addressLevelSchema, required: true },
+    province: { type: addressLevelSchema, required: true },
+    district: { type: addressLevelSchema, required: true },
+    commune: { type: addressLevelSchema, required: true },
     detail: { type: String },
     lat: { type: Number },
     long: { type: Number }

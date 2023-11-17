@@ -1,4 +1,4 @@
 import { model } from "mongoose";
-import { IParcel, ParcelSchema } from "@/models/schema/parcel.schema";
+import { IParcel, parcelSchema } from "@/models/schema/parcel.schema";
 
-export const ParcelBaseModel = model<IParcel>("Parcel", ParcelSchema);
+export const ParcelBaseModel = model<IParcel>("Parcel", parcelSchema);

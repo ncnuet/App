@@ -6,7 +6,7 @@ export interface IContact extends Document {
     email: string,
 }
 
-export const ContactSchema = new Schema<IContact>({
+export const contactSchema = new Schema<IContact>({
     hotline: { type: String },
     fax: { type: String },
     email: { type: String },

@@ -13,7 +13,7 @@ export interface IGoods extends Document {
     attached: string;
 }
 
-export const GoodsSchema = new Schema<IGoods>({
+export const goodsSchema = new Schema<IGoods>({
     name: { type: String },
     category: { type: String },
     quantity: { type: Number },

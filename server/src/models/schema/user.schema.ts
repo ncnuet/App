@@ -12,7 +12,7 @@ export interface IUserSchema extends Document {
     name: string;
 }
 
-export const UserSchema = new Schema<IUserSchema>(
+export const userSchema = new Schema<IUserSchema>(
     {
         username: { type: String, required: true, unique: true, index: true },
         password: { type: String, required: true },

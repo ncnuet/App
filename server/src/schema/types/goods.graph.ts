@@ -10,7 +10,16 @@ const GoodsCategoryEnum: GraphQLEnumType = new GraphQLEnumType({
     },
 });
 
-export const GoodsGraph = new GraphQLObjectType({
+export interface IGoodsOutputGraph {
+    name: string;
+    category: EGoodsCategory;
+    quantity: number;
+    value: number;
+    weight: number;
+    attached: string;
+}
+
+export const GoodsGraph = new GraphQLObjectType<IGoodsOutputGraph>({
     name: "GoodsGraph",
     description: "Goods Graph",
 

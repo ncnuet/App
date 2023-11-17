@@ -1,6 +1,12 @@
 import { GraphQLObjectType, GraphQLString } from "graphql";
 
-export const ContactGraph = new GraphQLObjectType({
+export interface IContactOutputGraph {
+    hotline: string;
+    fax: string;
+    email: string;
+}
+
+export const ContactGraph = new GraphQLObjectType<IContactOutputGraph>({
     name: "ContactGraph",
     description: "Contact Graph",
     fields: {

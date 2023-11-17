@@ -1,6 +1,6 @@
 import { GraphQLFieldConfig, GraphQLList, GraphQLString } from "graphql";
 import { PostOfficeGraph } from "@/schema/types/post_office.graph";
-import PostOfficeModel from '@/models/post_office.model';
+import PostOfficeModel from '@/models/postOffice.model';
 
 interface IArgs {
     poid: string;
@@ -16,7 +16,7 @@ export const postOfficeQuery: GraphQLFieldConfig<any, any, IArgs> = {
     },
 
     resolve: async (source, args) => {
-        if (args.poid) {            
+        if (args.poid) {
             return await PostOfficeModel.getPostOffices([args.poid]);
         } else if (args.poid && Array.isArray(args.poid)) {
             return await PostOfficeModel.getPostOffices(args.poids);

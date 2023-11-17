@@ -1,6 +1,11 @@
 import { GraphQLObjectType, GraphQLString } from "graphql";
 
-export const CustomerGraph = new GraphQLObjectType({
+export interface ICustomerOutputGraph {
+    name: string;
+    phone: string;
+}
+
+export const CustomerGraph = new GraphQLObjectType<ICustomerOutputGraph>({
     name: 'CustomerGraph',
     description: "Customer Graph",
 

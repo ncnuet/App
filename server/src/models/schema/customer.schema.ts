@@ -5,7 +5,7 @@ export interface ICustomer extends Document {
     phone: string;
 }
 
-export const CustomerSchema = new Schema<ICustomer>({
+export const customerSchema = new Schema<ICustomer>({
     name: { type: String, required: true },
     phone: { type: String, required: true }
 })

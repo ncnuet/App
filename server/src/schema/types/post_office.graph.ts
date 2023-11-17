@@ -1,10 +1,9 @@
 import { GraphQLEnumType, GraphQLList, GraphQLObjectType, GraphQLString } from "graphql";
 import { EPostOfficeType } from "@/types/post_office";
-import { AddressGraph } from "@/schema/types/address.graph";
-import PostOfficeModel from '@/models/post_office.model';
-import { ContactGraph } from "./contact.graph";
-import { UserGraph } from "./user.graph";
-import authModel from "@/models/auth.model";
+import { AddressGraph, IAddressOutputGraph } from "@/schema/types/address.graph";
+import PostOfficeModel from '@/models/postOffice.model';
+import { ContactGraph, IContactOutputGraph } from "./contact.graph";
+import { IUserOutputGraph, UserGraph } from "./user.graph";
 import userModel from "@/models/user.model";
 
 const PostOfficeTypeEnum: GraphQLEnumType = new GraphQLEnumType({
@@ -17,7 +16,17 @@ const PostOfficeTypeEnum: GraphQLEnumType = new GraphQLEnumType({
     },
 });
 
-const PostOfficeGraph: GraphQLObjectType = new GraphQLObjectType({
+export interface IPostOfficeOutputGraph {
+    poid: string;
+    name: string;
+    address: IAddressOutputGraph
+    manager: string,
+    contact: IContactOutputGraph
+    post_office_type: EPostOfficeType
+    gather_office: string
+}
+
+const PostOfficeGraph: GraphQLObjectType = new GraphQLObjectType<IPostOfficeOutputGraph>({
     name: 'PostOfficeGraph',
     description: 'Post Office Graph',
 
