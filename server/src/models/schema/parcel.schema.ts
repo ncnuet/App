@@ -1,4 +1,4 @@
-import { Document, ObjectId, Schema, model } from "mongoose";
+import { Document, ObjectId, Schema } from "mongoose";
 import { AddressSchema, IAddress } from "./address.schema"
 import { ICustomer, CustomerSchema } from "./customer.schema";
 import { GoodsSchema, IGoods } from "./goods.chema"

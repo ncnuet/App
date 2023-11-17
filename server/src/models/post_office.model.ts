@@ -1,6 +1,5 @@
 import { EPostOfficeType } from "@/types/post_office";
 import { IPostOffice } from "./schema/post_office.schema";
-import { FilterQuery } from "mongoose";
 import { PostOfficeBaseModel } from "./base/post_office.base";
 
 class PostOfficeModel {
@@ -10,18 +9,20 @@ class PostOfficeModel {
         await newPostOffice.save();
     };
 
-    /**
-     * 
-     * @param post_office_type 
-     * @param filter FilterQuery<IPostOffice>
-     * @returns 
-     */
-    async getPostOffices(poid: string,) {
+    async getPostOffices(poid: string[]) {
         const post_offices = await PostOfficeBaseModel.find(
-            { _id: poid }
+            { _id: { $in: poid } }
         ).exec();
 
-        return post_offices;
+        return post_offices.map(offices => {
+            const { _id, name, address, contact, post_office_type, manager, gather_office } = offices
+            return {
+                poid: _id.toString(),
+                name, address, contact, post_office_type,
+                manager: manager.toString(),
+                gather_office: gather_office.toString()
+            }
+        });
     }
 }
 

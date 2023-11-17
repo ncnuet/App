@@ -5,6 +5,7 @@ import PostOfficeModel from '@/models/post_office.model';
 import { ContactGraph } from "./contact.graph";
 import { UserGraph } from "./user.graph";
 import authModel from "@/models/auth.model";
+import userModel from "@/models/user.model";
 
 const PostOfficeTypeEnum: GraphQLEnumType = new GraphQLEnumType({
     name: 'PostOfficeTypeEnum',
@@ -25,18 +26,18 @@ const PostOfficeGraph: GraphQLObjectType = new GraphQLObjectType({
         name: { type: GraphQLString },
         address: { type: AddressGraph },
         manager: {
-            type: UserGraph,
+            type: GraphQLList(UserGraph),
             resolve: async (parent) => {
-                return await authModel.findUserByInfo({ uid: <string>parent.uid })
+                return await userModel.getUsers([parent.manager])
             }
         },
         contact: { type: ContactGraph },
         post_office_type: { type: PostOfficeTypeEnum },
 
         gather_office: {
-            type: PostOfficeGraph,
+            type: GraphQLList(PostOfficeGraph),
             resolve: async (parent) => {
-                return await PostOfficeModel.getPostOffices(parent.poid)
+                return await PostOfficeModel.getPostOffices([parent.gather_office])
             }
         }
     })

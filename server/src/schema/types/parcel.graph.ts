@@ -42,13 +42,13 @@ export const ParcelGraph: GraphQLObjectType = new GraphQLObjectType({
         goods: { type: GraphQLList(GoodsGraph) },
         notes: { type: GraphQLString },
         sending_office: {
-            type: PostOfficeGraph, resolve: async (parent) => {
-                return await PostOfficeModel.getPostOffices(parent.poid)
+            type: GraphQLList(PostOfficeGraph), resolve: async (parent) => {
+                return await PostOfficeModel.getPostOffices(parent.sending_office)
             }
         },
         receiving_office: {
-            type: PostOfficeGraph, resolve: async (parent) => {
-                return await PostOfficeModel.getPostOffices(parent.poid)
+            type: GraphQLList(PostOfficeGraph), resolve: async (parent) => {
+                return await PostOfficeModel.getPostOffices(parent.receiving_office)
             }
         },
     }

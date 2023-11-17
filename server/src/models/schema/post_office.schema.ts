@@ -3,7 +3,6 @@ import { IAddress } from "./address.schema";
 import { Document, ObjectId, Schema } from 'mongoose';
 import { UserBaseModel } from "../base/user.base";
 import { ContactSchema, IContact } from "./contact.schema";
-import { PostOfficeBaseModel } from "../base/post_office.base";
 
 export interface IPostOffice extends Document {
     name: String,
@@ -20,5 +19,5 @@ export const PostOfficeSchema: Schema = new Schema<IPostOffice>({
     manager: { type: Schema.Types.ObjectId, required: true, ref: UserBaseModel },
     contact: { type: ContactSchema, required: true },
     post_office_type: { type: String, required: true },
-    gather_office: { type: Schema.Types.ObjectId, required: true, ref: PostOfficeBaseModel }
+    gather_office: { type: Schema.Types.ObjectId }
 })
