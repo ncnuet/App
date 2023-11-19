@@ -1,4 +1,5 @@
 import "./globals.css";
+import "material-symbols";
 import "react-toastify/dist/ReactToastify.css";
 
 import type { Metadata } from "next";
@@ -12,7 +13,11 @@ export const metadata: Metadata = {
   description: "Trao gửi trọn niềm tin",
 };
 
-export default function RootLayout({ children, }: { children: React.ReactNode; }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body className={lexend.className}>
@@ -30,7 +35,7 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
           theme="light"
           className={"text-[14px]"}
         />
-        
+
         {children}
       </body>
     </html>
