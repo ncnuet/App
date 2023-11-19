@@ -50,7 +50,9 @@ const config: Config = {
       },
       boxShadow: {
         sd1: "0px 10px 15px -3px rgba(0, 0, 0, 0.10)",
-        sd2: "0px 3.500000238418579px 5.500000476837158px 0px #00000005",
+        sd2: "0px 3.5px 5.500000476837158px 0px #00000005",
+        sd3: "inset 0px 2px 11px -4px rgba(0,0,0,0.1)",
+        sd4: "0px 12px 5px 0px rgba(0,0,0,0.1)"
       },
     },
   },

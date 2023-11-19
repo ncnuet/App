@@ -1,12 +1,15 @@
 import LogoImg from "@/assets/images/logo.png"
 import Image from "next/image";
 import PackageNavItem from "../PackageNavItem";
+import { MdArrowForward } from "react-icons/md";
+import GroupPackageNavItem from "../GroupPackageNavItem";
 
 export default function Sidebar() {
     return (
         <aside className="bg-cgray-200 h-screen flex flex-col w-[400px] flex-none relative">
             <header className="flex-non p-7">
-                <div className="flex items-center justify-start mb-5">
+                {/* Logo */}
+                <div className="flex items-center justify-center mb-5">
                     <div className="h-7">
                         <Image alt="logo" src={LogoImg} className="object-scale-down h-full w-fit" />
                     </div>
@@ -16,7 +19,8 @@ export default function Sidebar() {
                     </div>
                 </div>
 
-                <h1 className="font-bold text-center text-3xl text-cblue-600">Tra cứu bưu gửi</h1>
+                {/* Heading page */}
+                <h1 className="font-bold text-2xl text-center text-cblue-600">Tra cứu bưu gửi</h1>
             </header>
 
             <div className="flex-none p-7 py-5">
@@ -29,24 +33,13 @@ export default function Sidebar() {
                 <div className="py-2 pl-5 pr-2 rounded-full border-2 border-cyellow-500 bg-white flex">
                     <input name="package_id" placeholder="EB123124123VN" className="bg-transparent outline-none w-full" />
                     <button
-                        className="w-10 h-10 flex justify-center items-center flex-none rounded-full bg-cyellow-500">
-                        <span className="material-symbols-rounded">arrow_right_alt</span>
+                        className="w-10 h-10 flex justify-center items-center flex-none rounded-full bg-cyellow-500 text-2xl">
+                        <MdArrowForward />
                     </button>
                 </div>
             </div>
 
-            <div className="flex flex-col gap-5 h-full overflow-y-scroll px-4 py-3 list">
-                <PackageNavItem selected />
-                <PackageNavItem />
-                <PackageNavItem />
-                <PackageNavItem />
-                <PackageNavItem />
-                <PackageNavItem />
-                <PackageNavItem />
-                <PackageNavItem />
-                <PackageNavItem />
-                <PackageNavItem />
-            </div>
+            <GroupPackageNavItem />
         </aside>
     )
 }

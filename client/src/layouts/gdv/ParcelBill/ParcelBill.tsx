@@ -35,10 +35,10 @@ const ParcelBill = ({ ...props }: IParcelBill) => {
           <h2 className="parcel-bill__heading">1. Họ tên địa chỉ người gửi</h2>
           <div className="px-[18px] flex flex-col mb-4">
             <span className="parcel-bill__content">
-              {props.senderInfor.name || "Trống"}
+              {props.senderInfor?.name || "Trống"}
             </span>
             <span className="parcel-bill__content">
-              {props.senderInfor.address || "Trống"}
+              {props.senderInfor?.address || "Trống"}
             </span>
           </div>
           <div className="px-[18px] flex flex-col">
@@ -50,7 +50,7 @@ const ParcelBill = ({ ...props }: IParcelBill) => {
               <div className="flex-1 flex-row items-center">
                 <span className="parcel-bill__heading pr-3">Điện thoại:</span>
                 <span className="parcel-bill__content">
-                  {props.senderInfor.phone}
+                  {props.senderInfor?.phone}
                 </span>
               </div>
               <div className="flex-1 flex-row items-center">
@@ -64,10 +64,10 @@ const ParcelBill = ({ ...props }: IParcelBill) => {
           <h2 className="parcel-bill__heading">2. Họ tên địa chỉ người nhận</h2>
           <div className="px-[18px] flex flex-col mb-4">
             <span className="parcel-bill__content">
-              {props.receiverInfor.name || "Trống"}
+              {props.receiverInfor?.name || "Trống"}
             </span>
             <span className="parcel-bill__content">
-              {props.receiverInfor.address || "Trống"}
+              {props.receiverInfor?.address || "Trống"}
             </span>
           </div>
           <div className="px-[18px] flex flex-col">
@@ -79,7 +79,7 @@ const ParcelBill = ({ ...props }: IParcelBill) => {
               <div className="flex-1 flex-row items-center">
                 <span className="parcel-bill__heading pr-3">Điện thoại:</span>
                 <span className="parcel-bill__content">
-                  {props.receiverInfor.phone}
+                  {props.receiverInfor?.phone}
                 </span>
               </div>
               <div className="flex-1 flex-row items-center">
@@ -129,7 +129,7 @@ const ParcelBill = ({ ...props }: IParcelBill) => {
                     Giấy tờ đính kèm
                   </div>
                 </div>
-                {props.goods.map((good, index) => (
+                {props.goods?.map((good, index) => (
                   <div className="flex flex-row" key={index}>
                     <div className="w-2/5 flex flex-row justify-center items-center parcel-bill__content border-r border-black py-[2px]">
                       {good.content}
