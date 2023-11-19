@@ -20,7 +20,8 @@
     },
     "include": [
         "./src/**/*",
-        "./test/**/*"
+        "./test/**/*",
+        "./deployment/**/*"
     ],
     "exclude": [
         "./test/**/*"
