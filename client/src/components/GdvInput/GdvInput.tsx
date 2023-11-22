@@ -1,12 +1,24 @@
 type Props = {
   placeholder: string;
   icon: string;
+  name?: string;
   value?: string;
   isBig?: boolean;
   onInfor?: any;
+  disabled?: boolean;
+  defaulValue?: string;
 };
 
-function GdvInput({ placeholder, icon, isBig = false, onInfor, value }: Props) {
+function GdvInput({
+  placeholder,
+  icon,
+  name,
+  defaulValue,
+  isBig = false,
+  disabled = false,
+  onInfor,
+  value,
+}: Props) {
   return (
     <div
       className={`flex flex-row  w-full ${
@@ -17,11 +29,16 @@ function GdvInput({ placeholder, icon, isBig = false, onInfor, value }: Props) {
         {icon}
       </span>
       <input
-        className="px-2 h-full w-full outline-none bg-transparent text-[15px]"
+        className={
+          "px-2 h-full w-full outline-none bg-transparent text-[15px]" +
+          `${disabled ? "pointer-events-none" : "pointer-events-auto"}`
+        }
         placeholder={placeholder}
         spellCheck={false}
         onChange={(e) => onInfor(e.target.value)}
         value={value}
+        name={name}
+        defaultValue={defaulValue}
       ></input>
     </div>
   );
