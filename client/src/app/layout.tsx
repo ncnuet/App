@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import type { Metadata } from "next";
 import { Lexend } from "next/font/google";
 import { ToastContainer } from "react-toastify";
+import { Providers } from "@/redux/provider";
 
 const lexend = Lexend({ subsets: ["latin"] });
 
@@ -36,7 +37,9 @@ export default function RootLayout({
           className={"text-[14px]"}
         />
 
-        {children}
+        <Providers>{
+          children}
+        </Providers>
       </body>
     </html>
   );

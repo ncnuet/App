@@ -1,73 +1,33 @@
+"use client"
+
 import Image from "next/image";
+import Summary from "./components/Summary";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { useGetParcelDetailsQuery } from "@/redux/services/parcel.api";
+import { ParcelDetail } from "@/redux/services/queries/details.parcel";
+import Details from "./components/Details";
 
 export default function Main() {
+    const { pid } = useParams();
+    const [parcel, setParcel] = useState<ParcelDetail>()
+
+    const { data, isSuccess } = useGetParcelDetailsQuery({ pid: pid as string })
+
+    useEffect(() => {
+        setParcel(data?.data.parcels[0])
+    }, [data])
+
     return (
         <main className="flex flex-col gap-5 h-full overflow-y-scroll p-7 list">
-            <section className="rounded-xl bg-cyellow-500 grid grid-cols-9 w-full p-5">
-                <div className="text-white border-r-2 border-white border-dashed text-center col-span-3">
-                    <p className="text-xs">Số hiệu bưu gửi</p>
-                    <h3 className="font-semibold">EB14453131VN</h3>
-                </div>
-                <div className="text-white border-r-2 border-white border-dashed text-center col-span-2">
-                    <p className="text-xs">Khối lượng</p>
-                    <h3 className="font-semibold">99 gram</h3>
-                </div>
-                <div className="text-white border-r-2 border-white border-dashed text-center col-span-2">
-                    <p className="text-xs">Nơi gửi</p>
-                    <h3 className="font-semibold">Hà Nội</h3>
-                </div>
-                <div className="text-white text-center col-span-2">
-                    <p className="text-xs">Nơi nhận</p>
-                    <h3 className="font-semibold">Hà Tĩnh</h3>
-                </div>
-            </section>
+            <Summary
+                pid={parcel && parcel.pid.slice(0, 14) || ""}
+                weight={0}
+                receiving_add={parcel && parcel.receiving_add.province.name || ""}
+                sending_add={parcel && parcel.sending_add.province.name || ""}
+            />
 
-            <section className="grid grid-cols-2 gap-5">
-                <div className="flex flex-col gap-2">
-                    <div className="flex justify-between items-center">
-                        <span className="text-sm text-cgray-600">Người gửi</span>
-                        <span className="font-semibold">Trương Tấn Tạ</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                        <span className="text-sm text-cgray-600">Số điện thoại</span>
-                        <span className="font-semibold">0123456789</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                        <span className="text-sm text-cgray-600">Nước gửi</span>
-                        <span className="font-semibold">VIETNAM-VI</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                        <span className="text-sm text-cgray-600">Địa chỉ gửi</span>
-                        <span className="font-semibold">Thanh Lâm - Mê Linh</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                        <span className="text-sm text-cgray-600">Cước phí</span>
-                        <span className="font-semibold">13.205đ</span>
-                    </div>
-                </div>
-                <div className="flex flex-col gap-2">
-                    <div className="flex justify-between items-center">
-                        <span className="text-sm text-cgray-600">Người nhận</span>
-                        <span className="font-semibold">Lã Thu Phương</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                        <span className="text-sm text-cgray-600">Số điện thoại</span>
-                        <span className="font-semibold">0123456789</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                        <span className="text-sm text-cgray-600">Nước gửi</span>
-                        <span className="font-semibold">VIETNAM-VI</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                        <span className="text-sm text-cgray-600">Địa chỉ nhận</span>
-                        <span className="font-semibold">Văn Lang - Huế</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                        <span className="text-sm text-cgray-600">Trạng thái</span>
-                        <span className="font-semibold text-cgreen-600">Đã nhận</span>
-                    </div>
-                </div>
-            </section>
+            <Details />
             <section className="grid grid-cols-2 gap-5">
                 <div className="flex flex-col gap-2">
                     <div className="flex justify-between items-center">

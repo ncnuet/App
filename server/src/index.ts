@@ -36,7 +36,7 @@ app.use(cors.default({
 route(app);
 // Apply graphql
 // app.all('/graphql', createHandler({ schema }));
-app.use("/graphql/",
+app.use("/v1/graphql/",
   graphqlHTTP({
     schema,
     graphiql: true

@@ -1,6 +1,5 @@
 import LogoImg from "@/assets/images/logo.png"
 import Image from "next/image";
-import PackageNavItem from "../PackageNavItem";
 import { MdArrowForward } from "react-icons/md";
 import GroupPackageNavItem from "../GroupPackageNavItem";
 
