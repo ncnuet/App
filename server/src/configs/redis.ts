@@ -3,8 +3,12 @@ import config from "./env"
 import { setTokenIndex } from '@/models/schema/token.schema';
 
 export const redis = createClient({
-    password: config.RD_PASSWORD,
-    username: config.RD_USERNAME,
+    // password: config.RD_PASSWORD,
+    // username: config.RD_USERNAME,
+    /**
+     * convert to local redis
+     */
+    legacyMode: true,
     socket: {
         host: config.RD_HOST,
         port: Number(config.RD_PORT)

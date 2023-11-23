@@ -15,8 +15,8 @@ export interface IParcelOutputGraph {
     status: EParcelStatus
     goods: IGoodsOutputGraph
     notes: string
-    sending_office: string;
-    receiving_office: string;
+    // sending_office: string;
+    // receiving_office: string;
 }
 
 const ParcelStatusEnum: GraphQLEnumType = new GraphQLEnumType({
@@ -56,15 +56,15 @@ export const ParcelGraph: GraphQLObjectType = new GraphQLObjectType<IParcelOutpu
         status: { type: ParcelStatusEnum },
         goods: { type: GraphQLList(GoodsGraph) },
         notes: { type: GraphQLString },
-        sending_office: {
-            type: GraphQLList(PostOfficeGraph), resolve: async (parent) => {
-                return await PostOfficeModel.getPostOffices([parent.sending_office])
-            }
-        },
-        receiving_office: {
-            type: GraphQLList(PostOfficeGraph), resolve: async (parent) => {
-                return await PostOfficeModel.getPostOffices([parent.receiving_office])
-            }
-        },
+        // sending_office: {
+        //     type: GraphQLList(PostOfficeGraph), resolve: async (parent) => {
+        //         return await PostOfficeModel.getPostOffices([parent.sending_office])
+        //     }
+        // },
+        // receiving_office: {
+        //     type: GraphQLList(PostOfficeGraph), resolve: async (parent) => {
+        //         return await PostOfficeModel.getPostOffices([parent.receiving_office])
+        //     }
+        // },
     }
 })

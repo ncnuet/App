@@ -3,6 +3,7 @@ import { IUserRole } from '@/types/auth';
 import { Document, Schema, model } from 'mongoose';
 
 export interface IUserSchema extends Document {
+    uid: string,
     username: string;
     password: string;
     role: IUserRole;
@@ -14,6 +15,7 @@ export interface IUserSchema extends Document {
 
 export const userSchema = new Schema<IUserSchema>(
     {
+        uid: { type: String, required: true, unique: true, index: true },
         username: { type: String, required: true, unique: true, index: true },
         password: { type: String, required: true },
         role: { type: String, required: true },

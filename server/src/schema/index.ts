@@ -1,7 +1,7 @@
 import { GraphQLObjectType, GraphQLSchema } from 'graphql';
 import { postOfficeQuery } from "./queries/post_office.query";
 import { parcelsQuery } from './queries/parcel.query';
-import { userQuery } from './queries/user.query';
+import { GDVQuery, userQuery } from './queries/user.query';
 import { TrackingQuery } from './queries/tracking.query';
 
 const RootQueryType = new GraphQLObjectType({
@@ -10,7 +10,10 @@ const RootQueryType = new GraphQLObjectType({
 
     fields: () => ({
         parcels: parcelsQuery,
+
         users: userQuery,
+        gdvs : GDVQuery,
+
         post_offices: postOfficeQuery,
         tracking: TrackingQuery
     })
