@@ -4,6 +4,7 @@ import { getParcelStatus } from "@/redux/services/parcel.api";
 import { Button, TextInput, CustomFlowbiteTheme } from "flowbite-react";
 import { FormEvent, KeyboardEvent, useState } from "react";
 import { HiArrowLongRight } from "react-icons/hi2";
+import { TbBallBowling } from "react-icons/tb";
 import { toast } from "react-toastify";
 
 const theme_btn: CustomFlowbiteTheme['button'] = {
@@ -34,11 +35,13 @@ export default function InputTracking() {
     async function handleNext() {
         setLoading(true)
         try {
-            const data = await getParcelStatus([pid])
-            if (data && data.data.parcels && data.data.parcels.length > 0) {
-                window && window.open("/tracking/" + pid, "_self")
-            } else {
-                toast.error("Không tồn tại bưu gửi")
+            if (pid.trim().length != 0) {
+                const response = await getParcelStatus([pid])
+                if (response && response.data.data.parcels && response.data.data.parcels.length > 0) {
+                    window && window.open("/tracking/" + pid, "_self")
+                } else {
+                    toast.error("Không tồn tại bưu gửi")
+                }
             }
         } catch (e: any) {
             console.log(e)
@@ -66,14 +69,19 @@ export default function InputTracking() {
                 className="w-full"
                 onKeyUp={handleEnter}
                 onChange={handleChange}
+                disabled={loading}
             />
 
             <Button
                 theme={theme_btn}
                 color="warning"
                 className="w-14 h-14 items-center justify-center rounded-lg flex-none hidden xs:flex"
-                onClick={handleNext}>
-                <span className="text-3xl"><HiArrowLongRight></HiArrowLongRight></span>
+                onClick={handleNext}
+                disabled={loading}
+            >
+                {loading
+                    ? <span className="text-3xl animate-spin"><TbBallBowling></TbBallBowling></span>
+                    : <span className="text-3xl"><HiArrowLongRight></HiArrowLongRight></span>}
             </Button>
         </div>
     )

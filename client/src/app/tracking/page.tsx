@@ -11,7 +11,7 @@ export default function Tracking() {
 
     useEffect(() => {
         parcels.parcels.length === 0 && console.log("Khong co du lieu")
-    })
+    }, [])
     return (
         <main>
             <section>

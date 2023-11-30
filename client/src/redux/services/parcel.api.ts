@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { parcelStatusQuery, ParcelStatus, ParcelStatusWraper } from "./queries/status.parcel";
 import { ParcelDetailsWraper, parcelDetailsQuery } from "./queries/details.parcel";
 import axios from "@/service/axios";
+import { AxiosResponse } from "axios";
 
 export const parcelAPI = createApi({
     reducerPath: "parcelApi",
@@ -34,7 +35,7 @@ export const parcelAPI = createApi({
     })
 })
 
-export async function getParcelStatus(pids: string[]): Promise<ParcelStatusWraper> {
+export async function getParcelStatus(pids: string[]): Promise<AxiosResponse<ParcelStatusWraper>> {
     return await axios.post("/graphql", {
         query: parcelStatusQuery.loc?.source.body,
         variables: { pids }
