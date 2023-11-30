@@ -3,8 +3,6 @@ import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
 
 export default function TrackingTemplate({ children }: { children: ReactNode }) {
-    console.log("Hello");
-    
     return (
         <>
             <Sidebar />

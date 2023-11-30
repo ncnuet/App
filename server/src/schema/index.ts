@@ -2,7 +2,7 @@ import { GraphQLObjectType, GraphQLSchema } from 'graphql';
 import { postOfficeQuery } from "./queries/post_office.query";
 import { parcelsQuery } from './queries/parcel.query';
 import { userQuery } from './queries/user.query';
-import { TrackingQuery } from './queries/tracking.query';
+import { trackingQuery } from './queries/tracking.query';
 
 const RootQueryType = new GraphQLObjectType({
     name: 'Query',
@@ -12,7 +12,7 @@ const RootQueryType = new GraphQLObjectType({
         parcels: parcelsQuery,
         users: userQuery,
         post_offices: postOfficeQuery,
-        tracking: TrackingQuery
+        tracking: trackingQuery
     })
 });
 

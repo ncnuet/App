@@ -6,7 +6,7 @@ interface IArgs {
     pid: string;
 }
 
-export const TrackingQuery: GraphQLFieldConfig<any, any, IArgs> = {
+export const trackingQuery: GraphQLFieldConfig<any, any, IArgs> = {
     type: GraphQLList(TrackingGraph),
     args: {
         pid: { type: GraphQLString }

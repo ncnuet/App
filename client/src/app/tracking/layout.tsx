@@ -4,6 +4,8 @@ import { useAppDispatch } from "@/redux/hooks";
 import { memo, useEffect, useState } from "react";
 import { useGetParcelStatusQuery } from "@/redux/services/parcel.api";
 import { setParcels } from "@/redux/features/parcel.slice";
+import 'tippy.js/dist/tippy.css';
+import 'tippy.js/themes/light.css';
 
 export default memo(function TrackingLayout({ children }: { children: React.ReactNode; }) {
     const dispatch = useAppDispatch();
