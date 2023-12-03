@@ -8,19 +8,37 @@ interface IProps {
 
 export default function ({ data, loading }: IProps) {
     return loading
-        ? <section className="grid grid-cols-2 gap-5">
-            < div className="flex flex-col gap-2" >
-                <div className="bg-gray-50 animate-pulse rounded-md h-6"></div>
-                <div className="bg-gray-50 animate-pulse rounded-md h-6"></div>
-                <div className="bg-gray-50 animate-pulse rounded-md h-6"></div>
+        ? <section className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="flex flex-col gap-2" >
+                <div className="flex justify-between items-center h-6 gap-3">
+                    <div className="bg-gray-100 animate-pulse rounded-md h-full w-2/5"></div>
+                    <div className="bg-gray-100 animate-pulse rounded-md h-full w-3/5"></div>
+                </div>
+                <div className="flex justify-between items-center h-6 gap-3">
+                    <div className="bg-gray-100 animate-pulse rounded-md h-full w-2/6"></div>
+                    <div className="bg-gray-100 animate-pulse rounded-md h-full w-4/6"></div>
+                </div>
+                <div className="flex justify-between items-center h-6 gap-3">
+                    <div className="bg-gray-100 animate-pulse rounded-md h-full w-2/6"></div>
+                    <div className="bg-gray-100 animate-pulse rounded-md h-full w-4/6"></div>
+                </div>
             </div >
             <div className="flex flex-col gap-2">
-                <div className="bg-gray-50 animate-pulse rounded-md h-6"></div>
-                <div className="bg-gray-50 animate-pulse rounded-md h-6"></div>
-                <div className="bg-gray-50 animate-pulse rounded-md h-6"></div>
+                <div className="flex justify-between items-center h-6 gap-3">
+                    <div className="bg-gray-100 animate-pulse rounded-md h-full w-2/5"></div>
+                    <div className="bg-gray-100 animate-pulse rounded-md h-full w-3/5"></div>
+                </div>
+                <div className="flex justify-between items-center h-6 gap-3">
+                    <div className="bg-gray-100 animate-pulse rounded-md h-full w-2/6"></div>
+                    <div className="bg-gray-100 animate-pulse rounded-md h-full w-4/6"></div>
+                </div>
+                <div className="flex justify-between items-center h-6 gap-3">
+                    <div className="bg-gray-100 animate-pulse rounded-md h-full w-2/6"></div>
+                    <div className="bg-gray-100 animate-pulse rounded-md h-full w-4/6"></div>
+                </div>
             </div>
         </section >
-        : <section className="grid grid-cols-2 gap-5" >
+        : <section className="grid grid-cols-1 sm:grid-cols-2 gap-5" >
             <div className="flex flex-col gap-2">
                 <div className="flex justify-between items-center">
                     <span className="text-sm text-cgray-600">Người gửi</span>

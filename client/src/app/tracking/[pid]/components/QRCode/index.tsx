@@ -16,17 +16,20 @@ export default function QRCode({ pid }: IProps) {
                     height={100} width={100}
                     src={`https://api.qrserver.com/v1/create-qr-code/?data=${process.env.NEXT_PUBLIC_DOMAIN + "/tracking/" + pid}&size=100x100`} />
 
-                <div className="px-4 py-2 rounded-full bg-cyellow-500 w-1/2 mt-5 flex items-center cursor-pointer">
-                    <span className="font-semibold truncate">
-                        {process.env.NEXT_PUBLIC_DOMAIN + "/tracking/" + pid}
+                <div
+                    className="px-4 py-2 rounded-full bg-cyellow-500 w-1/2 mt-5 flex items-center cursor-pointer"
+                    onClick={() => {
+                        navigator &&
+                            navigator.clipboard.writeText(process.env.NEXT_PUBLIC_DOMAIN + "/tracking/" + pid)
+                        toast.success("Đã copy thành công")
+                    }}>
+
+                    <span className="font-semibold truncate flex-grow overflow-hidden">
+                        {pid}
                     </span>
-                    <button
-                        onClick={() => {
-                            navigator &&
-                                navigator.clipboard.writeText(process.env.NEXT_PUBLIC_DOMAIN + "/tracking/" + pid)
-                            toast.success("Đã copy thành công")
-                        }}
-                        className="text-lg"><MdContentCopy />
+
+                    <button className="ml-2 text-lg w-5 flex-none">
+                        <MdContentCopy />
                     </button>
                 </div>
             </div>

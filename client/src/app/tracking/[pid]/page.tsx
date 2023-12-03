@@ -10,6 +10,7 @@ import Goods from "./components/Goods";
 import QRCode from "./components/QRCode";
 import Notes from "./components/Notes";
 import Ack from "./components/Ack";
+import { toast } from "react-toastify";
 
 export default function Main() {
     const { pid } = useParams();
@@ -20,8 +21,10 @@ export default function Main() {
 
     useEffect(() => {
         if (isSuccess) {
-            setParcel(data?.data.parcels[0])
-            setLoading(true);
+            data.data.parcels && data.data.parcels.length > 0
+                ? setParcel(data?.data.parcels[0]) == void 0 && setLoading(false)
+                : toast.error("Không thể tải nội dung")
+                ;
         }
     }, [data])
 
@@ -31,13 +34,13 @@ export default function Main() {
                 loading={loading}
                 pid={pid as string}
                 weight={0}
-                receiving_add={parcel && parcel.receiving_add.province?.name || ""}
-                sending_add={parcel && parcel.sending_add.province?.name || ""}
+                receiving_add={parcel?.receiving_add.province?.name || ""}
+                sending_add={parcel?.sending_add.province?.name || ""}
             />
 
-            <Details loading data={parcel} />
-            <Ack loading data={parcel} />
-            
+            <Details loading={loading} data={parcel} />
+            <Ack loading={loading} data={parcel} />
+
             <Notes loading={loading} notes={parcel?.notes} />
             <Goods loading={loading} goods={parcel?.goods} />
             <QRCode pid={pid as string} />

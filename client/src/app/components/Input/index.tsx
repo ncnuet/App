@@ -19,7 +19,7 @@ const theme_input: CustomFlowbiteTheme['textInput'] = {
         input: {
             base: "rounded-lg overflow-hidden block w-full border disabled:cursor-not-allowed disabled:opacity-50",
             colors: {
-                warning: "border-cyellow-500 bg-yellow-50 text-cyellow-500 placeholder-yellow-200 focus:border-cyellow-500 focus:ring-cyellow-500"
+                warning: "border-cyellow-500 bg-yellow-50 text-cyellow-500 placeholder-yellow-300 focus:border-cyellow-500 focus:ring-cyellow-500"
             },
             sizes: {
                 "md": "text-2xl font-semibold"
@@ -34,11 +34,27 @@ export default function InputTracking() {
 
     async function handleNext() {
         setLoading(true)
+
         try {
             if (pid.trim().length != 0) {
                 const response = await getParcelStatus([pid])
                 if (response && response.data.data.parcels && response.data.data.parcels.length > 0) {
-                    window && window.open("/tracking/" + pid, "_self")
+                    if (window) {
+                        try {
+                            const data = window.localStorage.getItem("tracking_pids") || "[]"
+                            const local_pids = JSON.parse(data)
+
+                            Array.isArray(local_pids)
+                                && !local_pids.includes(pid)
+                                && local_pids.push(pid)
+                                && window.localStorage.setItem("tracking_pids", JSON.stringify(local_pids))
+
+                            window.open("/tracking/" + pid, "_self")
+                        } catch (error) {
+                            console.log(error);
+                            toast.error("Lỗi không ghi được vào ô nhớ")
+                        }
+                    }
                 } else {
                     toast.error("Không tồn tại bưu gửi")
                 }
@@ -68,6 +84,7 @@ export default function InputTracking() {
                 placeholder="EB12345678910"
                 className="w-full"
                 onKeyUp={handleEnter}
+                value={pid}
                 onChange={handleChange}
                 disabled={loading}
             />
