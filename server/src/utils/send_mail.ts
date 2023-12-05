@@ -22,8 +22,12 @@ export async function sendMail(to: string, subject: string, body: any) {
 }
 
 export async function sendForgetPasswordMail(user: IQueryableUser, token: string) {
+    const path = env.ENV === "dev"
+        ? "/src/templates/forgot-password-email.html"
+        : "/templates/forgot-password-email"
+
     const body = renderTemplate(
-        "/src/templates/forgot-password-email.html",
+        path,
         {
             url: `${env.BACKEND}/auth/reset?token=${token}`,
             name: user.username

@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "compile_server": "cd ./server && npm run build && npm run add-build"
+    "compile_server": "cd ./server && npm run build && npm run add-build",
+    "LOC": "git ls-files | grep '\\.ts' | xargs wc -l"
   },
   "pre-commit": [
     "compile_server"

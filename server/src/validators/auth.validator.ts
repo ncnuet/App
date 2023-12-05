@@ -14,47 +14,45 @@ export interface IResetPassword {
     re_password: string
 }
 
-class AuthValidator {
-    private validateUsername(username: string) {
+export default class AuthValidator {
+    private static validateUsername(username: string) {
         if (!username || username.length < 3 || username.length > 50)
             throw new InputError("Username có độ dài từ 3 đến 50 ký tự", "username");
         return true
     }
 
-    private validatePassword(password: string) {
+    private static validatePassword(password: string) {
         if (!password || password.length < 8 || password.length > 50)
             throw new InputError("Mật khẩu có độ dài từ 8 đến 50 ký tự", "password");
         return true
     }
 
-    private validateEmail(email: string) {
+    private static validateEmail(email: string) {
         if (!email || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
             throw new InputError("Email không hợp lệ", "email");
         }
         return true
     }
-    private validateRePassword(password: string, re_password: string) {
+    private static validateRePassword(password: string, re_password: string) {
         if (re_password != password) {
             throw new InputError("Mật khẩu nhập lại cần giống mật khẩu", "re_password");
 
         }
     }
 
-    validateLoginPassword(data: ILoginByPassword) {
-        this.validateUsername(data.username)
-        this.validatePassword(data.password)
+    static validateLoginPassword(data: ILoginByPassword) {
+        AuthValidator.validateUsername(data.username)
+        AuthValidator.validatePassword(data.password)
     }
 
-    validateRequestReset(data: IRequestReset) {
+    static validateRequestReset(data: IRequestReset) {
         data.username &&
-            this.validateUsername(data.username) ||
-            this.validateEmail(data.email)
+            AuthValidator.validateUsername(data.username) ||
+            AuthValidator.validateEmail(data.email)
     }
 
-    validateReset(data: IResetPassword) {
-        this.validatePassword(data.password)
-        this.validateRePassword(data.password, data.re_password);
+    static validateReset(data: IResetPassword) {
+        AuthValidator.validatePassword(data.password)
+        AuthValidator.validateRePassword(data.password, data.re_password);
     }
 }
-
-export default new AuthValidator();

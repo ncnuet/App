@@ -5,7 +5,7 @@ import { checkReset } from '@/middlewares/checkReset.middler';
 
 const router: Router = express.Router();
 
-router.post('/login', AuthControler.loginByPassword);
+router.post('/login', AuthControler.login);
 router.post('/logout', [checkJWT], AuthControler.logout);
 router.post('/reset', AuthControler.requestReset)
 router.get('/reset', [checkReset], AuthControler.verifyReset)

@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+.material-symbols-rounded {
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
+}
+
 ::-webkit-scrollbar {
   width: 5px;
 }
@@ -19,6 +27,34 @@
   background: #FDB813;
 }
 
+.gdv-item:hover::-webkit-scrollbar-thumb {
+  background: #FDB813;
+}
+
+.gdv-parcel:hover::-webkit-scrollbar-thumb {
+  background: #FDB813;
+}
+
+.gdv-infor {
+  @apply h-fit max-w-fit min-w-[300px] rounded-[15px] shadow-sd1;
+}
+
+.gdv-animation {
+  animation: GdvAnimation 0.2s linear forwards;
+}
+
+.gdv-hidden-animation {
+  animation: GdvHiddenAnimation 0.2s linear forwards;
+}
+
+.gdv-animation__preview {
+  animation: GdvPreview 0.2s linear forwards;
+}
+
+.gdv-hidden-animation__preview {
+  animation: GdvHiddenPreview 0.2s linear forwards;
+}
+
 .storage-animation {
   animation-iteration-count: 1 !important;
   animation-duration: 500ms;
@@ -26,4 +62,53 @@
 
 input[type]:focus {
   box-shadow: none;
+}
+
+.parcel-bill__content {
+  @apply text-[15px] text-black font-normal;
+}
+
+.parcel-bill__heading {
+  @apply text-base text-black font-semibold;
+}
+
+@keyframes GdvPreview {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes GdvHiddenPreview {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes GdvAnimation {
+  from {
+    transform: scale(0);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes GdvHiddenAnimation {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+
+    transform: scale(0);
+  }
 }

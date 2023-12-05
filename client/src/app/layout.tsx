@@ -1,9 +1,11 @@
 import "./globals.css";
+import "material-symbols";
 import "react-toastify/dist/ReactToastify.css";
 
 import type { Metadata } from "next";
 import { Lexend } from "next/font/google";
 import { ToastContainer } from "react-toastify";
+import { Providers } from "@/redux/provider";
 
 const lexend = Lexend({ subsets: ["latin"] });
 
@@ -12,7 +14,11 @@ export const metadata: Metadata = {
   description: "Trao gửi trọn niềm tin",
 };
 
-export default function RootLayout({ children, }: { children: React.ReactNode; }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body className={lexend.className}>
@@ -30,8 +36,10 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
           theme="light"
           className={"text-[14px]"}
         />
-        
-        {children}
+
+        <Providers>{
+          children}
+        </Providers>
       </body>
     </html>
   );

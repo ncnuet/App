@@ -1,8 +1,8 @@
 import { ILocalData, Request, Response } from "@/types/controller"
-import { withAge, withSession } from '@/configs/cookie';
+import { withAge } from '@/configs/cookie';
 import { generateResetToken, generateToken } from '@/utils/generate';
 import handleError from '@/utils/handle_error';
-import authValidator, { ILoginByPassword, IRequestReset, IResetPassword } from "@/validators/auth.validator";
+import AuthValidator, { ILoginByPassword, IRequestReset, IResetPassword } from "@/validators/auth.validator";
 import authModel from '@/models/auth.model';
 import tokenModel from "@/models/token.model";
 import { sendForgetPasswordMail } from "@/utils/send_mail";
@@ -22,18 +22,18 @@ function setToken(res: Response, remember: boolean, accessToken: string, refresh
         .send();
 }
 
-class AuthController {
+export default class AuthController {
     /**
      * Verify account, return access token and resfresh token if true.
      * @param req 
      * @param res 
      */
-    async loginByPassword(req: Request, res: Response) {
+    static async login(req: Request, res: Response) {
         const data = <ILoginByPassword>req.body;
         console.log(data);
 
         await handleError(res, async () => {
-            authValidator.validateLoginPassword(data);
+            AuthValidator.validateLoginPassword(data);
             const user = await authModel.findUserByPassword(data.username, data.password);
             if (user) {
                 const version = (await tokenModel.getVersion(user.uid)) || "0";
@@ -54,7 +54,7 @@ class AuthController {
      * @param req 
      * @param res 
      */
-    async logout(req: Request, res: Response) {
+    static async logout(req: Request, res: Response) {
         const user = res.locals.user;
 
         await handleError(res, async () => {
@@ -71,12 +71,12 @@ class AuthController {
      * @param req 
      * @param res 
      */
-    async requestReset(req: Request, res: Response) {
+    static async requestReset(req: Request, res: Response) {
         const data = <IRequestReset>req.body;
         console.log(data);
 
         await handleError(res, async () => {
-            authValidator.validateRequestReset(data);
+            AuthValidator.validateRequestReset(data);
             const user = await authModel.findUserByInfo(data);
             if (user) {
                 const { username, uid } = user;
@@ -104,7 +104,7 @@ class AuthController {
      * @param req 
      * @param res 
      */
-    async verifyReset(req: Request, res: Response<any, ILocalData<IUserWithEpx>>) {
+    static async verifyReset(req: Request, res: Response<any, ILocalData<IUserWithEpx>>) {
         const username = res.locals.user.username;
         const timeExp = res.locals.user.exp * 1000;
         const remaining = Math.floor((timeExp - new Date().getTime()) / 1000);
@@ -114,11 +114,11 @@ class AuthController {
             .redirect(env.FRONTEND + "/resetpassword?ttl=" + remaining + "&user=" + username)
     }
 
-    async resetPassword(req: Request, res: Response) {
+    static async resetPassword(req: Request, res: Response) {
         const data = <IResetPassword>req.body;
 
         await handleError(res, async () => {
-            authValidator.validateReset(data);
+            AuthValidator.validateReset(data);
             const user = <IUser>res.locals.user;
 
             await authModel.updatePassword(user.uid, data.password)
@@ -126,5 +126,3 @@ class AuthController {
         })
     }
 }
-
-export default new AuthController()

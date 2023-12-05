@@ -13,8 +13,8 @@ export interface IUserWithoutVersion {
 }
 
 export type IQueryableUser = {
-    username: string,
-    uid: UID,
-    phone: string,
-    email: string
+    username?: string,
+    uid?: UID,
+    phone?: string,
+    email?: string
 }
