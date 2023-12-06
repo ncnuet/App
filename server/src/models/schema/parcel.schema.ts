@@ -1,14 +1,10 @@
 import { Document, ObjectId, Schema } from "mongoose";
 import { addressSchema, IAddress } from "./address.schema"
 import { ICustomer, customerSchema } from "./customer.schema";
-import { goodsSchema, IGoods } from "./goods.chema"
+import { goodsSchema } from "./goods.chema"
 import { PostOfficeBaseModel } from "../base/office.base";
-
-export enum EParcelStatus {
-    DELIVERING = "delivering",
-    DELIVERED = "delivered",
-    FAILED = "failed"
-}
+import { EParcelStatus } from "@/types/parcel";
+import { IGoods } from "@/types/goods";
 
 export interface IParcel extends Document {
     pid: string;

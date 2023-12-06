@@ -3,14 +3,14 @@ import userModel from "@/models/user.model";
 import { InputError, Request, Response } from "@/types/controller";
 import { EOfficeType } from "@/types/post_office";
 import handleError from "@/utils/handle_error";
-import OfficeValidate, { IOfficeCreate, IOfficeUpdate } from "@/validators/office.validator";
+import OfficeValidator, { IOfficeCreate, IOfficeUpdate } from "@/validators/office.validator";
 
 export default class OfficeController {
     public static create(req: Request, res: Response) {
         const data = <IOfficeCreate>req.body;
 
         handleError(res, async () => {
-            OfficeValidate.validateCreate(data);
+            OfficeValidator.validateCreate(data);
             const id = await postOfficeModel.create(data);
             res.json({ message: "Created success", data: { id } });
         })
@@ -20,7 +20,7 @@ export default class OfficeController {
         const id = <string>req.params.id;
 
         handleError(res, async () => {
-            OfficeValidate.validateDelete({ id });
+            OfficeValidator.validateDelete({ id });
             const ok = await postOfficeModel.delete(id);
             res.json({ message: ok ? "Created success" : "Unable to delete", data: { id } });
         })
@@ -31,7 +31,7 @@ export default class OfficeController {
         const data = <Omit<IOfficeUpdate, "id">>req.body;
 
         handleError(res, async () => {
-            OfficeValidate.validateUpdate({ id, ...data });
+            OfficeValidator.validateUpdate({ id, ...data });
             if (data.manager) {
                 const _users = await userModel.getUsers([data.manager]);
                 if (_users.length === 0)

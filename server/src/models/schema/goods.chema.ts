@@ -1,17 +1,5 @@
-import { Document, Schema } from "mongoose";
-
-export enum EGoodsCategory {
-    ELECTRONICE_DEVICE = "Electronic Devices",
-}
-
-export interface IGoods extends Document {
-    name: string;
-    category: EGoodsCategory;
-    quantity: number;
-    weight: number;
-    value: number;
-    attached: string;
-}
+import { IGoods } from "@/types/goods";
+import { Schema } from "mongoose";
 
 export const goodsSchema = new Schema<IGoods>({
     name: { type: String },

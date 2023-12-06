@@ -27,7 +27,7 @@ export const TrackingGraph = new GraphQLObjectType<ITrackingOutputGraph>({
         parcel: {
             type: GraphQLList(ParcelGraph),
             resolve: async (parent) => {
-                return await parcelModel.getParcel([parent.parcel])
+                return await parcelModel.getParcels([parent.parcel])
             }
         },
         events: {

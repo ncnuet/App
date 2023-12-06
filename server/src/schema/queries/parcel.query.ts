@@ -17,9 +17,9 @@ export const parcelsQuery: GraphQLFieldConfig<any, any, IArgs> = {
 
     resolve: async (source, args) => {
         if (args.pid) {
-            return await parcelModel.getParcel([args.pid]);
+            return await parcelModel.getParcels([args.pid]);
         } else if (args.pids && Array.isArray(args.pids)) {
-            return await parcelModel.getParcel(args.pids);
+            return await parcelModel.getParcels(args.pids);
         } else {
             return []
         }

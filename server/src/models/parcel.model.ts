@@ -1,7 +1,7 @@
 import { ParcelBaseModel } from "./base/parcel.base";
 
 class ParcelModel {
-    async getParcel(pid: string[]) {
+    async getParcels(pid: string[]) {
         const result = await ParcelBaseModel.find({
             _id: { $in: pid }
         }).exec();
