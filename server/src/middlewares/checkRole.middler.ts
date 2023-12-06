@@ -7,6 +7,6 @@ interface ICheckRole {
 
 export async function checkRole(this: ICheckRole, req: Request, res: Response, next: NextFunction) {
     const { role } = res.locals.user;
-    if (!role || this.role.includes(role)) return res.sendStatus(400);
+    if (!role || !this.role.includes(role)) return res.sendStatus(401);
     next();
 }

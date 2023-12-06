@@ -7,5 +7,6 @@ const router = Router();
 
 router.use("/", StatusRouter)
 router.use("/auth", AuthRouter)
+router.use("/office", OfficeRouter)
 
 export default router;

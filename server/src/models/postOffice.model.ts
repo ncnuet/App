@@ -1,4 +1,4 @@
-import { IOfficeCreate } from "@/validators/office.validator";
+import { IOfficeCreate, IOfficeUpdate } from "@/validators/office.validator";
 import { PostOfficeBaseModel } from "./base/post_office.base";
 import { findLevel1ById } from 'dvhcvn'
 
@@ -32,7 +32,22 @@ class PostOfficeModel {
     };
 
     async delete(id: string) {
-        const response = await PostOfficeBaseModel.deleteOne({_id: id});
+        const response = await PostOfficeBaseModel.deleteOne({ _id: id });
+        return response.acknowledged;
+    }
+
+    async update(id: string, data: Omit<IOfficeUpdate, "id">) {
+        const response = await PostOfficeBaseModel.updateOne({
+            _id: id,
+        }, {
+            name: data.name,
+            address: data.address,
+            manager: data.manager,
+            contact: data.contact,
+            post_office_type: data.post_office_type,
+            gather_office: data.gather_office
+        })
+
         return response.acknowledged;
     }
 

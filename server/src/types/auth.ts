@@ -1,5 +1,5 @@
 export type UID = string;
-export type IUserRole = "admin" | "bod" | "trans_head" | "gathe_head" | "trans_staf" | "gathe_staf";
+export type IUserRole = "admin" | "bod" | "head" | "trans_staf" | "gathe_staf";
 
 export interface IUser extends IUserWithoutVersion {
     version: string,
