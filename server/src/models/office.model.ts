@@ -1,8 +1,8 @@
 import { IOfficeCreate, IOfficeUpdate } from "@/validators/office.validator";
-import { PostOfficeBaseModel } from "./base/post_office.base";
+import { PostOfficeBaseModel } from "./base/office.base";
 import { findLevel1ById } from 'dvhcvn'
 
-class PostOfficeModel {
+class OfficeModel {
     async create(data: IOfficeCreate) {
         const _province = findLevel1ById("01");
         const province = { id: _province.id, name: _province.name }
@@ -51,7 +51,7 @@ class PostOfficeModel {
         return response.acknowledged;
     }
 
-    async getPostOffices(poid: string[]) {
+    async getOffices(poid: string[]) {
         const post_offices = await PostOfficeBaseModel.find(
             { _id: { $in: poid } }
         ).exec();
@@ -68,4 +68,4 @@ class PostOfficeModel {
     }
 }
 
-export default new PostOfficeModel();
+export default new OfficeModel();

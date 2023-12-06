@@ -1,11 +1,6 @@
 import { InputError } from "@/types/controller";
 import { findLevel1ById } from 'dvhcvn'
-
-export enum EPostOfficeType {
-    Gathering = "gathering",
-    Transaction = "transaction",
-    Headquarters = "headquarters",
-}
+import { EOfficeType } from "@/types/post_office";
 
 export interface IContact {
     hotline: string,
@@ -28,7 +23,7 @@ export interface IOfficeCreate {
     address: IAddress,
     manager?: string,
     contact: IContact,
-    post_office_type: EPostOfficeType,
+    post_office_type: EOfficeType,
     gather_office?: string,
 }
 
@@ -42,7 +37,7 @@ export interface IOfficeUpdate {
     address?: IAddress,
     manager?: string,
     contact?: IContact,
-    post_office_type?: EPostOfficeType,
+    post_office_type?: EOfficeType,
     gather_office?: string,
 }
 
@@ -61,7 +56,7 @@ export default class OfficeValidate {
 
     private static checkType(type: string, und?: boolean) {
         if (type) {
-            if (!Object.values(EPostOfficeType).includes(type as EPostOfficeType))
+            if (!Object.values(EOfficeType).includes(type as EOfficeType))
                 throw new InputError("Invalid office's type", "post_office_type");
         } else if (!und) throw new InputError("Must included office's type", "post_office_type");
     }

@@ -1,6 +1,6 @@
 import { ObjectId, Schema } from "mongoose";
 import { ParcelBaseModel } from "../base/parcel.base";
-import { PostOfficeBaseModel } from "../base/post_office.base";
+import { PostOfficeBaseModel } from "../base/office.base";
 import { ITrackingEvent, trackingEventSchema } from "./event.schema";
 
 export interface Itracking extends Document {

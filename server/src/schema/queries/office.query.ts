@@ -1,15 +1,15 @@
 import { GraphQLFieldConfig, GraphQLList, GraphQLString } from "graphql";
-import { PostOfficeGraph } from "@/schema/types/post_office.graph";
-import PostOfficeModel from '@/models/postOffice.model';
+import { OfficeGraph } from "@/schema/types/office.graph";
+import OfficeModel from '@/models/office.model';
 
 interface IArgs {
     poid: string;
     poids: string[];
 }
 
-export const postOfficeQuery: GraphQLFieldConfig<any, any, IArgs> = {
-    type: GraphQLList(PostOfficeGraph),
-    description: "PostOfficeQuery",
+export const officeQuery: GraphQLFieldConfig<any, any, IArgs> = {
+    type: GraphQLList(OfficeGraph),
+    description: "OfficeQuery",
     args: {
         poid: { type: GraphQLString },
         poids: { type: GraphQLList(GraphQLString) }
@@ -17,9 +17,9 @@ export const postOfficeQuery: GraphQLFieldConfig<any, any, IArgs> = {
 
     resolve: async (source, args) => {
         if (args.poid) {
-            return await PostOfficeModel.getPostOffices([args.poid]);
+            return await OfficeModel.getOffices([args.poid]);
         } else if (args.poid && Array.isArray(args.poid)) {
-            return await PostOfficeModel.getPostOffices(args.poids);
+            return await OfficeModel.getOffices(args.poids);
         } else {
             return []
         }

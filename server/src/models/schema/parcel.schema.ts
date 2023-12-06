@@ -2,7 +2,7 @@ import { Document, ObjectId, Schema } from "mongoose";
 import { addressSchema, IAddress } from "./address.schema"
 import { ICustomer, customerSchema } from "./customer.schema";
 import { goodsSchema, IGoods } from "./goods.chema"
-import { PostOfficeBaseModel } from "../base/post_office.base";
+import { PostOfficeBaseModel } from "../base/office.base";
 
 export enum EParcelStatus {
     DELIVERING = "delivering",

@@ -1,4 +1,4 @@
-export enum EPostOfficeType {
+export enum EOfficeType {
     Gathering = "gathering",
     Transaction = "transaction",
     Headquarters = "headquarters",

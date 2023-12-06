@@ -3,8 +3,8 @@ import { AddressGraph, IAddressOutputGraph } from "./address.graph";
 import { CustomerGraph, ICustomerOutputGraph } from "./customer.graph";
 import { GoodsGraph, IGoodsOutputGraph } from "./goods.graph";
 import { EParcelStatus } from "@/models/schema/parcel.schema";
-import { PostOfficeGraph } from "./post_office.graph";
-import PostOfficeModel from '@/models/postOffice.model';
+import { OfficeGraph } from "./office.graph";
+import OfficeModel from '@/models/office.model';
 
 export interface IParcelOutputGraph {
     pid: string;
@@ -57,13 +57,13 @@ export const ParcelGraph: GraphQLObjectType = new GraphQLObjectType<IParcelOutpu
         goods: { type: GraphQLList(GoodsGraph) },
         notes: { type: GraphQLString },
         sending_office: {
-            type: GraphQLList(PostOfficeGraph), resolve: async (parent) => {
-                return await PostOfficeModel.getPostOffices([parent.sending_office])
+            type: GraphQLList(OfficeGraph), resolve: async (parent) => {
+                return await OfficeModel.getOffices([parent.sending_office])
             }
         },
         receiving_office: {
-            type: GraphQLList(PostOfficeGraph), resolve: async (parent) => {
-                return await PostOfficeModel.getPostOffices([parent.receiving_office])
+            type: GraphQLList(OfficeGraph), resolve: async (parent) => {
+                return await OfficeModel.getOffices([parent.receiving_office])
             }
         },
     }

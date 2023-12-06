@@ -1,7 +1,7 @@
-import postOfficeModel from "@/models/postOffice.model";
+import postOfficeModel from "@/models/office.model";
 import userModel from "@/models/user.model";
 import { InputError, Request, Response } from "@/types/controller";
-import { EPostOfficeType } from "@/types/post_office";
+import { EOfficeType } from "@/types/post_office";
 import handleError from "@/utils/handle_error";
 import OfficeValidate, { IOfficeCreate, IOfficeUpdate } from "@/validators/office.validator";
 
@@ -40,10 +40,10 @@ export default class OfficeController {
                     throw new InputError("User role must be head", "role");
             }
             if (data.gather_office) {
-                const _offices = await postOfficeModel.getPostOffices([data.gather_office])
+                const _offices = await postOfficeModel.getOffices([data.gather_office])
                 if (_offices.length === 0)
                     throw new InputError("Office id not found", "gather_office");
-                if (_offices[0].post_office_type !== EPostOfficeType.Gathering)
+                if (_offices[0].post_office_type !== EOfficeType.Gathering)
                     throw new InputError("Office type must be gathering", "gather_office_type");
             }
 

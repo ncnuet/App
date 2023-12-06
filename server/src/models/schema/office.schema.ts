@@ -1,4 +1,4 @@
-import { EPostOfficeType } from "@/types/post_office";
+import { EOfficeType } from "@/types/post_office";
 import { IAddress } from "./address.schema";
 import { Document, ObjectId, Schema } from 'mongoose';
 import { UserBaseModel } from "../base/user.base";
@@ -9,7 +9,7 @@ export interface IPostOffice extends Document {
     address: IAddress,
     manager?: ObjectId,
     contact: IContact,
-    post_office_type: EPostOfficeType,
+    post_office_type: EOfficeType,
     gather_office?: ObjectId,
 }
 
