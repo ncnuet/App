@@ -1,4 +1,5 @@
 export enum EPostOfficeType {
-    Gather = "gathering",
+    Gathering = "gathering",
     Transaction = "transaction",
+    Headquarters = "headquarters",
 }

@@ -1,13 +1,40 @@
-import { EPostOfficeType } from "@/types/post_office";
-import { IPostOffice } from "./schema/post_office.schema";
+import { IOfficeCreate } from "@/validators/office.validator";
 import { PostOfficeBaseModel } from "./base/post_office.base";
+import { findLevel1ById } from 'dvhcvn'
 
 class PostOfficeModel {
-    async createPostOffice(args: any) {
+    async create(data: IOfficeCreate) {
+        const _province = findLevel1ById("01");
+        const province = { id: _province.id, name: _province.name }
+        const _district = _province.findLevel2ById("001")
+        const district = { id: _district.id, name: _district.name }
+        const _commune = _district.findLevel3ById("00001")
+        const commune = { id: _commune.id, name: _commune.name }
 
-        const newPostOffice = new PostOfficeBaseModel(args);
-        await newPostOffice.save();
+        const address = {
+            country: { name: "Việt Nam", id: "vi" },
+            province,
+            district,
+            commune,
+            detail: data.address.detail
+        }
+
+        const response = await PostOfficeBaseModel.create({
+            name: data.name,
+            address,
+            manager: data.manager,
+            contact: data.contact,
+            post_office_type: data.post_office_type,
+            gather_office: data.gather_office
+        })
+
+        return response._id;
     };
+
+    async delete(id: string) {
+        const response = await PostOfficeBaseModel.deleteOne({_id: id});
+        return response.acknowledged;
+    }
 
     async getPostOffices(poid: string[]) {
         const post_offices = await PostOfficeBaseModel.find(

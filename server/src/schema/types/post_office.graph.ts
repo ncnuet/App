@@ -23,7 +23,7 @@ const PostOfficeTypeEnum: GraphQLEnumType = new GraphQLEnumType({
 
     values: {
         TRANSACTION: { value: EPostOfficeType.Transaction },
-        GATHERING: { value: EPostOfficeType.Gather },
+        GATHERING: { value: EPostOfficeType.Gathering },
     },
 });
 

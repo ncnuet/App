@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import StatusRouter from "./status.route";
 import AuthRouter from "./auth.route";
-import schema from "@/schema"
+import OfficeRouter from "./office.route";
 
 const router = Router();
 
