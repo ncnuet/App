@@ -84,7 +84,8 @@ export default class AuthController {
                     username, uid,
                     role: "admin",
                     version: "0",
-                    remember: false
+                    remember: false,
+                    office: ""
                 });
 
                 await sendForgetPasswordMail(user, token);

@@ -1,6 +1,6 @@
 
 import { IUserRole } from '@/types/auth';
-import { Document, Schema, model } from 'mongoose';
+import { Document, ObjectId, Schema } from 'mongoose';
 
 export interface IUserSchema extends Document {
     username: string;
@@ -10,6 +10,7 @@ export interface IUserSchema extends Document {
     email: string;
     phone: string;
     name: string;
+    office: ObjectId;
 }
 
 export const userSchema = new Schema<IUserSchema>(
@@ -21,5 +22,6 @@ export const userSchema = new Schema<IUserSchema>(
         email: { type: String, unique: true, index: true },
         phone: { type: String, unique: true, index: true },
         name: { type: String },
+        office: { type: Schema.Types.ObjectId }
     },
     { timestamps: true });

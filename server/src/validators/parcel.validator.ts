@@ -23,13 +23,21 @@ export interface IParcelUpdate {
     id: string
     sender?: ICustomer;
     sending_add?: IAddress;
-    sending_office?: string;
+    sending_office: string;
     receiver?: ICustomer;
     receiving_add?: IAddress;
     receiving_office?: string;
     status?: EParcelStatus;
     goods?: IGoods[];
     notes?: string;
+}
+
+export interface IParcelUpdateStatus {
+    id: string;
+    status: EParcelStatus;
+    name: string,
+    uid: string,
+    office: string
 }
 
 export default class ParcelValidator extends BaseValidator {
@@ -56,7 +64,6 @@ export default class ParcelValidator extends BaseValidator {
         this.checkCustomer(data.receiver)
         this.checkAddress(data.receiving_add)
         this.checkAddress(data.sending_add)
-        this.checkId(data.sending_office)
         this.checkId(data.receiving_office, true)
         this.checkStatus(data.status)
         this.checkGoods(data.goods)
@@ -72,9 +79,13 @@ export default class ParcelValidator extends BaseValidator {
         this.checkCustomer(data.receiver, true)
         this.checkAddress(data.receiving_add, true)
         this.checkAddress(data.sending_add, true)
-        this.checkId(data.sending_office, true)
         this.checkId(data.receiving_office, true)
         this.checkStatus(data.status, true)
         this.checkGoods(data.goods, true)
+    }
+
+    public static validateUpdateStatus(data: IParcelUpdateStatus) {
+        this.checkId(data.id);
+        this.checkStatus(data.status);
     }
 }
