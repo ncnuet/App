@@ -2,7 +2,7 @@ import { GraphQLEnumType, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLStr
 import { AddressGraph, IAddressOutputGraph } from "./address.graph";
 import { CustomerGraph, ICustomerOutputGraph } from "./customer.graph";
 import { GoodsGraph, IGoodsOutputGraph } from "./goods.graph";
-import { EParcelStatus } from "@/models/schema/parcel.schema";
+import { EParcelStatus } from "@/types/parcel";
 import { OfficeGraph } from "./office.graph";
 import OfficeModel from '@/models/office.model';
 

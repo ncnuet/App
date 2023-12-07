@@ -55,9 +55,9 @@ export default abstract class BaseValidator {
             if (!_province) throw new InputError("Invalid province id", "address.province");
             const _district = _province.findLevel2ById(address.district)
             if (!_district) throw new InputError("Invalid district id", "address.district");
-            const _commune = _district.findLevel3ById(address.commune)
-            if (!_district) throw new InputError("Invalid commune id", "address.commune");
-        } else if (!und) throw new InputError("Must included office's address", "address");
+            const _commune = _district.findLevel3ById(address.commune)            
+            if (!_commune) throw new InputError("Invalid commune id", "address.commune");
+        } else if (!und) throw new InputError("Must included address", "address");
     }
 
     protected static checkContact(contact: IContact, und?: boolean) {

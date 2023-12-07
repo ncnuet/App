@@ -25,7 +25,7 @@ class ParcelModel {
         return response.acknowledged
     }
 
-    async update(id: string, data: IParcelUpdate) {
+    async update(id: string, data: Omit<IParcelUpdate, "id">) {
         const response = await ParcelBaseModel.updateOne({
             _id: id
         }, {

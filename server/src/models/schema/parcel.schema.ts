@@ -7,7 +7,6 @@ import { EParcelStatus } from "@/types/parcel";
 import { IGoods } from "@/types/goods";
 
 export interface IParcel extends Document {
-    pid: string;
     sender: ICustomer;
     sending_add: IAddress;
     sending_office: ObjectId;
@@ -20,7 +19,6 @@ export interface IParcel extends Document {
 }
 
 export const parcelSchema = new Schema<IParcel>({
-    pid: { type: String, required: true, unique: true, index: true },
     sender: { type: customerSchema, required: true },
     sending_add: { type: addressSchema, required: true },
     sending_office: { type: Schema.Types.ObjectId, require: true, ref: PostOfficeBaseModel },

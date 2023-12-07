@@ -1,4 +1,4 @@
-import { EGoodsCategory } from "@/models/schema/goods.chema";
+import { EGoodsCategory } from "@/types/goods";
 import { GraphQLEnumType, GraphQLInt, GraphQLObjectType, GraphQLString } from "graphql";
 
 export interface IGoodsOutputGraph {

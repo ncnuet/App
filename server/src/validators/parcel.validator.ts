@@ -44,9 +44,10 @@ export default class ParcelValidator extends BaseValidator {
         if (goods) {
             if (!Array.isArray(goods))
                 throw new InputError("Goods must be an array", "goods");
+
             if (goods.some(goods => !goods.weight || !goods.value ||
-                !goods.category || !goods.quantity || !goods.name || !goods.attached))
-                throw new InputError("Goods must include value, weight, value, category, quantity and name", "goods");
+                !goods.category || !goods.quantity || !goods.name))
+                throw new InputError("Goods must include value, weight, category, quantity and name", "goods");
         } else if (!und) throw new InputError("Must included parcel's goods", "goods");
     }
 
