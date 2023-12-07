@@ -1,23 +1,11 @@
 import { IOfficeCreate, IOfficeUpdate } from "@/validators/office.validator";
 import { PostOfficeBaseModel } from "./base/office.base";
 import { findLevel1ById } from 'dvhcvn'
+import { resolveAddress } from "@/utils/resolve_add";
 
 class OfficeModel {
     async create(data: IOfficeCreate) {
-        const _province = findLevel1ById("01");
-        const province = { id: _province.id, name: _province.name }
-        const _district = _province.findLevel2ById("001")
-        const district = { id: _district.id, name: _district.name }
-        const _commune = _district.findLevel3ById("00001")
-        const commune = { id: _commune.id, name: _commune.name }
-
-        const address = {
-            country: { name: "Việt Nam", id: "vi" },
-            province,
-            district,
-            commune,
-            detail: data.address.detail
-        }
+       const address = resolveAddress(data.address)
 
         const response = await PostOfficeBaseModel.create({
             name: data.name,

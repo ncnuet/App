@@ -4,7 +4,6 @@ import { EParcelStatus } from "@/types/parcel";
 import { IGoods } from "@/types/goods";
 
 export interface IParcelCreate {
-    pid: string;
     sender: ICustomer;
     sending_add: IAddress;
     sending_office: string;
@@ -16,6 +15,23 @@ export interface IParcelCreate {
     notes: string;
 }
 
+export interface IParcelDelete {
+    id: string;
+}
+
+export interface IParcelUpdate {
+    id: string
+    sender?: ICustomer;
+    sending_add?: IAddress;
+    sending_office?: string;
+    receiver?: ICustomer;
+    receiving_add?: IAddress;
+    receiving_office?: string;
+    status?: EParcelStatus;
+    goods?: IGoods[];
+    notes?: string;
+}
+
 export default class ParcelValidator extends BaseValidator {
     private static checkStatus(type: string, und?: boolean) {
         if (type) {
@@ -24,12 +40,17 @@ export default class ParcelValidator extends BaseValidator {
         } else if (!und) throw new InputError("Must included parcel's status", "status");
     }
 
-    private static checkGood(goods: IGoods[]){
-        
+    private static checkGoods(goods: IGoods[], und?: boolean) {
+        if (goods) {
+            if (!Array.isArray(goods))
+                throw new InputError("Goods must be an array", "goods");
+            if (goods.some(goods => !goods.weight || !goods.value ||
+                !goods.category || !goods.quantity || !goods.name || !goods.attached))
+                throw new InputError("Goods must include value, weight, value, category, quantity and name", "goods");
+        } else if (!und) throw new InputError("Must included parcel's goods", "goods");
     }
 
     public static validateCreate(data: IParcelCreate) {
-        this.checkPid(data.pid)
         this.checkCustomer(data.sender)
         this.checkCustomer(data.receiver)
         this.checkAddress(data.receiving_add)
@@ -37,5 +58,22 @@ export default class ParcelValidator extends BaseValidator {
         this.checkId(data.sending_office)
         this.checkId(data.receiving_office, true)
         this.checkStatus(data.status)
+        this.checkGoods(data.goods)
+    }
+
+    public static validateDelete(data: IParcelDelete) {
+        this.checkId(data.id);
+    }
+
+    public static validateUpdate(data: IParcelUpdate) {
+        this.checkId(data.id);
+        this.checkCustomer(data.sender, true)
+        this.checkCustomer(data.receiver, true)
+        this.checkAddress(data.receiving_add, true)
+        this.checkAddress(data.sending_add, true)
+        this.checkId(data.sending_office, true)
+        this.checkId(data.receiving_office, true)
+        this.checkStatus(data.status, true)
+        this.checkGoods(data.goods, true)
     }
 }
