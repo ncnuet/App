@@ -1,5 +1,5 @@
 import { redis } from "@/configs/redis";
-import { EUserRole } from "@/types/auth";
+import { IUserRole } from "@/types/auth";
 import { NameType, getKey } from "@/utils/redis_name";
 
 class TokenModel {
@@ -8,7 +8,7 @@ class TokenModel {
     * @param refreshToken 
     * @returns true if inserted successfully.
     */
-    async insertRefreshToken(refreshToken: string, uid: string, role: EUserRole) {
+    async insertRefreshToken(refreshToken: string, uid: string, role: IUserRole) {
         await redis.set(getKey(uid, NameType.USER_VERSION), 0, { NX: true })
 
         if (!(await redis.json.set(getKey(refreshToken, NameType.TOKEN), '$', { uid, token: refreshToken }) === "OK" &&
@@ -64,8 +64,8 @@ class TokenModel {
      * @param uid Get user's role
      * @returns 
      */
-    async getRole(uid: string): Promise<EUserRole> {
-        return <EUserRole>await redis.get(getKey(uid, NameType.USER_ROLE));
+    async getRole(uid: string): Promise<IUserRole> {
+        return <IUserRole>await redis.get(getKey(uid, NameType.USER_ROLE));
     }
 }
 

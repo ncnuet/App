@@ -1,8 +1,8 @@
-import { EUserRole } from "@/types/auth";
+import { IUserRole } from "@/types/auth";
 import { NextFunction, Request, Response } from "@/types/controller";
 
 interface ICheckRole {
-    role: EUserRole[]
+    role: IUserRole[]
 }
 
 export async function checkRole(this: ICheckRole, req: Request, res: Response, next: NextFunction) {

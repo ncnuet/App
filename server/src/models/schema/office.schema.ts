@@ -1,7 +1,6 @@
 import { Document, ObjectId, Schema } from 'mongoose';
 import { IAddress } from "./address.schema";
 import { contactSchema, IContact } from "./contact.schema";
-import { UserBaseModel } from "@/models/base/user.base";
 
 export enum EOfficeType {
     Gathering = "gathering",
@@ -27,7 +26,7 @@ export interface IOfficeSchema
 export const officeSchema: Schema = new Schema<IOfficeSchema>({
     name: { type: String, required: true },
     address: { type: Object, required: true },
-    manager: { type: Schema.Types.ObjectId, ref: UserBaseModel },
+    manager: { type: Schema.Types.ObjectId },
     contact: { type: contactSchema, required: true },
     office_type: { type: String, required: true },
     gather_office: { type: Schema.Types.ObjectId }

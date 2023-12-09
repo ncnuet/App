@@ -33,7 +33,7 @@ class TrackingModel {
         return response.acknowledged;
     }
 
-    async getTrackingByParcelID(pid: string) {
+    async getByParcelID(pid: string) {
         const user = await TrackingBaseModel.find(
             { parcel: new mongoose.Types.ObjectId(pid) },
             { parcel: 1, events: 1, _id: 1 })
@@ -44,7 +44,11 @@ class TrackingModel {
             return {
                 tid: _id.toString(),
                 parcel: parcel.toString(),
-                events
+                events: events.map(event => ({
+                    name: event.name,
+                    responsor: event.responsor.toString(),
+                    office: event.office.toString(),
+                }))
             };
         })
     }

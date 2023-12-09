@@ -2,8 +2,8 @@ import { IUserDB } from "@/models/schema/user.schema";
 
 export type IUserRole = "admin" | "bod" | "head" | "trans_staf" | "gathe_staf";
 export enum EUserRole {
-    ADMIN =  "admin",
-    BOD =  "bod",
+    ADMIN = "admin",
+    BOD = "bod",
     HEAD = "head",
     TRANS_STAF = "trans_staf",
     GATHE_STAF = "gathe_staf"
@@ -20,4 +20,6 @@ export interface IUserWithoutVersion
 }
 
 export interface IQueryableUser
-    extends Partial<Pick<IUserDB, "username" | "role" | "phone" | "email">> { }
+    extends Partial<Pick<IUserDB, "username" | "phone" | "email">> {
+    uid?: string
+}

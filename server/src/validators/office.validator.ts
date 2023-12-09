@@ -26,8 +26,8 @@ export default class OfficeValidator extends BaseValidator {
     private static checkType(type: string, und?: boolean) {
         if (type) {
             if (!Object.values(EOfficeType).includes(type as EOfficeType))
-                throw new InputError("Invalid office's type", "post_office_type");
-        } else if (!und) throw new InputError("Must included office's type", "post_office_type");
+                throw new InputError("Invalid office's type", "office_type");
+        } else if (!und) throw new InputError("Must included office's type", "office_type");
     }
 
     public static validateCreate(data: IOfficeCreate) {

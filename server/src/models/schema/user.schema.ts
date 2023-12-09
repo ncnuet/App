@@ -1,12 +1,12 @@
 
-import { EUserRole } from '@/types/auth';
+import { IUserRole } from '@/types/auth';
 import { Document, ObjectId, Schema } from 'mongoose';
 import { OfficeBaseModel } from '@/models/base/office.base';
 
 export interface IUserDB {
     username: string;
     password: string;
-    role: EUserRole;
+    role: IUserRole;
     version: number;
     email: string;
     phone: string;

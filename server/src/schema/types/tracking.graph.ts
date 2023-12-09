@@ -7,7 +7,6 @@ import parcelModel from "@/models/parcel.model";
 
 export interface ITrackingOutputGraph {
     tid: string;
-    post_office: string;
     parcel: string;
     events: ITrackingOutputGraph
 }
@@ -18,12 +17,6 @@ export const TrackingGraph = new GraphQLObjectType<ITrackingOutputGraph>({
 
     fields: {
         tid: { type: GraphQLString },
-        post_office: {
-            type: GraphQLList(OfficeGraph),
-            resolve: async (parent) => {
-                return await officeModel.getOffices([parent.post_office])
-            }
-        },
         parcel: {
             type: GraphQLList(ParcelGraph),
             resolve: async (parent) => {

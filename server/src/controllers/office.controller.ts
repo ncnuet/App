@@ -19,7 +19,7 @@ export default class OfficeController {
             const _offices = await postOfficeModel.getOffices([data.gather_office])
             if (_offices.length === 0)
                 throw new InputError("Office id not found", "gather_office");
-            if (_offices[0].post_office_type !== EOfficeType.Gathering)
+            if (_offices[0].office_type !== EOfficeType.Gathering)
                 throw new InputError("Office type must be gathering", "gather_office_type");
         }
     }
