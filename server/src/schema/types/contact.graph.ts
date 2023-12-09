@@ -1,10 +1,7 @@
 import { GraphQLObjectType, GraphQLString } from "graphql";
+import { IContact } from "@/models/schema/contact.schema";
 
-export interface IContactOutputGraph {
-    hotline: string;
-    fax: string;
-    email: string;
-}
+export interface IContactOutputGraph extends IContact {}
 
 export const ContactGraph = new GraphQLObjectType<IContactOutputGraph>({
     name: "ContactGraph",

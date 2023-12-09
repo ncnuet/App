@@ -16,7 +16,6 @@ export async function checkJWT(this: ICheckJWT | void, req: Request, res: Respon
     
     if (!token) return res.sendStatus(401);
 
-    //Try to validate the token and get data
     try {
         const user = <IUser>jwt.verify(token, config.JWT_KEY);
         const version = await tokenModel.getVersion(user.uid);

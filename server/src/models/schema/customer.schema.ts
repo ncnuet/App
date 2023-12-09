@@ -1,11 +1,13 @@
 import { Document, Schema } from "mongoose";
 
-export interface ICustomer extends Document {
+export interface ICustomer {
     name: string;
     phone: string;
 }
 
-export const customerSchema = new Schema<ICustomer>({
+export interface ICustomerSchema extends ICustomer, Document { }
+
+export const customerSchema = new Schema<ICustomerSchema>({
     name: { type: String, required: true },
     phone: { type: String, required: true }
 })

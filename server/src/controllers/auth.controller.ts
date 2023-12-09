@@ -82,9 +82,11 @@ export default class AuthController {
                 const { username, uid } = user;
                 const token = generateResetToken({
                     username, uid,
+                    name: "",
                     role: "admin",
                     version: "0",
-                    remember: false
+                    remember: false,
+                    office: ""
                 });
 
                 await sendForgetPasswordMail(user, token);
