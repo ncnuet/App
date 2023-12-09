@@ -1,28 +1,23 @@
 import { GraphQLEnumType, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from "graphql";
 import { AddressGraph, IAddressOutputGraph } from "./address.graph";
 import { CustomerGraph, ICustomerOutputGraph } from "./customer.graph";
-import { GoodsGraph, IGoodsOutputGraph } from "./goods.graph";
-import { ECostType, EParcelStatus, EReturnType } from "@/types/parcel";
+import { GoodsGraph, GoodsTypeEnum, IGoodsOutputGraph } from "./goods.graph";
+import { ECostType, EParcelStatus, EReturnType } from "@/models/schema/parcel.schema";
 import { OfficeGraph } from "./office.graph";
+import { UserGraph } from "./user.graph";
+import { IParcel } from "@/models/schema/parcel.schema";
 import OfficeModel from '@/models/office.model';
-import { EGoodsType } from "@/types/goods";
-import toGraphEnum from "@/utils/enum2grE";
+import UserModel from "@/models/user.model";
+import toGraphEnum from "@/utils/to_graph_enum";
 
-export interface IParcelOutputGraph {
+export interface IParcelOutputGraph
+    extends Omit<IParcel, "sender" | "sending_add" | "receiver" | "receiving_add" | "goods"> {
     pid: string;
-    sender: string;
+    sender: ICustomerOutputGraph,
     sending_add: IAddressOutputGraph
     receiver: ICustomerOutputGraph
     receiving_add: IAddressOutputGraph
-    status: EParcelStatus
     goods: IGoodsOutputGraph
-    notes: string
-    sending_office: string;
-    receiving_office: string;
-    goods_type: EGoodsType;
-    return_type: EReturnType;
-    cost: number;
-    cost_type: ECostType;
 }
 
 const ParcelStatusEnum: GraphQLEnumType = new GraphQLEnumType({
@@ -30,13 +25,6 @@ const ParcelStatusEnum: GraphQLEnumType = new GraphQLEnumType({
     description: "Parcel Status Enum",
 
     values: toGraphEnum(EParcelStatus)
-});
-
-const GoodsTypeEnum: GraphQLEnumType = new GraphQLEnumType({
-    name: 'GoodsTypeEnum',
-    description: "Goods Type Enum",
-
-    values: toGraphEnum(EGoodsType)
 });
 
 const ReturnTypeEnum: GraphQLEnumType = new GraphQLEnumType({
@@ -70,9 +58,14 @@ export const ParcelGraph: GraphQLObjectType = new GraphQLObjectType<IParcelOutpu
         return_type: { type: ReturnTypeEnum },
         cost: { type: GraphQLInt },
         cost_type: { type: CostTypeEnum },
+        creator: {
+            type: GraphQLList(UserGraph), resolve: async (parent) => {
+                return parent.creator ? await UserModel.getUsers([parent.creator]) : null;
+            }
+        },
         sending_office: {
             type: GraphQLList(OfficeGraph), resolve: async (parent) => {
-                return await OfficeModel.getOffices([parent.sending_office])
+                return parent.sending_office ? await OfficeModel.getOffices([parent.sending_office]) : null
             }
         },
         receiving_office: {

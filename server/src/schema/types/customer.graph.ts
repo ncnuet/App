@@ -1,9 +1,7 @@
 import { GraphQLObjectType, GraphQLString } from "graphql";
+import { ICustomer } from "@/models/schema/customer.schema";
 
-export interface ICustomerOutputGraph {
-    name: string;
-    phone: string;
-}
+export interface ICustomerOutputGraph extends ICustomer {}
 
 export const CustomerGraph = new GraphQLObjectType<ICustomerOutputGraph>({
     name: 'CustomerGraph',

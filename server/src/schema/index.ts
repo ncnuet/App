@@ -11,14 +11,11 @@ const RootQueryType = new GraphQLObjectType({
     fields: () => ({
         parcels: parcelsQuery,
         users: userQuery,
-        post_offices: officeQuery,
+        offices: officeQuery,
         tracking: trackingQuery
     })
 });
 
-const schema = new GraphQLSchema({
+export default new GraphQLSchema({
     query: RootQueryType
-});
-
-
-export default schema;
+});;

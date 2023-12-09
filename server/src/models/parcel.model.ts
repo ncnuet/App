@@ -18,18 +18,10 @@ class ParcelModel {
             cost_type: data.cost_type,
             cost: data.cost,
             goods_type: data.goods_type,
+            creator: data.creator
         })
 
         return response._id;
-    }
-
-    async delete(id: string, office_id: string) {
-        const response = await ParcelBaseModel.deleteOne({
-            _id: id,
-            sending_office: office_id
-        });
-
-        return response.acknowledged
     }
 
     async update(id: string, office_id: string, data: Omit<IParcelUpdate, "id">) {
@@ -37,8 +29,8 @@ class ParcelModel {
             _id: id,
             sending_office: office_id
         }, {
-            sending_add: data.sending_add ? resolveAddress(data.sending_add) : void 0,
-            receiving_add: data.receiving_add ? resolveAddress(data.receiving_add) : void 0,
+            sending_add: resolveAddress(data.sending_add),
+            receiving_add: resolveAddress(data.receiving_add),
             sender: data.sender,
             receiver: data.receiver,
             receiving_office: data.receiving_office,
@@ -52,6 +44,15 @@ class ParcelModel {
         })
 
         return response.acknowledged;
+    }
+
+    async delete(id: string, office_id: string) {
+        const response = await ParcelBaseModel.deleteOne({
+            _id: id,
+            sending_office: office_id
+        });
+
+        return response.acknowledged
     }
 
     async updateStatus(id: string, data: Omit<IParcelUpdateStatus, "id">) {
@@ -68,13 +69,13 @@ class ParcelModel {
         const result = await ParcelBaseModel.find({
             _id: { $in: pid }
         }).exec();
-        
+
         return result.map(parcel => {
             const {
                 _id, sender, sending_add, receiver,
                 receiving_add, status, goods, notes,
-                sending_office, receiving_office,
-                goods_type, cost, cost_type, return_type
+                sending_office, receiving_office, creator,
+                goods_type, cost, cost_type, return_type,
             } = parcel;
 
             return {
@@ -82,8 +83,9 @@ class ParcelModel {
                 sender, sending_add, receiver,
                 receiving_add, status, goods, notes,
                 goods_type, cost, cost_type, return_type,
-                sending_office: sending_office.toString(),
-                receiving_office: receiving_office ? receiving_office.toString(): null
+                sending_office: sending_office ? sending_office.toString() : null,
+                receiving_office: receiving_office ? receiving_office.toString() : null,
+                creator: creator ? creator.toString() : null,
             }
         })
     }

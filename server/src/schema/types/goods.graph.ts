@@ -1,22 +1,21 @@
-import { EGoodsCategory } from "@/types/goods";
 import { GraphQLEnumType, GraphQLInt, GraphQLObjectType, GraphQLString } from "graphql";
+import { EGoodsCategory, EGoodsType, IGoods } from "@/models/schema/goods.chema";
+import toGraphEnum from "@/utils/to_graph_enum";
 
-export interface IGoodsOutputGraph {
-    name: string;
-    category: EGoodsCategory;
-    quantity: number;
-    value: number;
-    weight: number;
-    attached: string;
-}
+export interface IGoodsOutputGraph extends IGoods {}
 
-const GoodsCategoryEnum: GraphQLEnumType = new GraphQLEnumType({
+export const GoodsTypeEnum: GraphQLEnumType = new GraphQLEnumType({
+    name: 'GoodsTypeEnum',
+    description: "Goods Type Enum",
+
+    values: toGraphEnum(EGoodsType)
+});
+
+export const GoodsCategoryEnum: GraphQLEnumType = new GraphQLEnumType({
     name: 'GoodsCategoryEnum',
     description: "Goods Category Enum",
 
-    values: {
-        ELECTRONICE_DEVICE: { value: EGoodsCategory.ELECTRONICE_DEVICE }
-    },
+    values: toGraphEnum(EGoodsCategory)
 });
 
 

@@ -1,43 +1,26 @@
 import { InputError } from "@/types/controller";
 import BaseValidator, { IAddress, ICustomer } from "./base.validator";
-import { ECostType, EParcelStatus, EReturnType } from "@/types/parcel";
-import { EGoodsType, IGoods } from "@/types/goods";
+import { ECostType, EParcelStatus, EReturnType, IParcel } from "@/models/schema/parcel.schema";
+import { EGoodsType, IGoods } from "@/models/schema/goods.chema";
+import { EGoodsCategory } from "@/models/schema/goods.chema";
 
-export interface IParcelCreate {
-    sender: ICustomer;
+export interface IParcelCreate
+    extends Omit<IParcel, "receiving_office" | "sending_add" | "receiving_add">,
+    Partial<Pick<IParcel, "receiving_office">> {
     sending_add: IAddress;
-    sending_office: string;
-    receiver: ICustomer;
     receiving_add: IAddress;
-    receiving_office?: string;
-    status: EParcelStatus;
-    goods: IGoods[];
-    goods_type: EGoodsType;
-    return_type: EReturnType;
-    cost: number;
-    cost_type: ECostType;
-    notes: string;
 }
 
 export interface IParcelDelete {
     id: string;
 }
 
-export interface IParcelUpdate {
-    id: string
-    sender?: ICustomer;
-    sending_add?: IAddress;
-    sending_office: string;
-    receiver?: ICustomer;
-    receiving_add?: IAddress;
-    receiving_office?: string;
-    status?: EParcelStatus;
-    goods?: IGoods[];
-    goods_type?: EGoodsType;
-    return_type?: EReturnType;
-    cost?: number;
-    cost_type?: ECostType;
-    notes?: string;
+export interface IParcelUpdate
+    extends Partial<Omit<IParcel, "sending_office" | "sending_add" | "receiving_add">>,
+    Pick<IParcel, "sending_office"> {
+    id: string,
+    sending_add?: IAddress,
+    receiving_add?: IAddress
 }
 
 export interface IParcelUpdateStatus {
@@ -82,9 +65,13 @@ export default class ParcelValidator extends BaseValidator {
             if (!Array.isArray(goods))
                 throw new InputError("Goods must be an array", "goods");
 
-            if (goods.some(goods => !goods.weight || !goods.value ||
-                !goods.category || !goods.quantity || !goods.name))
+            if (goods.some(_goods => !_goods.weight || !_goods.value ||
+                !_goods.category || !_goods.quantity || !_goods.name))
                 throw new InputError("Goods must include value, weight, category, quantity and name", "goods");
+
+            if (goods.some(_goods => !Object.values(EGoodsCategory)
+                .includes(_goods.category as EGoodsCategory)))
+                throw new InputError("Invalid category good type", "goods.category");
         } else if (!und) throw new InputError("Must included parcel's goods", "goods");
     }
 
@@ -119,7 +106,7 @@ export default class ParcelValidator extends BaseValidator {
     }
 
     public static validateUpdate(data: IParcelUpdate) {
-        this.checkId(data.id);
+        this.checkId(data.id)
         this.checkCustomer(data.sender, true)
         this.checkCustomer(data.receiver, true)
         this.checkAddress(data.receiving_add, true)

@@ -53,13 +53,3 @@ export function generateResetToken(user: IUserPayload) {
     const { iat, exp, ...data } = user as IUserPayload;
     return sign(data, config.JWT_RESET_KEY, JWTResetOpt);
 }
-
-// ⚠️
-export function generate_password(length: number = 8): string {
-    length = (length > 0) ? length : 8;
-
-    const base = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-    const password: string[] = [];
-
-    return [...new Array(length)].map(() => base[generateMinMax(0, base.length - 1)]).join("");
-}

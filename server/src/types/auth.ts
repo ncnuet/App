@@ -1,21 +1,23 @@
-export type UID = string;
+import { IUserDB } from "@/models/schema/user.schema";
+
 export type IUserRole = "admin" | "bod" | "head" | "trans_staf" | "gathe_staf";
+export enum EUserRole {
+    ADMIN =  "admin",
+    BOD =  "bod",
+    HEAD = "head",
+    TRANS_STAF = "trans_staf",
+    GATHE_STAF = "gathe_staf"
+}
 
 export interface IUser extends IUserWithoutVersion {
     version: string,
     remember: boolean
 }
 
-export interface IUserWithoutVersion {
-    username: string,
-    uid: UID
-    role: IUserRole,
-    office: string
+export interface IUserWithoutVersion
+    extends Pick<IUserDB, "username" | "role" | "office" | "name"> {
+    uid: string
 }
 
-export type IQueryableUser = {
-    username?: string,
-    uid?: UID,
-    phone?: string,
-    email?: string
-}
+export interface IQueryableUser
+    extends Partial<Pick<IUserDB, "username" | "role" | "phone" | "email">> { }

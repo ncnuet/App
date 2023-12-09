@@ -1,26 +1,18 @@
 import { InputError } from "@/types/controller";
 import { findLevel1ById } from 'dvhcvn'
-
-export interface IContact {
-    hotline: string,
-    fax: string,
-    email: string,
-}
-
-export interface IAddress {
+import { ICustomer as _ICustomer } from "@/models/schema/customer.schema";
+import { IContact as _IContact } from "@/models/schema/contact.schema";
+import { IAddress as _IAddress } from "@/models/schema/address.schema";
+export interface IAddress
+    extends Omit<_IAddress, "country" | "district" | "province" | "commune"> {
     country: string;
     province: string;
     district: string;
     commune: string;
-    detail?: string;
-    lat?: number;
-    long?: number;
 }
 
-export interface ICustomer {
-    name: string;
-    phone: string;
-}
+export interface IContact extends _IContact { }
+export interface ICustomer extends _ICustomer { }
 
 export default abstract class BaseValidator {
     protected static checkId(id: string, und?: boolean) {
@@ -55,7 +47,7 @@ export default abstract class BaseValidator {
             if (!_province) throw new InputError("Invalid province id", "address.province");
             const _district = _province.findLevel2ById(address.district)
             if (!_district) throw new InputError("Invalid district id", "address.district");
-            const _commune = _district.findLevel3ById(address.commune)            
+            const _commune = _district.findLevel3ById(address.commune)
             if (!_commune) throw new InputError("Invalid commune id", "address.commune");
         } else if (!und) throw new InputError("Must included address", "address");
     }

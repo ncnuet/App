@@ -1,30 +1,24 @@
 import { GraphQLEnumType, GraphQLList, GraphQLObjectType, GraphQLString } from "graphql";
-import { EOfficeType } from "@/types/post_office";
+import { EOfficeType, IOffice } from "@/models/schema/office.schema";
 import { AddressGraph, IAddressOutputGraph } from "@/schema/types/address.graph";
-import OfficeModel from '@/models/office.model';
 import { ContactGraph, IContactOutputGraph } from "./contact.graph";
 import { UserGraph } from "./user.graph";
+import OfficeModel from '@/models/office.model';
 import userModel from "@/models/user.model";
+import toGraphEnum from "@/utils/to_graph_enum";
 
-export interface IOfficeOutputGraph {
+export interface IOfficeOutputGraph
+    extends Omit<IOffice, "address" | "contact"> {
     poid: string;
-    name: string;
     address: IAddressOutputGraph
-    manager: string,
     contact: IContactOutputGraph
-    post_office_type: EOfficeType
-    gather_office: string
 }
-
 
 const OfficeTypeEnum: GraphQLEnumType = new GraphQLEnumType({
     name: 'OfficeTypeEnum',
     description: "Office Type Enum",
 
-    values: {
-        TRANSACTION: { value: EOfficeType.Transaction },
-        GATHERING: { value: EOfficeType.Gathering },
-    },
+    values: toGraphEnum(EOfficeType)
 });
 
 const OfficeGraph: GraphQLObjectType = new GraphQLObjectType<IOfficeOutputGraph>({
@@ -35,19 +29,18 @@ const OfficeGraph: GraphQLObjectType = new GraphQLObjectType<IOfficeOutputGraph>
         poid: { type: GraphQLString },
         name: { type: GraphQLString },
         address: { type: AddressGraph },
+        contact: { type: ContactGraph },
+        office_type: { type: OfficeTypeEnum },
         manager: {
             type: GraphQLList(UserGraph),
             resolve: async (parent) => {
-                return await userModel.getUsers([parent.manager])
+                return parent.manager ? await userModel.getUsers([parent.manager]) : null;
             }
         },
-        contact: { type: ContactGraph },
-        post_office_type: { type: OfficeTypeEnum },
-
         gather_office: {
             type: GraphQLList(OfficeGraph),
             resolve: async (parent) => {
-                return await OfficeModel.getOffices([parent.gather_office])
+                return parent.gather_office ? await OfficeModel.getOffices([parent.gather_office]) : null
             }
         }
     })

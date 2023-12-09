@@ -1,24 +1,20 @@
 import parcelModel from "@/models/parcel.model";
-import { GraphQLFieldConfig, GraphQLList, GraphQLScalarType, GraphQLString } from "graphql";
-import { ParcelGraph } from "../types/parcel.graph";
+import { GraphQLFieldConfig, GraphQLList, GraphQLNonNull, GraphQLString } from "graphql";
+import { ParcelGraph } from "@/schema/types/parcel.graph";
 
 interface IArgs {
-    pid: string;
     pids: string[];
 }
 
-export const parcelsQuery: GraphQLFieldConfig<any, any, IArgs> = {
+export const parcelsQuery: GraphQLFieldConfig<undefined, any, IArgs> = {
     type: GraphQLList(ParcelGraph),
     description: "Parcel Query",
     args: {
-        pid: { type: GraphQLString },
-        pids: { type: GraphQLList(GraphQLString) }
+        pids: { type: GraphQLNonNull(GraphQLList(GraphQLString)) }
     },
 
     resolve: async (source, args) => {
-        if (args.pid) {
-            return await parcelModel.getParcels([args.pid]);
-        } else if (args.pids && Array.isArray(args.pids)) {
+        if (args.pids && Array.isArray(args.pids)) {
             return await parcelModel.getParcels(args.pids);
         } else {
             return []

@@ -1,24 +1,35 @@
-import { EOfficeType } from "@/types/post_office";
-import { IAddress } from "./address.schema";
 import { Document, ObjectId, Schema } from 'mongoose';
-import { UserBaseModel } from "../base/user.base";
+import { IAddress } from "./address.schema";
 import { contactSchema, IContact } from "./contact.schema";
+import { UserBaseModel } from "@/models/base/user.base";
 
-export interface IPostOffice extends Document {
-    name: String,
-    address: IAddress,
-    manager?: ObjectId,
-    contact: IContact,
-    post_office_type: EOfficeType,
-    gather_office?: ObjectId,
+export enum EOfficeType {
+    Gathering = "gathering",
+    Transaction = "transaction",
+    Headquarters = "headquarters",
 }
 
-export const officeSchema: Schema = new Schema<IPostOffice>({
+export interface IOffice {
+    name: string,
+    address: IAddress,
+    manager?: string,
+    contact: IContact,
+    office_type: EOfficeType,
+    gather_office?: string
+}
+
+export interface IOfficeSchema
+    extends Omit<IOffice, "manager" | "gather_office">, Document {
+    manager: ObjectId,
+    gather_office: ObjectId
+}
+
+export const officeSchema: Schema = new Schema<IOfficeSchema>({
     name: { type: String, required: true },
     address: { type: Object, required: true },
     manager: { type: Schema.Types.ObjectId, ref: UserBaseModel },
     contact: { type: contactSchema, required: true },
-    post_office_type: { type: String, required: true },
+    office_type: { type: String, required: true },
     gather_office: { type: Schema.Types.ObjectId }
 }, {
     timestamps: true

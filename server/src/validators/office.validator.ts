@@ -1,35 +1,25 @@
 import { InputError } from "@/types/controller";
-import { findLevel1ById } from 'dvhcvn'
-import { EOfficeType } from "@/types/post_office";
-import BaseValidator, { IAddress, IContact } from "./base.validator";
+import { EOfficeType, IOffice } from "@/models/schema/office.schema";
+import BaseValidator, { IAddress } from "./base.validator";
 
-export interface IOfficeCreate {
-    name: string,
-    address: IAddress,
-    manager?: string,
-    contact: IContact,
-    post_office_type: EOfficeType,
-    gather_office?: string,
+export interface IOfficeCreate
+    extends Omit<IOffice, "address"> {
+    address: IAddress
 }
 
 export interface IOfficeDelete {
     id: string
 }
 
-export interface IOfficeUpdate {
+export interface IOfficeUpdate
+    extends Partial<Omit<IOffice, "address">> {
     id: string,
-    name?: string,
-    address?: IAddress,
-    manager?: string,
-    contact?: IContact,
-    post_office_type?: EOfficeType,
-    gather_office?: string,
+    address?: IAddress
 }
 
 export default class OfficeValidator extends BaseValidator {
     private static checkName(name: string, und?: boolean) {
         if (name) {
-
         } else if (!und) throw new InputError("Must included office's name", "name");
     }
 
@@ -44,7 +34,7 @@ export default class OfficeValidator extends BaseValidator {
         this.checkName(data.name);
         this.checkAddress(data.address);
         this.checkContact(data.contact);
-        this.checkType(data.post_office_type);
+        this.checkType(data.office_type);
         this.checkId(data.gather_office, true);
         this.checkId(data.manager, true);
     }
@@ -60,6 +50,6 @@ export default class OfficeValidator extends BaseValidator {
         this.checkId(data.manager, true);
         this.checkAddress(data.address, true);
         this.checkContact(data.contact, true);
-        this.checkType(data.post_office_type, true);
+        this.checkType(data.office_type, true);
     }
 }

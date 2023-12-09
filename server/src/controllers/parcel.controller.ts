@@ -14,16 +14,19 @@ export default class ParcelController {
     }
 
     public static async create(req: Request, res: Response) {
-        const data = <IParcelCreate>req.body;
+        const _data = req.body;
         const user = res.locals.user;
+        const data = <IParcelCreate>{
+            ..._data,
+            creator: user.uid,
+            sending_office: user.office
+        }
 
         handleError(res, async () => {
             ParcelValidator.validateCreate(data);
             await ParcelController.precheck(data);
-            data.sending_office = user.office;
-            
+
             const parcel_id = await parcelModel.create(data);
-            if (!parcel_id) throw new InputError("Can not created parcel", "_");
             const tracking_id = await trackingModel.create({
                 parcel: parcel_id,
                 office: user.office,
@@ -56,7 +59,7 @@ export default class ParcelController {
             await ParcelController.precheck(data);
 
             const ok = await parcelModel.update(id, user.office, data);
-            res.json({ message: ok ? "Deleted successfully" : "Unable to delete", data: { id } });
+            res.json({ message: ok ? "Updated successfully" : "Unable to update", data: { id } });
         })
     }
 
@@ -69,9 +72,11 @@ export default class ParcelController {
             ParcelValidator.validateUpdateStatus({ id, ...data });
 
             const ok_tracking = await trackingModel.push(id, { ...data, uid: user.uid, office: user.office })
-            if (!ok_tracking) throw new InputError("Unable to push new event", "event");
             const ok_parcel = await parcelModel.updateStatus(id, data)
-            res.json({ message: ok_parcel ? "Updated status successfully" : "Unable to update status" })
+            res.json({
+                message: ok_parcel && ok_tracking ? "Updated status successfully" : "Unable to update status",
+                data: { id }
+            })
         })
     }
 }

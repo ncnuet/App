@@ -1,15 +1,21 @@
 
-import { IUserRole } from '@/types/auth';
+import { EUserRole } from '@/types/auth';
 import { Document, ObjectId, Schema } from 'mongoose';
+import { OfficeBaseModel } from '@/models/base/office.base';
 
-export interface IUserSchema extends Document {
+export interface IUserDB {
     username: string;
     password: string;
-    role: IUserRole;
+    role: EUserRole;
     version: number;
     email: string;
     phone: string;
     name: string;
+    office: string;
+}
+
+export interface IUserSchema
+    extends Omit<IUserDB, "office">, Document {
     office: ObjectId;
 }
 
@@ -22,6 +28,6 @@ export const userSchema = new Schema<IUserSchema>(
         email: { type: String, unique: true, index: true },
         phone: { type: String, unique: true, index: true },
         name: { type: String },
-        office: { type: Schema.Types.ObjectId }
+        office: { type: Schema.Types.ObjectId, ref: OfficeBaseModel }
     },
     { timestamps: true });
