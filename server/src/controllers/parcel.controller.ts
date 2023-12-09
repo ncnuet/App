@@ -21,12 +21,12 @@ export default class ParcelController {
             ParcelValidator.validateCreate(data);
             await ParcelController.precheck(data);
             data.sending_office = user.office;
-
+            
             const parcel_id = await parcelModel.create(data);
             if (!parcel_id) throw new InputError("Can not created parcel", "_");
             const tracking_id = await trackingModel.create({
                 parcel: parcel_id,
-                post_office: data.sending_office,
+                office: user.office,
                 uid: user.uid
             });
 
@@ -68,7 +68,7 @@ export default class ParcelController {
         handleError(res, async () => {
             ParcelValidator.validateUpdateStatus({ id, ...data });
 
-            const ok_tracking = await trackingModel.push(id, { ...data, office: user.office })
+            const ok_tracking = await trackingModel.push(id, { ...data, uid: user.uid, office: user.office })
             if (!ok_tracking) throw new InputError("Unable to push new event", "event");
             const ok_parcel = await parcelModel.updateStatus(id, data)
             res.json({ message: ok_parcel ? "Updated status successfully" : "Unable to update status" })

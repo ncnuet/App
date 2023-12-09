@@ -13,7 +13,7 @@ export interface IPostOffice extends Document {
     gather_office?: ObjectId,
 }
 
-export const postOfficeSchema: Schema = new Schema<IPostOffice>({
+export const officeSchema: Schema = new Schema<IPostOffice>({
     name: { type: String, required: true },
     address: { type: Object, required: true },
     manager: { type: Schema.Types.ObjectId, ref: UserBaseModel },

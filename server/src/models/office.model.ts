@@ -1,5 +1,5 @@
 import { IOfficeCreate, IOfficeUpdate } from "@/validators/office.validator";
-import { PostOfficeBaseModel } from "./base/office.base";
+import { OfficeBaseModel } from "./base/office.base";
 import { findLevel1ById } from 'dvhcvn'
 import { resolveAddress } from "@/utils/resolve_add";
 
@@ -7,7 +7,7 @@ class OfficeModel {
     async create(data: IOfficeCreate) {
        const address = resolveAddress(data.address)
 
-        const response = await PostOfficeBaseModel.create({
+        const response = await OfficeBaseModel.create({
             name: data.name,
             address,
             manager: data.manager,
@@ -20,12 +20,12 @@ class OfficeModel {
     };
 
     async delete(id: string) {
-        const response = await PostOfficeBaseModel.deleteOne({ _id: id });
+        const response = await OfficeBaseModel.deleteOne({ _id: id });
         return response.acknowledged;
     }
 
     async update(id: string, data: Omit<IOfficeUpdate, "id">) {
-        const response = await PostOfficeBaseModel.updateOne({
+        const response = await OfficeBaseModel.updateOne({
             _id: id,
         }, {
             name: data.name,
@@ -40,7 +40,7 @@ class OfficeModel {
     }
 
     async getOffices(poid: string[]) {
-        const post_offices = await PostOfficeBaseModel.find(
+        const post_offices = await OfficeBaseModel.find(
             { _id: { $in: poid } }
         ).exec();
 

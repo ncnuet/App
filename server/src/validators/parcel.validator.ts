@@ -1,7 +1,7 @@
 import { InputError } from "@/types/controller";
 import BaseValidator, { IAddress, ICustomer } from "./base.validator";
-import { EParcelStatus } from "@/types/parcel";
-import { IGoods } from "@/types/goods";
+import { ECostType, EParcelStatus, EReturnType } from "@/types/parcel";
+import { EGoodsType, IGoods } from "@/types/goods";
 
 export interface IParcelCreate {
     sender: ICustomer;
@@ -12,6 +12,10 @@ export interface IParcelCreate {
     receiving_office?: string;
     status: EParcelStatus;
     goods: IGoods[];
+    goods_type: EGoodsType;
+    return_type: EReturnType;
+    cost: number;
+    cost_type: ECostType;
     notes: string;
 }
 
@@ -29,6 +33,10 @@ export interface IParcelUpdate {
     receiving_office?: string;
     status?: EParcelStatus;
     goods?: IGoods[];
+    goods_type?: EGoodsType;
+    return_type?: EReturnType;
+    cost?: number;
+    cost_type?: ECostType;
     notes?: string;
 }
 
@@ -48,6 +56,27 @@ export default class ParcelValidator extends BaseValidator {
         } else if (!und) throw new InputError("Must included parcel's status", "status");
     }
 
+    private static checkGoodsType(type: string, und?: boolean) {
+        if (type) {
+            if (!Object.values(EGoodsType).includes(type as EGoodsType))
+                throw new InputError("Invalid parcel's goods type", "goods_type");
+        } else if (!und) throw new InputError("Must included parcel's goods type", "goods_type");
+    }
+
+    private static checkReturnType(type: string, und?: boolean) {
+        if (type) {
+            if (!Object.values(EReturnType).includes(type as EReturnType))
+                throw new InputError("Invalid parcel's return type", "return_type");
+        } else if (!und) throw new InputError("Must included parcel's return type", "return_type");
+    }
+
+    private static checkCostType(type: string, und?: boolean) {
+        if (type) {
+            if (!Object.values(ECostType).includes(type as ECostType))
+                throw new InputError("Invalid parcel's cost type", "cost_type");
+        } else if (!und) throw new InputError("Must included parcel's cost type", "cost_type");
+    }
+
     private static checkGoods(goods: IGoods[], und?: boolean) {
         if (goods) {
             if (!Array.isArray(goods))
@@ -59,6 +88,18 @@ export default class ParcelValidator extends BaseValidator {
         } else if (!und) throw new InputError("Must included parcel's goods", "goods");
     }
 
+    private static checkName(name: string, und?: boolean) {
+        if (name) {
+            if (name.trim().length === 0) throw new InputError("Invalid name", "name");
+        } else if (!und) throw new InputError("Must include name", "name");
+    }
+
+    private static checkCost(cost: number, und?: boolean) {
+        if (cost) {
+            if (cost < 0) throw new InputError("Invalid cost", "cost");
+        } else if (!und) throw new InputError("Must include cost", "cost");
+    }
+
     public static validateCreate(data: IParcelCreate) {
         this.checkCustomer(data.sender)
         this.checkCustomer(data.receiver)
@@ -67,6 +108,10 @@ export default class ParcelValidator extends BaseValidator {
         this.checkId(data.receiving_office, true)
         this.checkStatus(data.status)
         this.checkGoods(data.goods)
+        this.checkGoodsType(data.goods_type)
+        this.checkReturnType(data.return_type);
+        this.checkCostType(data.cost_type);
+        this.checkCost(data.cost)
     }
 
     public static validateDelete(data: IParcelDelete) {
@@ -82,10 +127,15 @@ export default class ParcelValidator extends BaseValidator {
         this.checkId(data.receiving_office, true)
         this.checkStatus(data.status, true)
         this.checkGoods(data.goods, true)
+        this.checkGoodsType(data.goods_type, true)
+        this.checkReturnType(data.return_type, true);
+        this.checkCostType(data.cost_type, true);
+        this.checkCost(data.cost, true)
     }
 
     public static validateUpdateStatus(data: IParcelUpdateStatus) {
         this.checkId(data.id);
         this.checkStatus(data.status);
+        this.checkName(data.name);
     }
 }

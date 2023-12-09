@@ -13,7 +13,11 @@ class ParcelModel {
             receiving_office: data.receiving_office,
             status: data.status,
             goods: data.goods,
-            notes: data.notes
+            notes: data.notes,
+            return_type: data.return_type,
+            cost_type: data.cost_type,
+            cost: data.cost,
+            goods_type: data.goods_type,
         })
 
         return response._id;
@@ -40,7 +44,11 @@ class ParcelModel {
             receiving_office: data.receiving_office,
             status: data.status,
             goods: data.goods,
-            notes: data.notes
+            notes: data.notes,
+            return_type: data.return_type,
+            cost_type: data.cost_type,
+            cost: data.cost,
+            goods_type: data.goods_type,
         })
 
         return response.acknowledged;
@@ -60,20 +68,22 @@ class ParcelModel {
         const result = await ParcelBaseModel.find({
             _id: { $in: pid }
         }).exec();
-
+        
         return result.map(parcel => {
             const {
                 _id, sender, sending_add, receiver,
                 receiving_add, status, goods, notes,
-                sending_office, receiving_office
+                sending_office, receiving_office,
+                goods_type, cost, cost_type, return_type
             } = parcel;
 
             return {
                 pid: _id.toString(),
                 sender, sending_add, receiver,
                 receiving_add, status, goods, notes,
+                goods_type, cost, cost_type, return_type,
                 sending_office: sending_office.toString(),
-                receiving_office: receiving_office.toString()
+                receiving_office: receiving_office ? receiving_office.toString(): null
             }
         })
     }

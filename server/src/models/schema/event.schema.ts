@@ -1,6 +1,6 @@
 import { ObjectId, Schema } from "mongoose";
 import { UserBaseModel } from "../base/user.base";
-import officeModel from "../office.model";
+import { OfficeBaseModel } from "../base/office.base";
 
 export interface ITrackingEvent {
     name: string;
@@ -11,5 +11,5 @@ export interface ITrackingEvent {
 export const trackingEventSchema = new Schema<ITrackingEvent>({
     name: { type: String, required: true },
     responsor: { type: Schema.Types.ObjectId, required: true, ref: UserBaseModel },
-    office: { type: Schema.Types.ObjectId, required: true, ref: officeModel }
+    office: { type: Schema.Types.ObjectId, required: true, ref: OfficeBaseModel }
 })

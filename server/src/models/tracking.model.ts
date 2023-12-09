@@ -2,12 +2,12 @@ import mongoose from "mongoose";
 import { TrackingBaseModel } from "./base/tracking.base";
 
 class TrackingModel {
-    async create(data: { post_office: string, parcel: string, uid: string }) {
+    async create(data: { office: string, parcel: string, uid: string }) {
         const response = await TrackingBaseModel.create({
             parcel: data.parcel,
             events: [
                 {
-                    post_office: data.post_office,
+                    office: data.office,
                     name: "Created parcel",
                     responsor: data.uid,
                 }
