@@ -12,11 +12,14 @@ export interface IUserDB {
     phone: string;
     name: string;
     office: string;
+    active: boolean;
+    creator: string;
 }
 
 export interface IUserSchema
-    extends Omit<IUserDB, "office">, Document {
+    extends Omit<IUserDB, "office" | "creator">, Document {
     office: ObjectId;
+    creator: ObjectId
 }
 
 export const userSchema = new Schema<IUserSchema>(
@@ -28,6 +31,8 @@ export const userSchema = new Schema<IUserSchema>(
         email: { type: String, unique: true, index: true },
         phone: { type: String, unique: true, index: true },
         name: { type: String },
-        office: { type: Schema.Types.ObjectId, ref: OfficeBaseModel }
+        office: { type: Schema.Types.ObjectId, ref: OfficeBaseModel },
+        active: { type: Boolean, require: true },
+        creator: { type: Schema.Types.ObjectId }
     },
     { timestamps: true });
