@@ -11,8 +11,12 @@ const ManagerPage = () => {
       </h2>
       <div className="max-h-full flex flex-col gap-2 px-1 -mr-7">
         <section className="grid grid-cols-3 pt-2 pb-[18px] border-b border-b-[#E2E8F0] mr-7">
-          <h3 className="text-sm text-[#A0AEC0] font-bold ">Tài khoản</h3>
-          <h3 className="text-sm text-[#A0AEC0] font-bold ">Chức vụ</h3>
+          <h3 className="col-span-2 lg:col-span-1 text-sm text-[#A0AEC0] font-bold ">
+            Tài khoản
+          </h3>
+          <h3 className="hidden lg:block text-sm text-[#A0AEC0] font-bold ">
+            Chức vụ
+          </h3>
           <h3 className="text-sm text-[#A0AEC0] font-bold ">Quản lý</h3>
         </section>
         <section className="flex-grow overflow-scroll flex flex-col gap-4 list pr-7">
@@ -24,11 +28,11 @@ const ManagerPage = () => {
                 `${index === 0 && "mt-2"}`
               }
             >
-              <div className="flex flex-row gap-[10px] items-center">
+              <div className="col-span-2 lg:col-span-1 flex flex-row gap-[10px] items-center">
                 <Image
                   src={coolGirl}
                   alt="cool girl"
-                  className="h-9 w-9 rounded-[18px] object-cover"
+                  className="hidden sm:block flex-none h-9 w-9 rounded-[18px] object-cover"
                   loading="lazy"
                 ></Image>
                 <div className="flex flex-col items-start">
@@ -40,7 +44,7 @@ const ManagerPage = () => {
                   </span>
                 </div>
               </div>
-              <div className="flex flex-col items-start">
+              <div className="hidden lg:flex flex-col items-start">
                 <span className="text-sm text-cblue-600 font-bold">
                   Manager
                 </span>

@@ -102,11 +102,11 @@ const StaffInfor = ({ params }: StaffInforProps) => {
 
   return (
     <main
-      className="grid grid-cols-10 gap-3"
+      className="max-h-full overflow-scroll -mr-5 pr-5 pb-10 grid grid-cols-10 gap-5 xl:gap-3 list"
       onDragOver={(e) => e.preventDefault()}
       onDrop={(e) => e.preventDefault()}
     >
-      <section className="col-span-7 flex flex-col gap-5">
+      <section className="col-span-10 xl:col-span-7 flex flex-col gap-5">
         <form
           onSubmit={onInforSubmitHandler}
           className="flex flex-col gap-3 bg-white rounded-[15px] shadow-sd2"
@@ -120,7 +120,7 @@ const StaffInfor = ({ params }: StaffInforProps) => {
             </button>
           </div>
           <div className="flex flex-col gap-8 pb-[30px] px-[30px]">
-            <div className="grid grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
               <div className="flex flex-col gap-2">
                 <h3 className="text-sm text-cgray-600 font-semibold">
                   Tên đầy đủ
@@ -154,7 +154,7 @@ const StaffInfor = ({ params }: StaffInforProps) => {
               </div>
             </div>
             <div className="grid grid-cols-10 gap-5">
-              <div className="col-span-5 flex flex-col gap-2">
+              <div className="col-span-10 lg:col-span-5 flex flex-col gap-2">
                 <h3 className="text-sm text-cgray-600 font-semibold">
                   Địa chỉ
                 </h3>
@@ -170,7 +170,7 @@ const StaffInfor = ({ params }: StaffInforProps) => {
                   Nơi bạn đang cư trú
                 </span>
               </div>
-              <div className="col-span-3 flex flex-col gap-2">
+              <div className="col-span-5 lg:col-span-3 flex flex-col gap-2">
                 <h3 className="text-sm text-cgray-600 font-semibold">
                   Số điện thoại
                 </h3>
@@ -186,7 +186,7 @@ const StaffInfor = ({ params }: StaffInforProps) => {
                   Cách chúng tôi liên hệ với bạn
                 </span>
               </div>
-              <div className="col-span-2 flex flex-col gap-2">
+              <div className=" col-span-5 lg:col-span-2 flex flex-col gap-2">
                 <h3 className="text-sm text-cgray-600 font-semibold">
                   Giới tính
                 </h3>
@@ -228,7 +228,7 @@ const StaffInfor = ({ params }: StaffInforProps) => {
             </button>
           </div>
           <div className="flex flex-col gap-8 pb-[30px] px-[30px]">
-            <div className="grid grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
               <div className="flex flex-col gap-2">
                 <h3 className="text-sm text-cgray-600 font-semibold">
                   Tên đăng nhập
@@ -266,7 +266,7 @@ const StaffInfor = ({ params }: StaffInforProps) => {
           </div>
         </form>
       </section>
-      <section className="col-span-3 flex flex-col gap-5">
+      <section className="col-span-10 xl:col-span-3 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-1 gap-5">
         <div className="flex flex-col gap-3 bg-white rounded-[15px] shadow-sd2">
           <h2 className="p-[20px] text-base text-cyellow-600 font-semibold border-b border-b-[#CCD7E2]">
             Ảnh đại diện
@@ -322,7 +322,7 @@ const StaffInfor = ({ params }: StaffInforProps) => {
                   cloud_upload
                 </span>
               </span>
-              <div className="flex flex-row gap-1">
+              <div className="flex flex-row items-end gap-1">
                 <span className="text-[15px] text-cblue-300 font-medium cursor-pointer hover:opacity-80">
                   {isDragging ? "Thả tại đây" : "Click để tải ảnh lên"}
                 </span>
