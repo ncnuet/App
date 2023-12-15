@@ -20,7 +20,7 @@ export interface IUpdateUser {
     role: string,
     active: boolean,
     office: string,
-    password: string;
+    avatar: string,
 }
 
 

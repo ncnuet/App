@@ -4,6 +4,7 @@ import { checkJWT } from '@/middlewares/checkJWT.middler';
 import { checkReset } from '@/middlewares/checkReset.middler';
 import userModel from '@/models/user.model';
 import { checkRole } from '@/middlewares/checkRole.middler';
+import { upload } from '@/middlewares/multer.middler';
 
 const router: Router = express.Router();
 
@@ -19,6 +20,6 @@ router.put('/reset', [checkReset], AuthControler.resetPassword)
 router.post('/', [checkJWT, checkRole.bind({ role: ["admin", "bod", "head"] })], AuthControler.createUser);
 router.patch('/:id',[checkJWT, checkRole.bind({ role: ["admin", "bod", "head"] })], AuthControler.updateUser);
 router.delete('/:id',checkJWT, AuthControler.deleteUser);
-// router.post('/:id/active', userModel.activeManager);
+router.patch('/',checkJWT, upload.single("avatar"), AuthControler.updateSelf);
 
 export default router;

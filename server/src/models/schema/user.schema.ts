@@ -14,6 +14,7 @@ export interface IUserDB {
     office: string;
     active: boolean;
     creator: string;
+    avatar: string;
 }
 
 export interface IUserSchema
@@ -33,6 +34,7 @@ export const userSchema = new Schema<IUserSchema>(
         name: { type: String },
         office: { type: Schema.Types.ObjectId, ref: OfficeBaseModel },
         active: { type: Boolean, require: true },
-        creator: { type: Schema.Types.ObjectId }
+        creator: { type: Schema.Types.ObjectId },
+        avatar: {type: String},
     },
     { timestamps: true });

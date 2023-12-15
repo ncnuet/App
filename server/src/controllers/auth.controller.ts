@@ -192,4 +192,28 @@ export default class AuthController {
             })
         })
     }
+
+    static async updateSelf(req: Request, res: Response) {
+        const data = <IUpdateUser>req.body;
+        if(req.file) {
+            data.avatar = req.file.path
+        }
+        
+        const editor = res.locals.user;
+        await handleError(res, async() => {
+            const updatedUser = await userModel.update(editor.uid.toString(), data);
+
+            res.status(200).json({
+                message: "update success",
+                data: {
+                    uid:editor.uid,
+                    username: updatedUser.username,
+                    email: updatedUser.email,
+                    role: updatedUser.role,
+                    active: updatedUser.active,
+                    phone: updatedUser.phone,
+                }
+            })
+        })
+    }
 }
