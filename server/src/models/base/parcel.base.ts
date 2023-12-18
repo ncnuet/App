@@ -1,4 +1,5 @@
 import { model } from "mongoose";
-import { IParcel, parcelSchema } from "@/models/schema/parcel.schema";
+import ParcelSchema, { IParcelSchema } from "@/models/schema/parcel.schema";
+import { MongoosasticModel } from "mongoosastic";
 
-export const ParcelBaseModel = model<IParcel>("Parcel", parcelSchema);
+export const ParcelBaseModel = model<IParcelSchema, MongoosasticModel<IParcelSchema>>("Parcel", ParcelSchema);

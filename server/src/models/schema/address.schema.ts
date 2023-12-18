@@ -5,22 +5,25 @@ export interface IAddressLevel {
     name: string;
 }
 
-export interface IAddress extends Document {
+export interface IAddress {
     country: IAddressLevel;
     province: IAddressLevel;
     district: IAddressLevel;
     commune: IAddressLevel;
-    detail: string;
-    lat: number;
-    long: number;
+    detail?: string;
+    lat?: number;
+    long?: number;
 }
 
-export const addressLevelSchema = new Schema<IAddressLevel>({
+export interface IAddressSchema extends IAddress, Document { }
+export interface IAddressLevelSchema extends IAddressLevel { }
+
+export const addressLevelSchema = new Schema<IAddressLevelSchema>({
     id: { type: String, required: true },
     name: { type: String, required: true }
 })
 
-export const addressSchema = new Schema<IAddress>({
+export const addressSchema = new Schema<IAddressSchema>({
     country: { type: addressLevelSchema, required: true },
     province: { type: addressLevelSchema, required: true },
     district: { type: addressLevelSchema, required: true },

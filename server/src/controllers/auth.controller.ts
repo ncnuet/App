@@ -8,6 +8,8 @@ import tokenModel from "@/models/token.model";
 import { sendForgetPasswordMail } from "@/utils/send_mail";
 import env from "@/configs/env";
 import { IUser } from "@/types/auth";
+import RoleValidator, { ICreateUser, IUpdateUser } from "@/validators/user.validator";
+import userModel from "@/models/user.model";
 
 interface IUserWithEpx extends IUser {
     exp: number;
@@ -82,9 +84,11 @@ export default class AuthController {
                 const { username, uid } = user;
                 const token = generateResetToken({
                     username, uid,
+                    name: "",
                     role: "admin",
                     version: "0",
-                    remember: false
+                    remember: false,
+                    office: ""
                 });
 
                 await sendForgetPasswordMail(user, token);
@@ -123,6 +127,93 @@ export default class AuthController {
 
             await authModel.updatePassword(user.uid, data.password)
             res.json({ message: "Password changed successfully" });
+        })
+    }
+
+    static async createUser(req: Request, res: Response) {
+        const data = <ICreateUser>req.body;
+        const user = res.locals.user;
+        
+        await handleError(res, async () => {
+            RoleValidator.validateCreateUser(user.role, data);
+            const user_id = await userModel.create(user.uid, data);
+
+            res.status(200).json({
+                message: "Created sucessfully",
+                data: {
+                    uid: user_id,
+                    username: data.username,
+                    password: data.password,
+                    email: data.email,
+                    role: data.role
+                }
+            })
+
+            // TODO: Gui mail ve chi nguoi dung
+        })
+    }
+
+    static async updateUser(req: Request, res: Response) {
+        const {id} = req.params;
+        const data = <IUpdateUser>req.body;
+        const editor = res.locals.user;
+
+        await handleError(res, async () => {
+            const users = await userModel.getUsers([id]);
+
+            RoleValidator.validateUpdateUser(users[0].creator.toString(), editor, data);
+            const updatedUser = await userModel.update(id, data);
+
+            res.status(200).json({
+                message: "update success",
+                data: {
+                    uid: id,
+                    username: updatedUser.username,
+                    password: updatedUser.password,
+                    email: updatedUser.email,
+                    role: updatedUser.role,
+                    active: updatedUser.active,
+                    phone: updatedUser.phone,
+                }
+            })
+        })
+    }
+
+    static async deleteUser(req: Request, res: Response) {
+        const {id} = req.params;
+        const editor = res.locals.user;
+        await handleError(res, async() => {
+            const users = await userModel.getUsers([id]);
+            RoleValidator.validateDeleteUser(users[0].creator.toString(), editor);
+            const deleteResult = await userModel.delete(id);
+            res.status(200).json({
+                message: "delete success",
+                data: deleteResult,
+            })
+        })
+    }
+
+    static async updateSelf(req: Request, res: Response) {
+        const data = <IUpdateUser>req.body;
+        if(req.file) {
+            data.avatar = req.file.path
+        }
+        
+        const editor = res.locals.user;
+        await handleError(res, async() => {
+            const updatedUser = await userModel.update(editor.uid.toString(), data);
+
+            res.status(200).json({
+                message: "update success",
+                data: {
+                    uid:editor.uid,
+                    username: updatedUser.username,
+                    email: updatedUser.email,
+                    role: updatedUser.role,
+                    active: updatedUser.active,
+                    phone: updatedUser.phone,
+                }
+            })
         })
     }
 }

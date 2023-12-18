@@ -1,5 +1,6 @@
 import { IQueryableUser } from "@/types/auth";
 import { InputError } from "@/types/controller";
+import { ICreateUser } from "./user.validator";
 
 export interface ILoginByPassword {
     username: string,
@@ -40,6 +41,16 @@ export default class AuthValidator {
         }
     }
 
+    private static validatePhone(phone : string) {
+        const phoneRegex = /^\+?[0-9]{1,4}[-. ]?([0-9]{1,4}[-. ]?){1,10}$/;
+
+        if(!phoneRegex.test(phone)) {
+            throw new InputError("Phone không hợp lệ", "phone");
+        }
+
+        return true;
+    }
+
     static validateLoginPassword(data: ILoginByPassword) {
         AuthValidator.validateUsername(data.username)
         AuthValidator.validatePassword(data.password)
@@ -54,5 +65,12 @@ export default class AuthValidator {
     static validateReset(data: IResetPassword) {
         AuthValidator.validatePassword(data.password)
         AuthValidator.validateRePassword(data.password, data.re_password);
+    }
+
+    static validateCreateUser (data : ICreateUser) {
+        AuthValidator.validateUsername(data.username);
+        AuthValidator.validateEmail(data.email);
+        AuthValidator.validatePassword(data.password);
+        AuthValidator.validatePhone(data.phone);
     }
 }

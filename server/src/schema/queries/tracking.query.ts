@@ -1,12 +1,12 @@
 import { GraphQLFieldConfig, GraphQLList, GraphQLString } from "graphql";
-import { TrackingGraph } from "../types/tracking.graph";
+import { TrackingGraph } from "@/schema/types/tracking.graph";
 import trackingModel from "@/models/tracking.model";
 
 interface IArgs {
     pid: string;
 }
 
-export const TrackingQuery: GraphQLFieldConfig<any, any, IArgs> = {
+export const trackingQuery: GraphQLFieldConfig<undefined, any, IArgs> = {
     type: GraphQLList(TrackingGraph),
     args: {
         pid: { type: GraphQLString }
@@ -14,7 +14,7 @@ export const TrackingQuery: GraphQLFieldConfig<any, any, IArgs> = {
 
     resolve: async (parent, args) => {
         if (args.pid) {            
-            return await trackingModel.getTrackingByParcelID(args.pid)
+            return await trackingModel.getByParcelID(args.pid)
         } else {
             return null;
         }

@@ -3,7 +3,7 @@ import BoxesImg from "@/assets/images/boxes.png"
 import LogoImg from "@/assets/images/logo.png"
 import Image from "next/image"
 import Link from "next/link";
-import { HiArrowLongRight } from "react-icons/hi2";
+import InputTracking from "./components/Input";
 
 export default function Home() {
   return (
@@ -40,18 +40,7 @@ export default function Home() {
         <p className="text-cblue-600 text-sm">Mã số của bưu gửi thường nằm trong biên lai của khách hàng. </p>
         <a href="#" className="text-cyellow-600 text-sm hover:underline">Xem cách tra cứu</a>
 
-        <div className="mt-10 flex gap-5">
-          <div className="bg-cyellow-500 rounded-full overflow-hidden py-3 px-6">
-            <input
-              type="text"
-              defaultValue="EB123456789VN"
-              className="bg-transparent w-full h-full text-xl font-bold text-center border-0 focus:outline-none focus:shadow-none focus:ring-transparent" />
-          </div>
-
-          <button className="w-16 h-16 items-center justify-center rounded-full bg-cyellow-600 flex-none hidden xs:flex">
-            <span className="text-3xl"><HiArrowLongRight></HiArrowLongRight></span>
-          </button>
-        </div>
+        <InputTracking />
 
         <div className="pl-5 mt-5 flex gap-3 flex-wrap justify-center sm:justify-start">
           <Link
