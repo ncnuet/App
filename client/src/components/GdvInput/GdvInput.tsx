@@ -16,12 +16,12 @@ function GdvInput({
   defaulValue,
   isBig = false,
   disabled = false,
-  onInfor,
+  onInfor = () => {},
   value,
 }: Props) {
   return (
     <div
-      className={`flex flex-row  w-full ${
+      className={`flex flex-row items-center  w-full ${
         isBig ? "py-[10px]" : "py-[5px]"
       } px-[10px] rounded-lg bg-cgray-100 text-cgray-500 active:outline-1 active:outline-black`}
     >
