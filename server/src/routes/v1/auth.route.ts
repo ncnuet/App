@@ -22,7 +22,7 @@ router.patch('/:id',[checkJWT, checkRole.bind({ role: ["admin", "bod", "head"] }
 router.delete('/:id',checkJWT, AuthControler.deleteUser);
 router.patch('/:id/active', [checkJWT, checkRole.bind({ role: ["admin", "bod", "head"] })], AuthControler.updateActive);
 
-router.patch('/',checkJWT, upload.single("avatar"), AuthControler.updateSelfAvatar);
+router.patch('/avatar',checkJWT, upload.single("avatar"), AuthControler.updateSelfAvatar);
 router.patch('/', checkJWT, AuthControler.updateSelfInfo);
 router.patch('/username', checkJWT, AuthControler.updateSelfUserName)
 

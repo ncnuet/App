@@ -93,9 +93,9 @@ class UserModel {
     }
 
     async updateAvatar(id_user: string, data: IUpdateAvatar) {
-        let result = await cloudinary.uploader.upload(data.avatar, { folder: 'avatar' });
+        // let result = await cloudinary.uploader.upload(data.avatar, { folder: 'avatar' });
         const updateData: any = {
-            avatar : result.secure_url,
+            avatar : data.avatar
         };
 
         const userAfterUpdate = await UserBaseModel.findByIdAndUpdate(id_user, updateData, {new: true});

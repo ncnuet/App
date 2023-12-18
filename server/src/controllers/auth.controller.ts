@@ -10,6 +10,7 @@ import env from "@/configs/env";
 import { IUser } from "@/types/auth";
 import RoleValidator, { ICreateUser, IUpdateActive, IUpdateAvatar, IUpdateInfoUser, IUpdateUser, IUpdateUserName } from "@/validators/user.validator";
 import userModel from "@/models/user.model";
+import cloudinary from "@/configs/cloudinary";
 
 interface IUserWithEpx extends IUser {
     exp: number;
@@ -221,10 +222,11 @@ export default class AuthController {
 
     static async updateSelfAvatar(req: Request, res: Response) {
         const data = <IUpdateAvatar>req.body;
-        data.avatar = req.file.path
         const editor = res.locals.user;
 
         await handleError(res, async() => {
+            let result = await cloudinary.uploader.upload(data.avatar, { folder: 'avatar' });
+            data.avatar = result.secure_url;
             const updatedUser = await userModel.updateAvatar(editor.uid.toString(), data);
             res.status(200).json({
                 message: "success",
