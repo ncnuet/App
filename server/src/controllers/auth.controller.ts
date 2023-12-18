@@ -8,7 +8,7 @@ import tokenModel from "@/models/token.model";
 import { sendForgetPasswordMail } from "@/utils/send_mail";
 import env from "@/configs/env";
 import { IUser } from "@/types/auth";
-import RoleValidator, { ICreateUser, IUpdateUser } from "@/validators/user.validator";
+import RoleValidator, { ICreateUser, IUpdateActive, IUpdateAvatar, IUpdateInfoUser, IUpdateUser, IUpdateUserName } from "@/validators/user.validator";
 import userModel from "@/models/user.model";
 
 interface IUserWithEpx extends IUser {
@@ -193,27 +193,60 @@ export default class AuthController {
         })
     }
 
-    static async updateSelf(req: Request, res: Response) {
-        const data = <IUpdateUser>req.body;
-        if(req.file) {
-            data.avatar = req.file.path
-        }
-        
+    static async updateSelfInfo(req: Request, res: Response) {
+        const data = <IUpdateInfoUser>req.body;
         const editor = res.locals.user;
-        await handleError(res, async() => {
-            const updatedUser = await userModel.update(editor.uid.toString(), data);
 
+        await handleError(res, async() => {
+            const updatedUser = await userModel.updateInfo(editor.uid.toString(), data);
             res.status(200).json({
-                message: "update success",
-                data: {
-                    uid:editor.uid,
-                    username: updatedUser.username,
-                    email: updatedUser.email,
-                    role: updatedUser.role,
-                    active: updatedUser.active,
-                    phone: updatedUser.phone,
-                }
+                message: "success",
+                data: updatedUser,
             })
         })
     }
+
+    static async updateSelfUserName(req: Request, res: Response) {
+        const data = <IUpdateUserName>req.body;
+        const editor = res.locals.user;
+
+        await handleError(res, async() => {
+            const updatedUser = await userModel.updateUsername(editor.uid.toString(), data);
+            res.status(200).json({
+                message: "success",
+                data: updatedUser,
+            })
+        })
+    }
+
+    static async updateSelfAvatar(req: Request, res: Response) {
+        const data = <IUpdateAvatar>req.body;
+        data.avatar = req.file.path
+        const editor = res.locals.user;
+
+        await handleError(res, async() => {
+            const updatedUser = await userModel.updateAvatar(editor.uid.toString(), data);
+            res.status(200).json({
+                message: "success",
+                data: updatedUser,
+            })
+        })
+    }
+
+    static async updateActive(req: Request, res: Response) {
+        const {id} = req.params;
+        const data = <IUpdateActive>req.body;
+        const editor = res.locals.user;
+
+        await handleError(res, async() => {
+            const users = await userModel.getUsers([id]);
+            RoleValidator.checkActionForThisUser(users[0].creator.toString(), editor.uid)
+            const updatedUser = await userModel.updateActive(id, data);
+            res.status(200).json({
+                message: "success",
+                data: updatedUser,
+            })
+        })
+    }
+
 }

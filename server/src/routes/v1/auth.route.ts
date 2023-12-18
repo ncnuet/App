@@ -20,6 +20,11 @@ router.put('/reset', [checkReset], AuthControler.resetPassword)
 router.post('/', [checkJWT, checkRole.bind({ role: ["admin", "bod", "head"] })], AuthControler.createUser);
 router.patch('/:id',[checkJWT, checkRole.bind({ role: ["admin", "bod", "head"] })], AuthControler.updateUser);
 router.delete('/:id',checkJWT, AuthControler.deleteUser);
-router.patch('/',checkJWT, upload.single("avatar"), AuthControler.updateSelf);
+router.patch('/:id/active', [checkJWT, checkRole.bind({ role: ["admin", "bod", "head"] })], AuthControler.updateActive);
+
+router.patch('/',checkJWT, upload.single("avatar"), AuthControler.updateSelfAvatar);
+router.patch('/', checkJWT, AuthControler.updateSelfInfo);
+router.patch('/username', checkJWT, AuthControler.updateSelfUserName)
+
 
 export default router;

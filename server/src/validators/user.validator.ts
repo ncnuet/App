@@ -1,6 +1,8 @@
 import { InputError } from "@/types/controller";
 import { EUserRole, IUser } from "@/types/auth";
 import BaseValidator from "./base.validator";
+import { IAddress } from "@/models/schema/address.schema";
+import { EGenderType } from "@/models/schema/user.schema";
 
 export interface ICreateUser {
     name: string,
@@ -9,7 +11,8 @@ export interface ICreateUser {
     phone: string,
     role: string,
     office: string,
-    password: string;
+    password: string,
+    address: IAddress,
 }
 
 export interface IUpdateUser {
@@ -18,13 +21,29 @@ export interface IUpdateUser {
     email: string,
     phone: string,
     role: string,
-    active: boolean,
     office: string,
+    address: IAddress,
+}
+
+export interface IUpdateInfoUser {
+    name: string,
+    email: string,
+    phone: string,
+    address: IAddress,
+    gender: EGenderType,
+}
+
+export interface IUpdateUserName {
+    username: string,
+}
+
+export interface IUpdateAvatar {
     avatar: string,
 }
 
-
-
+export interface IUpdateActive {
+    active: boolean,
+}
 export default class RoleValidator extends BaseValidator {
     static checkRoleForCreate(initiatorRole: string, creativeRole: string, und?: boolean) {
         if (creativeRole) {
@@ -66,9 +85,9 @@ export default class RoleValidator extends BaseValidator {
         }
     }
 
-    
-    private static checkActionForThisUser(creator_id: string, editor_id: string) {
-        if(creator_id !== editor_id) {
+
+    static checkActionForThisUser(creator_id: string, editor_id: string) {
+        if (creator_id !== editor_id) {
             throw new InputError("The creator is different from the editor.", "role")
         }
     }
@@ -84,7 +103,7 @@ export default class RoleValidator extends BaseValidator {
         this.checkPhone(data.phone);
     }
 
-    static validateUpdateUser(creator_id : string, editor: IUser, data: IUpdateUser) {
+    static validateUpdateUser(creator_id: string, editor: IUser, data: IUpdateUser) {
         RoleValidator.checkRoleForCreate(editor.role, data.role, true);
 
         this.checkActionForThisUser(creator_id, editor.uid);
@@ -96,7 +115,7 @@ export default class RoleValidator extends BaseValidator {
         this.checkPhone(data.phone, true);
     }
 
-    static validateDeleteUser(creator_id : string, editor: IUser) {
+    static validateDeleteUser(creator_id: string, editor: IUser) {
         this.checkActionForThisUser(creator_id, editor.uid);
     }
 }
