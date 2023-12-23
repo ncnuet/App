@@ -22,15 +22,15 @@ export interface IFormDB {
 }
 
 export const ContenFormSchema = new Schema<IContentForm> ({
-    parcel: {type: Schema.Types.ObjectId, required: true, ref:ParcelBaseModel},
-    comfirm: {type: Boolean, required: true}
+    parcel: {type: Schema.Types.ObjectId, required: true, ref:ParcelBaseModel, unique: true},
+    comfirm: { default: false, type: Boolean, required: true}
 })
 
 const FormSchema = new Schema<IFormDB> ({
     creator: {type: Schema.Types.ObjectId, required: true, ref:UserBaseModel},
     receiver: {type: String, required: true },
     type: {type: String, required: true},
-    content: {type: [ContenFormSchema], required: true},
+    content: {type: [ContenFormSchema]},
 }, {
     timestamps: true,
 })
