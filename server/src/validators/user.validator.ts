@@ -95,10 +95,20 @@ export default class RoleValidator extends BaseValidator {
         this.checkActionForThisUser(creator_id, editor.uid);
     }
 
-    static validateOnlyManagerInOffice(user: Object[], und?: boolean) {
+    static validateOnlyManagerInOffice(user: Object[], role: string, und?: boolean) {
         if (!und) {
-            if (user.length > 0) {
+            if (user.length > 0 && role === EUserRole.HEAD) {
                 throw new InputError("Đã tồn tại quản lý trong ofice", "user");
+            }
+        }
+    }
+
+    static validateEmployeeSameOfficeManager(offie_creator: string, offie_user: string, role_user: string, und?: boolean) {
+        if (!und) {
+            if (role_user === EUserRole.GATHE_STAF || role_user === EUserRole.TRANS_STAF) {
+                if (offie_creator !== offie_user) {
+                    throw new InputError("Nhân viên và quản lý phải chung office", "user");
+                }
             }
         }
     }

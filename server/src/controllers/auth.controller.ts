@@ -128,7 +128,8 @@ export default class AuthController {
             RoleValidator.validateCreateUser(user.role, data);
 
             const userInOtherOffice = await userModel.getUserInOffice(data.office)
-            RoleValidator.validateOnlyManagerInOffice(userInOtherOffice);
+            RoleValidator.validateOnlyManagerInOffice(userInOtherOffice, data.role);
+            RoleValidator.validateEmployeeSameOfficeManager(user.office.toString(), data.office, data.role);
             const user_id = await userModel.create(user.uid, data);
 
             res.status(200).json({
