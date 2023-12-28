@@ -84,6 +84,7 @@ export default class ParcelController {
         })
     }
 
+    
     public static async getAllParcelFormOffice(req: Request, res: Response) {
         const user = res.locals.user;
         const page = parseInt(req.query.page as string) || 1;
@@ -98,23 +99,25 @@ export default class ParcelController {
             }));
     
             const flattenedResult = result.flat();
-
+    
             const startIndex = (page - 1) * limit;
             const endIndex = page * limit;
             const paginatedResult = flattenedResult.slice(startIndex, endIndex);
     
-            const filteredResult = paginatedResult.map((parcel) => {
+            const filteredResult = await Promise.all(paginatedResult.map(async (parcel) => {
+                const creator = await userModel.getUsers([parcel.creator.toString()]);
                 return {
                     code: parcel._id,
-                    creator: parcel.creator,
+                    creator: creator[0].name,
                     receiver: parcel.receiver,
                     sender: parcel.sender,
+                    sending_add: parcel.sending_add,
                     receiving_add: parcel.receiving_add,
                     status: parcel.status,
                     cost: parcel.cost,
                     createdAt: parcel.createdAt
                 };
-            });
+            }));
     
             res.json({
                 message: "thành công",
@@ -122,6 +125,7 @@ export default class ParcelController {
             });
         });
     }
+    
     
     
 }
