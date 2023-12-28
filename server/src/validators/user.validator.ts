@@ -41,6 +41,11 @@ export interface IUpdateAvatar {
     avatar: string,
 }
 
+export interface IUpdatePassword {
+    username: string,
+    password: string,
+}
+
 export interface IUpdateActive {
     active: boolean,
 }
@@ -69,10 +74,12 @@ export default class RoleValidator extends BaseValidator {
 
     private static checkEmail(email: string, und?: boolean) {
         var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-        if (und && email) {
+        if (und && !email) {
 
-        } else if (!filter.test(email) || !email) {
-            throw new InputError("This email is invalid", "email");
+        } else if(!und) {
+            if (!filter.test(email) || !email) {
+                throw new InputError("This email is invalid", "email");
+            }
         }
     }
 
@@ -117,5 +124,13 @@ export default class RoleValidator extends BaseValidator {
 
     static validateDeleteUser(creator_id: string, editor: IUser) {
         this.checkActionForThisUser(creator_id, editor.uid);
+    }
+
+    static validateOnlyManagerInOffice(user: Object[], und?:boolean) {
+        if(!und) {
+            if(user.length > 0) {
+                throw new InputError("Đã tồn tại quản lý trong ofice", "user");
+            }
+        }
     }
 }
