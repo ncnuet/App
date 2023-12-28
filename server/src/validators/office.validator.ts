@@ -18,11 +18,6 @@ export interface IOfficeUpdate
 }
 
 export default class OfficeValidator extends BaseValidator {
-    private static checkName(name: string, und?: boolean) {
-        if (name) {
-        } else if (!und) throw new InputError("Must included office's name", "name");
-    }
-
     private static checkType(type: string, und?: boolean) {
         if (type) {
             if (!Object.values(EOfficeType).includes(type as EOfficeType))

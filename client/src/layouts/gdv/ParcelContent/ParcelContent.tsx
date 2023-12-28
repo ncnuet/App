@@ -5,8 +5,8 @@ import ParcelBasisInfor from "./ParcelBasisInfor";
 import ParcelGoods from "./ParcelGoods/ParcelGoods.tsx/ParcelGoods";
 import ParcelSave from "./ParcelSave";
 import ParcelWeight from "./ParcelWeight";
-import PreviewLayout from "@/app/gdv/[pid]/preview/layout";
-import GdvPage from "@/app/gdv/[pid]/preview/page";
+import PreviewLayout from "@/app/(gdv)/[pid]/preview/layout";
+import GdvPage from "@/app/(gdv)/[pid]/preview/page";
 
 interface IParcelContent {
   isCancel: boolean | null;
