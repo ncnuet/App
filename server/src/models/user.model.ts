@@ -15,13 +15,13 @@ class UserModel {
             {
                 role: 1, email: 1, username: 1,
                 phone: 1, _id: 1, name: 1, office: 1,
-                creator: 1
+                creator: 1, address: 1
             })
             .exec()
 
         return user.map(user => {
-            const { _id, email, username, phone, name, role, office, creator } = user;
-            return { uid: _id.toString(), email, username, phone, name, role, office, creator };
+            const { _id, email, username, phone, name, role, office, creator, address } = user;
+            return { uid: _id.toString(), email, username, phone, name, role, office, creator, address };
         })
     }
 

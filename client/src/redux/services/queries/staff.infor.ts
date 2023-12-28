@@ -6,6 +6,9 @@ export const staffInforQuery = gql`
       uid
       name
       role
+      phone
+      username
+      email
     }
   }
 `;

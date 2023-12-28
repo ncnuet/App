@@ -25,17 +25,17 @@ export interface IStaffdetailInfor {
 }
 
 export interface IDetailStaffInfor {
+  uid: string;
+  name: string;
+  username: string;
+  role: string;
+  email: string;
+  phone: string;
+}
+
+export interface IGrapthDetailInfor {
   data: {
-    users: {
-      id: string;
-      name: string;
-      username: string;
-      role: string;
-      email: string;
-      address: string;
-      phone: string;
-      password: string;
-    }[];
+    users: IDetailStaffInfor[];
   };
 }
 
@@ -63,7 +63,7 @@ export async function getStaffInfor(
 
 export async function getDetailStaff(
   pid: string[]
-): Promise<AxiosResponse<IDetailStaffInfor>> {
+): Promise<AxiosResponse<IGrapthDetailInfor>> {
   return await axios.post("/graphql", {
     query: staffInforQuery.loc?.source.body,
     variables: { userIds: pid },
@@ -82,4 +82,13 @@ export async function editStaffAccount(
   data: any
 ): Promise<AxiosResponse<any>> {
   return await axios.put(`auth/${pid}/password`, data);
+}
+
+export async function editStaffAvatar(
+  pid: string,
+  avatar: string
+): Promise<AxiosResponse<any>> {
+  return await axios.put(`auth/${pid}/avatar`, {
+    avatar: avatar,
+  });
 }

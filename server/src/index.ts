@@ -15,8 +15,8 @@ const port = config.PORT;
 
 // Initialize middleware
 app.use(morgan(env === "dev" ? "dev" : "tiny")); // Logger
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(cookieParser());
 app.use(helmet()); // Protect known attack types
 
