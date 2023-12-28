@@ -8,6 +8,9 @@ import AuthButton from "@/components/AuthButton";
 import AuthInput from "@/components/AuthInput";
 import Link from "next/link";
 import AuthSwitch from "@/components/AuthSwitch";
+import { useDispatch } from "react-redux";
+import { setProfile } from "@/redux/features/profile.slice";
+import { getMe } from "@/redux/services/me.api";
 
 interface ResponseData {
   name: string;
@@ -19,6 +22,7 @@ const LoginPage = () => {
   const [isLoading, setLoading] = useState(false);
   const [status, setStatus] = useState<InputStatus>("normal")
   const [errorText, setErrorText] = useState<ResponseData>();
+  const dispatch = useDispatch()
 
   async function submitHander(event: FormEvent) {
     event.preventDefault();
@@ -30,15 +34,23 @@ const LoginPage = () => {
       body.remember = !!body.remember as unknown as FormDataEntryValue;
 
       const res = await axios.post("/auth/login", body);
-
-      console.log(body, res.data);
       if (res.status !== 200) {
         setStatus("failure");
         setErrorText(res.data);
         toast.error("Đăng nhập thất bại");
       } else {
         toast.success("Đăng nhập thành công");
-        router.push('/')
+        
+        const res_user = await getMe();
+        const user = res_user.data.data;
+        dispatch(setProfile({
+          name: user.name,
+          username: user.username,
+          office: user.office,
+          role: user.role
+        }))
+        
+        router.push('/dashboard')
       }
     } catch (error) {
       console.log(error);

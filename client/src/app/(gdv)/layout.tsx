@@ -1,21 +1,29 @@
-import GdvHeader from "@/layouts/gdv/GdvHeader";
-import GdvSidebar from "@/layouts/gdv/GdvSidebar";
+"use client"
 
-type GdvLayoutProps = {
+
+import { profileState } from "@/redux/features/profile.slice";
+import { useAppSelector } from "@/redux/hooks";
+import { useEffect, useState } from "react";
+
+type IProps = {
   children: React.ReactNode;
 };
-const GdvLayout = ({ children }: GdvLayoutProps) => {
+
+const GdvLayout = ({ children }: IProps) => {
+  const [showContent, setContent] = useState(false);
+  const user = useAppSelector(profileState)
+
+  useEffect(() => {
+    if (user && user.isLogin) setContent(true);
+  }, [user])
+
   return (
-    <div className="relative top-0 left-0 h-screen w-full bg-indigo-50">
-      {/* #f8f9fa */}
-      <div className="w-full h-full xs:p-[32px] flex flex-row gap-6">
-        <GdvSidebar></GdvSidebar>
-        <div className="flex flex-col gap-8 flex-grow">
-          <GdvHeader></GdvHeader>
-          {children}
-        </div>
-      </div>
+    showContent && children ||
+    <div className="h-screen w-screen bg-blue-50 flex flex-col justify-center items-center">
+      <p className="animate-bounce">Loading...</p>
+      <p className="">Đợi chờ là hạnh phúc</p>
     </div>
   );
 };
+
 export default GdvLayout;

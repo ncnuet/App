@@ -37,8 +37,8 @@ export default function RootLayout({
           className={"text-[14px]"}
         />
 
-        <Providers>{
-          children}
+        <Providers>
+          {children}
         </Providers>
       </body>
     </html>

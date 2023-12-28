@@ -1,7 +1,19 @@
-import Sidebar from "@/app/tracking/components/Sidebar";
+"use client"
+
 import Logo from "@/icons/Logo";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { IoHomeOutline, IoMailOutline, IoSettingsOutline } from "react-icons/io5";
+
+const navLinks = [
+  { name: "Dashboard", icon: <IoHomeOutline />, href: "/dashboard" },
+  { name: "Đơn gửi", icon: <IoMailOutline />, href: "/gdv" },
+  { name: "Cài đặt", icon: <IoSettingsOutline />, href: "/setting" },
+]
 
 const GdvSidebar = () => {
+  const pathname = usePathname();
+
   return (
     <aside className="hidden xs:flex flex-col select-none flex-none">
       <div className="flex flex-row items-center gap-3 pb-[30px]">
@@ -11,38 +23,26 @@ const GdvSidebar = () => {
         </strong>
       </div>
       <div className="w-full h-[1px] bg-gradient-to-r from-[#E0E1E200] via-[#E0E1E2] to-[#E0E1E228] mb-[30px]"></div>
-      {/* Dashboard */}
+
       <div className="flex flex-col gap-2">
-        <div className="w-full p-[10px] bg-white rounded-lg shadow-sd2">
-          <div className="w-full flex flex-row items-center justify-start gap-3">
-            <div className="w-[30px] h-[30px] rounded-[10px] bg-cyellow-500 flex justify-center items-center">
-              <span className="material-symbols-outlined text-white">home</span>
+        {navLinks.map((item, index) => (
+          <Link
+            key={index}
+            href={item.href}
+            className={
+              "w-full p-[10px] rounded-lg shadow-sd2 " +
+              (pathname.startsWith(item.href) ? "bg-white" : "")
+            }>
+            <div className="w-full flex flex-row items-center justify-start gap-3">
+              <div className="w-[30px] h-[30px] rounded-[10px] bg-cyellow-500 flex justify-center items-center text-lg font-semibold">
+                {item.icon}
+              </div>
+              <h2 className="hidden md:block text-sm font-bold">{item.name}</h2>
             </div>
-            <h2 className="hidden md:block text-sm font-bold">Dashboard</h2>
-          </div>
-        </div>
-        <div className="w-full p-[10px] bg-transparent rounded-lg shadow-none">
-          <div className="w-full flex flex-row items-center justify-start gap-3">
-            <div className="w-[30px] h-[30px] rounded-[10px] bg-transparent  flex justify-center items-center">
-              <span className="material-symbols-outlined text-cblue-600">
-                home
-              </span>
-            </div>
-            <h2 className="hidden md:block text-sm font-medium">Dashboard</h2>
-          </div>
-        </div>
-        <div className="w-full p-[10px] bg-transparent rounded-lg shadow-none">
-          <div className="w-full flex flex-row items-center justify-start gap-3">
-            <div className="w-[30px] h-[30px] rounded-[10px] bg-transparent  flex justify-center items-center">
-              <span className="material-symbols-outlined text-cblue-600">
-                home
-              </span>
-            </div>
-            <h2 className="hidden md:block text-sm font-medium">Dashboard</h2>
-          </div>
-        </div>
+          </Link>))}
       </div>
     </aside>
   );
 };
+
 export default GdvSidebar;
