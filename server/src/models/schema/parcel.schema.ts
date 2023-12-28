@@ -47,6 +47,8 @@ export interface IParcelSchema
     sending_office: ObjectId;
     receiving_office: ObjectId;
     creator: ObjectId;
+    createdAt: Date;
+    updateAt: Date;
 }
 
 const ParcelSchema = new Schema<IParcelSchema>({

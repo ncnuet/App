@@ -1,6 +1,7 @@
 import officeModel from "@/models/office.model";
 import parcelModel from "@/models/parcel.model";
 import trackingModel from "@/models/tracking.model";
+import userModel from "@/models/user.model";
 
 import { InputError, Request, Response } from "@/types/controller";
 import { handleError } from "@/utils/controller";
@@ -82,4 +83,45 @@ export default class ParcelController {
             })
         })
     }
+
+    public static async getAllParcelFormOffice(req: Request, res: Response) {
+        const user = res.locals.user;
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 10;
+    
+        handleError(res, async () => {
+            const usersSameOffice = await userModel.getUserInOffice(user.office);
+    
+            const result = await Promise.all(usersSameOffice.map(async (user) => {
+                const parcels = await parcelModel.getParcelsByCreator(user.id);
+                return parcels;
+            }));
+    
+            const flattenedResult = result.flat();
+
+            const startIndex = (page - 1) * limit;
+            const endIndex = page * limit;
+            const paginatedResult = flattenedResult.slice(startIndex, endIndex);
+    
+            const filteredResult = paginatedResult.map((parcel) => {
+                return {
+                    code: parcel._id,
+                    creator: parcel.creator,
+                    receiver: parcel.receiver,
+                    sender: parcel.sender,
+                    receiving_add: parcel.receiving_add,
+                    status: parcel.status,
+                    cost: parcel.cost,
+                    createdAt: parcel.createdAt
+                };
+            });
+    
+            res.json({
+                message: "thành công",
+                data: filteredResult
+            });
+        });
+    }
+    
+    
 }
