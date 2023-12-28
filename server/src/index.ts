@@ -20,17 +20,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(helmet()); // Protect known attack types
 
-app.use(cors.default({
-  origin: config.FRONTEND,
-  credentials: true,
-  methods: ['GET', 'PUT', 'POST', 'DELETE'],
-  optionsSuccessStatus: 200,
-  allowedHeaders: ['Content-Type, Authorization']
-}))
+app.use(
+  cors.default({
+    origin: config.FRONTEND,
+    credentials: true,
+    methods: ["GET", "PUT", "POST", "DELETE"],
+    optionsSuccessStatus: 200,
+    allowedHeaders: ["Content-Type, Authorization"],
+  })
+);
 
 // Initialize app's routes
 route(app);
-
 
 if (require.main === module) {
   app.listen(port, async () => {

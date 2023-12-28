@@ -1,12 +1,17 @@
-import axios, { AxiosResponse } from "axios";
-
+import { AxiosResponse } from "axios";
+import axios from "@/service/axios";
 export interface IStaffInfor {
   avatar: string;
-  name: string;
+  username: string;
   email: string;
   role: string;
+  id: string;
 }
 
+export interface IGetStaffAPIProps {
+  data: IStaffInfor[];
+  message: string;
+}
 export interface IStaffdetailInfor {
   name: string;
   username: string;
@@ -32,8 +37,8 @@ export interface IEditStaffPassword {
 
 export async function getStaffInfor(
   pid: string
-): Promise<AxiosResponse<IStaffInfor[]>> {
-  return await axios.get("/manager", {
+): Promise<AxiosResponse<IGetStaffAPIProps>> {
+  return await axios.get("/auth/created-people", {
     params: {
       pid: pid,
     },
@@ -42,11 +47,7 @@ export async function getStaffInfor(
 
 export async function editStaffInfor(
   pid: string,
-  data: IEditStaffInfor
-): Promise<AxiosResponse<IStaffInfor[]>> {
-  return await axios.patch("/manager", data, {
-    params: {
-      pid: pid,
-    },
-  });
+  data: any
+): Promise<AxiosResponse<any>> {
+  return await axios.put(`/auth/${pid}`, data);
 }

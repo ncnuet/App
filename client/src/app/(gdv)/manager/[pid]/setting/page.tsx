@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { editStaffInfor } from "@/redux/services/manager.staff";
 
 interface StaffInforProps {
   searchParams: { pid: string };
@@ -98,14 +99,23 @@ const StaffInfor = ({ searchParams }: StaffInforProps) => {
     }
   };
 
-  const onInforSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
+  const onInforSubmitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const body = Object.fromEntries(formData.entries());
     if (body.hasOwnProperty("gender")) {
       delete body.gender;
     }
-    alert(JSON.stringify(body));
+    if (pid !== null) {
+      try {
+        const response = await editStaffInfor(pid, {
+          email: "quanlytapket1test@gmail.com",
+        });
+        alert(response?.data);
+      } catch (error) {
+        alert(JSON.stringify(error));
+      }
+    }
   };
 
   const onAccountSubmitHandler = (e: FormEvent<HTMLFormElement>) => {

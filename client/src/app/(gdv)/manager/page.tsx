@@ -8,8 +8,9 @@ const mockStaff: IStaffInfor = {
   avatar:
     "https://res.cloudinary.com/dxqd4odva/image/upload/v1703748165/VCA_app/avatars/cool-girl_avoub9.jpg",
   email: "esthera@simmmple.com",
-  name: "Esthera Jackson",
+  username: "Esthera Jackson",
   role: "Nhân viên",
+  id: "1",
 };
 const fakeData = new Array<IStaffInfor>(5);
 fakeData.fill(mockStaff);
@@ -18,13 +19,13 @@ const ManagerPage = () => {
   const getData = async () => {
     try {
       const response = await getStaffInfor("12345");
-      if (response?.data && typeof response?.data === "object") {
-        setStaffData(response.data);
+      if (response?.data) {
+        setStaffData(response.data?.data || []);
       } else {
-        setStaffData(fakeData);
+        setStaffData([]);
       }
     } catch (error) {
-      setStaffData(fakeData);
+      setStaffData([]);
     }
   };
   useEffect(() => {
@@ -58,7 +59,7 @@ const ManagerPage = () => {
               >
                 <div className="col-span-2 lg:col-span-1 flex flex-row gap-[10px] items-center">
                   <Image
-                    src={item.avatar}
+                    src={item?.avatar || mockStaff.avatar}
                     alt="cool girl"
                     className="hidden sm:block flex-none h-9 w-9 rounded-[18px] object-cover"
                     loading="lazy"
@@ -67,7 +68,7 @@ const ManagerPage = () => {
                   ></Image>
                   <div className="flex flex-col items-start">
                     <span className="text-sm text-cblue-600 font-bold">
-                      {item.name}
+                      {item.username}
                     </span>
                     <span className="text-sm text-[#718096] font-normal">
                       {item.email}
@@ -86,7 +87,7 @@ const ManagerPage = () => {
                   href={{
                     pathname: "/manager/5/setting",
                     query: {
-                      pid: "5",
+                      pid: item.id,
                     },
                   }}
                 >
