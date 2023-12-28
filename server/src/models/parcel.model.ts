@@ -89,6 +89,14 @@ class ParcelModel {
             }
         })
     }
+
+    async getParcelsByCreator (creator : string) {
+        const result = await ParcelBaseModel.find({
+            creator: creator
+        })
+
+        return result
+    }
 }
 
 export default new ParcelModel();
