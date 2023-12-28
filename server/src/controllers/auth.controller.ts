@@ -1,5 +1,5 @@
 import { ILocalData, Request, Response } from "@/types/controller"
-import { withAge } from '@/configs/cookie';
+import { TTL, withAge } from '@/configs/cookie';
 import { generateResetToken, generateToken } from '@/utils/generate';
 import handleError from '@/utils/handle_error';
 import AuthValidator, { ILoginByPassword, IRequestReset, IResetPassword } from "@/validators/auth.validator";
@@ -11,27 +11,21 @@ import { IUser } from "@/types/auth";
 import RoleValidator, { ICreateUser, IUpdateActive, IUpdateAvatar, IUpdateInfoUser, IUpdatePassword, IUpdateUser, IUpdateUserName } from "@/validators/user.validator";
 import userModel from "@/models/user.model";
 import cloudinary from "@/configs/cloudinary";
-import officeModel from "@/models/office.model";
 
 interface IUserWithEpx extends IUser {
     exp: number;
 }
 
 function setToken(res: Response, remember: boolean, accessToken: string, refreshToken?: string) {
-    refreshToken && res.cookie("refresh_token", refreshToken, withAge(86400 * 1000))
+    refreshToken && res.cookie("refresh_token", refreshToken, withAge(TTL.ONE_DAY))
     res
         .status(200)
-        .cookie("token", accessToken, withAge(remember ? 3600 * 1000 : void 0))
+        .cookie("token", accessToken, withAge(remember ? TTL.ONE_HOUR : void 0))
         .json({ message: "success", data: { accessToken, refreshToken } })
         .send();
 }
 
 export default class AuthController {
-    /**
-     * Verify account, return access token and resfresh token if true.
-     * @param req 
-     * @param res 
-     */
     static async login(req: Request, res: Response) {
         const data = <ILoginByPassword>req.body;
         console.log(data);
@@ -53,28 +47,18 @@ export default class AuthController {
         })
     }
 
-    /**
-     * Logout
-     * @param req 
-     * @param res 
-     */
     static async logout(req: Request, res: Response) {
         const user = res.locals.user;
 
         await handleError(res, async () => {
             tokenModel.deleteRefreshToken(user.uid);
             tokenModel.updateVersion(user.uid);
-            res.cookie("token", null, withAge(0));
-            res.cookie("refresh_token", null, withAge(0));
+            res.cookie("token", null, withAge(TTL.ZERO));
+            res.cookie("refresh_token", null, withAge(TTL.ZERO));
             res.sendStatus(200);
         });
     }
 
-    /**
-     * Request reset password
-     * @param req 
-     * @param res 
-     */
     static async requestReset(req: Request, res: Response) {
         const data = <IRequestReset>req.body;
         console.log(data);
@@ -105,18 +89,13 @@ export default class AuthController {
         })
     }
 
-    /**
-     * Verify link and redirect to front-end 
-     * @param req 
-     * @param res 
-     */
     static async verifyReset(req: Request, res: Response<any, ILocalData<IUserWithEpx>>) {
         const username = res.locals.user.username;
         const timeExp = res.locals.user.exp * 1000;
         const remaining = Math.floor((timeExp - new Date().getTime()) / 1000);
 
         res
-            .cookie("token", req.query.token, withAge(180 * 1000))
+            .cookie("token", req.query.token, withAge(TTL.THREE_MINS))
             .redirect(env.FRONTEND + "/resetpassword?ttl=" + remaining + "&user=" + username)
     }
 
@@ -288,9 +267,9 @@ export default class AuthController {
             const result = createdPersons.map(user => {
                 return (
                     {
-                        id : user._id,
+                        id: user._id,
                         username: user.username,
-                        email : user.email,
+                        email: user.email,
                         avatar: user.avatar,
                         role: user.role
                     }
