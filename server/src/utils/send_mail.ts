@@ -36,6 +36,20 @@ export async function sendForgetPasswordMail(user: IQueryableUser, token: string
     return await sendMail(user.email, "Khôi phục mật khẩu trên " + env.APP_NAME, body)
 }
 
+export async function sendResetPasswordMail(user: IQueryableUser) {
+    const path = env.ENV === "dev"
+        ? "/src/templates/reset-password-email.html"
+        : "/templates/reset-password-email"
+
+    const body = renderTemplate(
+        path,
+        {
+            name: user.username
+        });
+
+    return await sendMail(user.email, "Đã đặt lại mật khẩu trên " + env.APP_NAME, body)
+}
+
 export async function startup() {
     return await sendMail(
         "fakenoname02@gmail.com",

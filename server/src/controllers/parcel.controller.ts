@@ -3,7 +3,7 @@ import parcelModel from "@/models/parcel.model";
 import trackingModel from "@/models/tracking.model";
 
 import { InputError, Request, Response } from "@/types/controller";
-import handleError from "@/utils/handle_error";
+import { handleError } from "@/utils/controller";
 import ParcelValidator, {
     IParcelCreate, IParcelUpdate, IParcelUpdateStatus
 } from "@/validators/parcel.validator";

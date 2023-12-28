@@ -27,7 +27,7 @@ export function generateToken(user: IUserPayload, gen_RT?: boolean) {
     return { accessToken, refreshToken }
 }
 
-export function generateResetToken(user: IUserPayload) {
+export function generateResetToken(user: IUser) {
     const { iat, exp, ...data } = user as IUserPayload;
     return sign(data, config.JWT_RESET_KEY, JWTResetOpt);
 }

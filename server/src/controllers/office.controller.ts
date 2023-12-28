@@ -2,7 +2,7 @@ import postOfficeModel from "@/models/office.model";
 import userModel from "@/models/user.model";
 import { InputError, Request, Response } from "@/types/controller";
 import { EOfficeType } from "@/models/schema/office.schema";
-import handleError from "@/utils/handle_error";
+import { handleError } from "@/utils/controller";
 
 import OfficeValidator, {
     IOfficeCreate, IOfficeUpdate

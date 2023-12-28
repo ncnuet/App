@@ -1,14 +1,14 @@
 import { ILocalData, Request, Response } from "@/types/controller"
 import { IUser } from "@/types/auth";
 import { TTL, withAge } from '@/configs/cookie';
-
 import config from "@/configs/env";
+
 import { generateResetToken, generateToken } from '@/utils/generate';
-import { sendForgetPasswordMail } from "@/utils/send_mail";
-import handleError from '@/utils/handle_error';
+import { sendForgetPasswordMail, sendResetPasswordMail } from "@/utils/send_mail";
+import { handleError } from '@/utils/controller';
 
 import authModel from '@/models/auth.model';
-import tokenModel from "@/models/token.model";
+import TokenModel from "@/models/token.model";
 import userModel from "@/models/user.model";
 import cloudinary from "@/configs/cloudinary";
 
@@ -43,9 +43,9 @@ export default class AuthController {
             AuthValidator.validateLoginPassword(data);
             const user = await authModel.findUserByPassword(data.username, data.password);
             if (user) {
-                const version = (await tokenModel.getVersion(user.uid)) || "0";
+                const version = (await TokenModel.getVersion(user.uid)) || "0";
                 const token = generateToken({ ...user, version, remember: data.remember }, true);
-                await tokenModel.insertRefreshToken(token.refreshToken, user.uid, user.role)
+                await TokenModel.insertRefreshToken(token.refreshToken, user.uid, user.role)
                 setToken(res, data.remember, token.accessToken, token.refreshToken);
             } else {
                 res.status(401).json({
@@ -60,8 +60,8 @@ export default class AuthController {
         const user = res.locals.user;
 
         await handleError(res, async () => {
-            tokenModel.deleteRefreshToken(user.uid);
-            tokenModel.updateVersion(user.uid);
+            TokenModel.deleteRefreshToken(user.uid);
+            TokenModel.updateVersion(user.uid);
             res.cookie("token", null, withAge(TTL.ZERO));
             res.cookie("refresh_token", null, withAge(TTL.ZERO));
             res.sendStatus(200);
@@ -86,14 +86,11 @@ export default class AuthController {
                     office: ""
                 });
 
-                await sendForgetPasswordMail(user, token);
+                sendForgetPasswordMail(user, token);
 
                 res.status(200).json({ message: "Email đã được gửi thành công tới " + user.email });
             } else {
-                res.status(400).json({
-                    message: "Không tồn tại email",
-                    name: "email"
-                })
+                res.status(400).json({ message: "Không tồn tại tài khoản" })
             }
         })
     }
@@ -115,27 +112,30 @@ export default class AuthController {
             AuthValidator.validateReset(data);
             const user = <IUser>res.locals.user;
 
-            await authModel.updatePassword(user.uid, data.password)
-            res.json({ message: "Password changed successfully" });
+            const new_profile = await authModel.updatePassword(user.uid, data.password)
+            if (new_profile) sendResetPasswordMail(new_profile);
+
+            res.json({ message: "Password đã thay đổi thành công" });
         })
     }
 
+    // Unchecked
     static async createUser(req: Request, res: Response) {
         const data = <ICreateUser>req.body;
         const user = res.locals.user;
 
         await handleError(res, async () => {
             RoleValidator.validateCreateUser(user.role, data);
+
             const userInOtherOffice = await userModel.getUserInOffice(data.office)
             RoleValidator.validateOnlyManagerInOffice(userInOtherOffice);
             const user_id = await userModel.create(user.uid, data);
 
             res.status(200).json({
-                message: "Created sucessfully",
+                message: "Tạo tài khoản thành công",
                 data: {
                     uid: user_id,
                     username: data.username,
-                    password: data.password,
                     email: data.email,
                     role: data.role
                 }

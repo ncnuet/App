@@ -15,16 +15,49 @@ export interface IContact extends _IContact { }
 export interface ICustomer extends _ICustomer { }
 
 export default abstract class BaseValidator {
-    protected static checkId(id: string, und?: boolean) {
-        if (id) {
-            if (id.length != 24) throw new InputError("Invalid id", "id");
-        } else if (!und) throw new InputError("Must include id", "id");
+    protected static checkUnd(
+        data: any, und: boolean, key: string,
+        callback: () => void, message: string = key): boolean {
+        if (data) callback();
+        else if (!und) throw new InputError("Phải bao gồm " + message, key);
+        return true;
     }
 
-    protected static checkPid(pid: string, und?: boolean) {
-        if (pid) {
-            if (pid.length != 10) throw new InputError("Invalid id", "id");
-        } else if (!und) throw new InputError("Must include id", "id");
+    protected static checkId(id: string, und?: boolean, key: string = "id", message: string = key) {
+        this.checkUnd(id, und, "id", () => {
+            if (id.length != 24)
+                throw new InputError(message + " không hợp lệ", key);
+        })
+    }
+
+    protected static checkEmail(email: string, und?: boolean) {
+        var emailRegex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+        this.checkUnd(email, und, "email", () => {
+            if (!email || !emailRegex.test(email)) {
+                throw new InputError("Email không hợp lệ", "email");
+            }
+        })
+    }
+
+    protected static checkPhone(phone: string, und?: boolean) {
+        const phoneRegex = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
+
+        this.checkUnd(phone, und, "phone", () => {
+            if (!phoneRegex.test(phone)) {
+                throw new InputError("Phone không hợp lệ", "phone");
+            }
+        })
+    }
+
+    protected static checkName(name: string, und?: boolean) {
+        const nameRegex = /[a-zỳọáầảấờễàạằệếýộậốũứĩõúữịỗìềểẩớặòùồợãụủíỹắẫựỉỏừỷởóéửỵẳẹèẽổẵẻỡơôưăêâđ']/;
+
+        this.checkUnd(name, und, "name", () => {
+            if (!nameRegex.test(name.toLowerCase())) {
+                throw new InputError("Name không hợp lệ", "name");
+            }
+        })
     }
 
     protected static checkCustomer(customer: ICustomer, und?: boolean) {

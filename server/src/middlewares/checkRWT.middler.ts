@@ -5,7 +5,7 @@ import config from "@/configs/env";
 import { generateToken } from "@/utils/generate";
 import tokenModel from "@/models/token.model";
 import { TTL, withAge } from "@/configs/cookie";
-import handleError from "@/utils/handle_error";
+import {handleError} from "@/utils/controller";
 import { IUser } from "@/types/auth";
 
 export async function checkRWT(req: Request, res: Response, next: NextFunction) {

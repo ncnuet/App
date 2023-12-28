@@ -26,21 +26,15 @@ class UserModel {
     }
 
     async create(creator: string, data: ICreateUser) {
-        var salt = bcrypt.genSaltSync(10);
-        // console.log(data.password);
-
-        var hashPass = bcrypt.hashSync(data.password, salt);
-
         const response = await UserBaseModel.create({
             username: data.username,
-            password: hashPass,
+            password: bcrypt.hashSync("123456789", 10),
             role: data.role,
             version: 0,
             email: data.email,
             phone: data.phone,
             name: data.name,
             office: data.office,
-            address: data.address,
             creator: creator,
             active: true
         })
@@ -49,8 +43,6 @@ class UserModel {
     }
 
     async update(id_user: string, data: IUpdateUser) {
-
-
         const updateData: any = {
             name: data.name,
             role: data.role,
