@@ -10,7 +10,11 @@ import {
   useRef,
   useState,
 } from "react";
-import { editStaffInfor } from "@/redux/services/manager.staff";
+import {
+  editStaffAccount,
+  editStaffInfor,
+  getDetailStaff,
+} from "@/redux/services/manager.staff";
 
 interface StaffInforProps {
   searchParams: { pid: string };
@@ -37,7 +41,17 @@ const StaffInfor = ({ searchParams }: StaffInforProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    console.log("pid: ", pid);
+    const getData = async () => {
+      try {
+        const response = await getDetailStaff([searchParams.pid]);
+        alert(JSON.stringify(response.data));
+      } catch (error) {
+        alert(JSON.stringify(error));
+      }
+    };
+    if (pid !== null) {
+      getData();
+    }
   }, [pid]);
 
   const onBrowsering = () => {
@@ -109,7 +123,7 @@ const StaffInfor = ({ searchParams }: StaffInforProps) => {
     if (pid !== null) {
       try {
         const response = await editStaffInfor(pid, {
-          email: "quanlytapket1test@gmail.com",
+          email: "quanlytapket1@gmail.com",
         });
         alert(response?.data);
       } catch (error) {
@@ -118,11 +132,22 @@ const StaffInfor = ({ searchParams }: StaffInforProps) => {
     }
   };
 
-  const onAccountSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
+  const onAccountSubmitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const body = Object.fromEntries(formData.entries());
-    alert(JSON.stringify(body));
+    const data = {
+      username: body.username,
+      password: body.password,
+    };
+    if (pid !== null) {
+      try {
+        const response = await editStaffAccount(pid, data);
+        alert(response?.data);
+      } catch (error) {
+        alert(JSON.stringify(error));
+      }
+    }
   };
 
   return (
@@ -265,7 +290,7 @@ const StaffInfor = ({ searchParams }: StaffInforProps) => {
                   onInfor={() => {}}
                   disabled={true}
                   defaulValue={fakeData.userName}
-                  name="userName"
+                  name="username"
                 ></GdvInput>
                 <span className="text-[11px] text-cgray-400 font-normal">
                   Tên để đăng nhập vào tài khoản

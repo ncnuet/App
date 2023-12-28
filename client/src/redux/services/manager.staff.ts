@@ -1,5 +1,6 @@
 import { AxiosResponse } from "axios";
 import axios from "@/service/axios";
+import { staffInforQuery } from "./queries/staff.infor";
 export interface IStaffInfor {
   avatar: string;
   username: string;
@@ -21,6 +22,21 @@ export interface IStaffdetailInfor {
   office: string;
   password: string;
   address: string;
+}
+
+export interface IDetailStaffInfor {
+  data: {
+    users: {
+      id: string;
+      name: string;
+      username: string;
+      role: string;
+      email: string;
+      address: string;
+      phone: string;
+      password: string;
+    }[];
+  };
 }
 
 export interface IEditStaffInfor {
@@ -45,9 +61,25 @@ export async function getStaffInfor(
   });
 }
 
+export async function getDetailStaff(
+  pid: string[]
+): Promise<AxiosResponse<IDetailStaffInfor>> {
+  return await axios.post("/graphql", {
+    query: staffInforQuery.loc?.source.body,
+    variables: { userIds: pid },
+  });
+}
+
 export async function editStaffInfor(
   pid: string,
   data: any
 ): Promise<AxiosResponse<any>> {
   return await axios.put(`/auth/${pid}`, data);
+}
+
+export async function editStaffAccount(
+  pid: string,
+  data: any
+): Promise<AxiosResponse<any>> {
+  return await axios.put(`auth/${pid}/password`, data);
 }
