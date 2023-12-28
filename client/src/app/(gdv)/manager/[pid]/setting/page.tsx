@@ -2,10 +2,17 @@
 import Image from "next/image";
 import GdvInput from "@/components/GdvInput";
 import prettyGirl from "@/assets/images/girl.png";
-import { ChangeEvent, DragEvent, FormEvent, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  DragEvent,
+  FormEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 interface StaffInforProps {
-  params: { pid: string };
+  searchParams: { pid: string };
 }
 
 type Gender = "Nam" | "Nữ";
@@ -21,11 +28,16 @@ const fakeData = {
   office: "Trụ sở điều hành Magic Post",
   location: "Trần Duy Hưng, Cầu Giấy, Hà Nội",
 };
-const StaffInfor = ({ params }: StaffInforProps) => {
+const StaffInfor = ({ searchParams }: StaffInforProps) => {
+  const [pid, setPid] = useState<string | null>(searchParams?.pid || null);
   const [avatar, setAvatar] = useState<string | null>(null);
   const [gender, setGender] = useState<Gender>("Nam");
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    console.log("pid: ", pid);
+  }, [pid]);
 
   const onBrowsering = () => {
     fileInputRef.current?.click();
@@ -90,6 +102,9 @@ const StaffInfor = ({ params }: StaffInforProps) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const body = Object.fromEntries(formData.entries());
+    if (body.hasOwnProperty("gender")) {
+      delete body.gender;
+    }
     alert(JSON.stringify(body));
   };
 
@@ -179,7 +194,7 @@ const StaffInfor = ({ params }: StaffInforProps) => {
                   icon="smartphone"
                   placeholder="0123456789"
                   onInfor={() => {}}
-                  name="phoneNumber"
+                  name="phone"
                   defaulValue={fakeData.phoneNumber}
                 ></GdvInput>
                 <span className="text-[11px] text-cgray-400 font-normal">
