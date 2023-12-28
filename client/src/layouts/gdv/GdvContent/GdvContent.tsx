@@ -83,9 +83,10 @@ const GdvConTent = () => {
     try {
       setIsLoading(true);
       const response = await getReviewParcels();
+      console.log(response.data);
       if (response.data?.data) {
         setIsLoading(false);
-        setData(response.data.data.parcels);
+        // setData(response.data.data);
       } else {
         setIsLoading(false);
         setData(fakeData);

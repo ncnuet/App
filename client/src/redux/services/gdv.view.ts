@@ -16,13 +16,18 @@ export interface IReviewParcel {
 }
 
 export interface IGrapqlReviewParcel {
-  data: {
-    parcels: IReviewParcel[];
-  };
+  data: IReviewParcel[];
+  message?: string;
 }
 
-export async function getReviewParcels(): Promise<
-  AxiosResponse<IGrapqlReviewParcel>
-> {
-  return await axios.get("/parcel");
+export async function getReviewParcels(
+  limit: number = 10,
+  page: number = 1
+): Promise<AxiosResponse<IGrapqlReviewParcel>> {
+  return await axios.get("/parcel", {
+    params: {
+      limit: limit,
+      page: page,
+    },
+  });
 }
