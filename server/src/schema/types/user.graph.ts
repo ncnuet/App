@@ -3,6 +3,7 @@ import toGraphEnum from "@/utils/to_graph_enum";
 import { GraphQLEnumType, GraphQLList, GraphQLObjectType, GraphQLString } from "graphql";
 import { OfficeGraph } from "./office.graph";
 import OfficeModel from "@/models/office.model";
+import { AddressGraph } from "./address.graph";
 
 export interface IUserOutputGraph
     extends Omit<IUserWithoutVersion, "username"> { }
@@ -20,6 +21,9 @@ export const UserGraph = new GraphQLObjectType<IUserOutputGraph>({
         uid: { type: GraphQLString },
         name: { type: GraphQLString },
         role: { type: UserTypeEnum },
+        username : {type: GraphQLString},
+        phone: {type: GraphQLString },
+        address: { type: AddressGraph},
         office: {
             type: GraphQLList(OfficeGraph),
             resolve: async (parent) => {
