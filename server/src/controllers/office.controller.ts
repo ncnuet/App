@@ -2,8 +2,11 @@ import postOfficeModel from "@/models/office.model";
 import userModel from "@/models/user.model";
 import { InputError, Request, Response } from "@/types/controller";
 import { EOfficeType } from "@/models/schema/office.schema";
-import handleError from "@/utils/handle_error";
-import OfficeValidator, { IOfficeCreate, IOfficeUpdate } from "@/validators/office.validator";
+import { handleError } from "@/utils/controller";
+
+import OfficeValidator, {
+    IOfficeCreate, IOfficeUpdate
+} from "@/validators/office.validator";
 
 export default class OfficeController {
     private static async precheck(data: Omit<IOfficeUpdate, "id"> | IOfficeCreate) {

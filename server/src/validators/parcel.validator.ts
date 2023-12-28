@@ -75,12 +75,6 @@ export default class ParcelValidator extends BaseValidator {
         } else if (!und) throw new InputError("Must included parcel's goods", "goods");
     }
 
-    private static checkName(name: string, und?: boolean) {
-        if (name) {
-            if (name.trim().length === 0) throw new InputError("Invalid name", "name");
-        } else if (!und) throw new InputError("Must include name", "name");
-    }
-
     private static checkCost(cost: number, und?: boolean) {
         if (cost) {
             if (cost < 0) throw new InputError("Invalid cost", "cost");

@@ -1,17 +1,20 @@
 import { ILocalData, Request, Response } from "@/types/controller";
-import { withAge } from "@/configs/cookie";
-import { generateResetToken, generateToken } from "@/utils/generate";
-import handleError from "@/utils/handle_error";
-import AuthValidator, {
-  ILoginByPassword,
-  IRequestReset,
-  IResetPassword,
-} from "@/validators/auth.validator";
-import authModel from "@/models/auth.model";
-import tokenModel from "@/models/token.model";
-import { sendForgetPasswordMail } from "@/utils/send_mail";
-import env from "@/configs/env";
 import { IUser } from "@/types/auth";
+import { TTL, withAge } from "@/configs/cookie";
+import config from "@/configs/env";
+
+import { generateResetToken, generateToken } from "@/utils/generate";
+import {
+  sendForgetPasswordMail,
+  sendResetPasswordMail,
+} from "@/utils/send_mail";
+import { handleError } from "@/utils/controller";
+
+import authModel from "@/models/auth.model";
+import TokenModel from "@/models/token.model";
+import userModel from "@/models/user.model";
+import cloudinary from "@/configs/cloudinary";
+
 import RoleValidator, {
   ICreateUser,
   IUpdateActive,
@@ -21,9 +24,12 @@ import RoleValidator, {
   IUpdateUser,
   IUpdateUserName,
 } from "@/validators/user.validator";
-import userModel from "@/models/user.model";
-import cloudinary from "@/configs/cloudinary";
-import officeModel from "@/models/office.model";
+
+import AuthValidator, {
+  ILoginByPassword,
+  IRequestReset,
+  IResetPassword,
+} from "@/validators/auth.validator";
 
 interface IUserWithEpx extends IUser {
   exp: number;
@@ -36,20 +42,15 @@ function setToken(
   refreshToken?: string
 ) {
   refreshToken &&
-    res.cookie("refresh_token", refreshToken, withAge(86400 * 1000));
+    res.cookie("refresh_token", refreshToken, withAge(TTL.ONE_DAY));
   res
     .status(200)
-    .cookie("token", accessToken, withAge(remember ? 3600 * 1000 : void 0))
+    .cookie("token", accessToken, withAge(remember ? TTL.ONE_HOUR : void 0))
     .json({ message: "success", data: { accessToken, refreshToken } })
     .send();
 }
 
 export default class AuthController {
-  /**
-   * Verify account, return access token and resfresh token if true.
-   * @param req
-   * @param res
-   */
   static async login(req: Request, res: Response) {
     const data = <ILoginByPassword>req.body;
     console.log(data);
@@ -61,12 +62,12 @@ export default class AuthController {
         data.password
       );
       if (user) {
-        const version = (await tokenModel.getVersion(user.uid)) || "0";
+        const version = (await TokenModel.getVersion(user.uid)) || "0";
         const token = generateToken(
           { ...user, version, remember: data.remember },
           true
         );
-        await tokenModel.insertRefreshToken(
+        await TokenModel.insertRefreshToken(
           token.refreshToken,
           user.uid,
           user.role
@@ -81,28 +82,18 @@ export default class AuthController {
     });
   }
 
-  /**
-   * Logout
-   * @param req
-   * @param res
-   */
   static async logout(req: Request, res: Response) {
     const user = res.locals.user;
 
     await handleError(res, async () => {
-      tokenModel.deleteRefreshToken(user.uid);
-      tokenModel.updateVersion(user.uid);
-      res.cookie("token", null, withAge(0));
-      res.cookie("refresh_token", null, withAge(0));
+      TokenModel.deleteRefreshToken(user.uid);
+      TokenModel.updateVersion(user.uid);
+      res.cookie("token", null, withAge(TTL.ZERO));
+      res.cookie("refresh_token", null, withAge(TTL.ZERO));
       res.sendStatus(200);
     });
   }
 
-  /**
-   * Request reset password
-   * @param req
-   * @param res
-   */
   static async requestReset(req: Request, res: Response) {
     const data = <IRequestReset>req.body;
     console.log(data);
@@ -122,25 +113,17 @@ export default class AuthController {
           office: "",
         });
 
-        await sendForgetPasswordMail(user, token);
+        sendForgetPasswordMail(user, token);
 
         res
           .status(200)
           .json({ message: "Email đã được gửi thành công tới " + user.email });
       } else {
-        res.status(400).json({
-          message: "Không tồn tại email",
-          name: "email",
-        });
+        res.status(400).json({ message: "Không tồn tại tài khoản" });
       }
     });
   }
 
-  /**
-   * Verify link and redirect to front-end
-   * @param req
-   * @param res
-   */
   static async verifyReset(
     req: Request,
     res: Response<any, ILocalData<IUserWithEpx>>
@@ -152,7 +135,11 @@ export default class AuthController {
     res
       .cookie("token", req.query.token, withAge(180 * 1000))
       .redirect(
-        env.FRONTEND + "/resetpassword?ttl=" + remaining + "&user=" + username
+        config.FRONTEND +
+          "/resetpassword?ttl=" +
+          remaining +
+          "&user=" +
+          username
       );
   }
 
@@ -163,8 +150,13 @@ export default class AuthController {
       AuthValidator.validateReset(data);
       const user = <IUser>res.locals.user;
 
-      await authModel.updatePassword(user.uid, data.password);
-      res.json({ message: "Password changed successfully" });
+      const new_profile = await authModel.updatePassword(
+        user.uid,
+        data.password
+      );
+      if (new_profile) sendResetPasswordMail(new_profile);
+
+      res.json({ message: "Password đã thay đổi thành công" });
     });
   }
 
@@ -174,6 +166,7 @@ export default class AuthController {
 
     await handleError(res, async () => {
       RoleValidator.validateCreateUser(user.role, data);
+
       const userInOtherOffice = await userModel.getUserInOffice(data.office);
       RoleValidator.validateOnlyManagerInOffice(userInOtherOffice, data.role);
       RoleValidator.validateEmployeeSameOfficeManager(
@@ -184,17 +177,14 @@ export default class AuthController {
       const user_id = await userModel.create(user.uid, data);
 
       res.status(200).json({
-        message: "Created sucessfully",
+        message: "Tạo tài khoản thành công",
         data: {
           uid: user_id,
           username: data.username,
-          password: data.password,
           email: data.email,
           role: data.role,
         },
       });
-
-      // TODO: Gui mail ve chi nguoi dung
     });
   }
 

@@ -1,6 +1,6 @@
 import { InputError, Response } from "@/types/controller";
 
-export default async function handleError<T = void>(res: Response, func: () => Promise<T>) {
+export async function handleError<T = void>(res: Response, func: () => Promise<T>) {
     try {
         await func();
     } catch (error) {

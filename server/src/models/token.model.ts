@@ -2,13 +2,13 @@ import { redis } from "@/configs/redis";
 import { IUserRole } from "@/types/auth";
 import { NameType, getKey } from "@/utils/redis_name";
 
-class TokenModel {
+export default class TokenModel {
     /**
     * Insert refresh token into the database.
     * @param refreshToken 
     * @returns true if inserted successfully.
     */
-    async insertRefreshToken(refreshToken: string, uid: string, role: IUserRole) {
+    static async insertRefreshToken(refreshToken: string, uid: string, role: IUserRole) {
         await redis.set(getKey(uid, NameType.USER_VERSION), 0, { NX: true })
 
         if (!(await redis.json.set(getKey(refreshToken, NameType.TOKEN), '$', { uid, token: refreshToken }) === "OK" &&
@@ -22,7 +22,7 @@ class TokenModel {
      * @param refreshToken 
      * @returns 
      */
-    async getRefreshToken(refreshToken: string): Promise<string> {
+    static async getRefreshToken(refreshToken: string): Promise<string> {
         return <string>await redis.json.get(getKey(refreshToken, NameType.TOKEN))
     }
 
@@ -31,7 +31,7 @@ class TokenModel {
      * @param uid 
      * @returns 
      */
-    async deleteRefreshToken(uid: string) {
+    static async deleteRefreshToken(uid: string) {
         const tokens = await redis.ft.search("idx:token", `@uid:"${uid}"`)
         tokens && await Promise.all(
             tokens.documents.map(token => redis.json.del(token.id))
@@ -43,7 +43,7 @@ class TokenModel {
      * @param uid 
      * @returns 
      */
-    async updateVersion(uid: string) {
+    static async updateVersion(uid: string) {
         if (!redis.incr(getKey(uid, NameType.USER_VERSION))) {
             throw new Error("Unable to update version");
 
@@ -55,7 +55,7 @@ class TokenModel {
      * @param uid 
      * @returns 
      */
-    async getVersion(uid: string) {
+    static async getVersion(uid: string) {
         return await redis.get(getKey(uid, NameType.USER_VERSION));
     }
 
@@ -64,9 +64,7 @@ class TokenModel {
      * @param uid Get user's role
      * @returns 
      */
-    async getRole(uid: string): Promise<IUserRole> {
+    static async getRole(uid: string): Promise<IUserRole> {
         return <IUserRole>await redis.get(getKey(uid, NameType.USER_ROLE));
     }
 }
-
-export default new TokenModel();

@@ -22,7 +22,6 @@ export async function checkJWT(this: ICheckJWT | void, req: Request, res: Respon
 
         if (version && version !== user.version) return res.sendStatus(401); 
 
-        // if valid, pass resolve data to local response and continue processing.
         res.locals.user = user;
         next();
     } catch (error) {

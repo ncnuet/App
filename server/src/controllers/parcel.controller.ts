@@ -1,9 +1,12 @@
 import officeModel from "@/models/office.model";
 import parcelModel from "@/models/parcel.model";
 import trackingModel from "@/models/tracking.model";
+
 import { InputError, Request, Response } from "@/types/controller";
-import handleError from "@/utils/handle_error";
-import ParcelValidator, { IParcelCreate, IParcelUpdate, IParcelUpdateStatus } from "@/validators/parcel.validator";
+import { handleError } from "@/utils/controller";
+import ParcelValidator, {
+    IParcelCreate, IParcelUpdate, IParcelUpdateStatus
+} from "@/validators/parcel.validator";
 
 export default class ParcelController {
     private static async precheck(data: IParcelCreate | Omit<IParcelUpdate, "id">) {
