@@ -9,6 +9,11 @@ export enum EUserRole {
     GATHE_STAF = "gathe_staf"
 }
 
+export enum ECustomerType {
+    SENDER = "sender",
+    RECEIVER = "receiver",
+}
+
 export interface IUser extends IUserWithoutVersion {
     version: string,
     remember: boolean

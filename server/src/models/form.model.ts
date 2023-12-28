@@ -1,4 +1,4 @@
-import { IFormAddItem, IFormCreate, IFormDelete, IFormDeleteItem, IFormUpdate, IFormUpdateItem } from "@/validators/form.validator";
+import { IFormAddItem, IFormUserCreate, IFormDelete, IFormDeleteItem, IFormUpdate, IFormUpdateItem, IFormCustomerCreate } from "@/validators/form.validator";
 import { FormBaseModel } from "./base/form.base";
 
 class FormModel {
@@ -10,10 +10,20 @@ class FormModel {
         return form
     }
 
-    async createForm(data: IFormCreate, creator: string) {
+    async createUserForm(data: IFormUserCreate, creator: string) {
         const response = await FormBaseModel.create({
             creator: creator,
             receiver: data.receiver,
+            type: data.type,
+        })
+
+        return response._id;
+    }
+
+    async createCustomerForm(data: IFormCustomerCreate, creator: string, receiver: string) {
+        const response = await FormBaseModel.create({
+            creator: creator,
+            receiver: receiver,
             type: data.type,
             content: data.content,
         })
@@ -65,6 +75,11 @@ class FormModel {
         );
 
         return result;
+    }
+
+    async findParcel(id_parcel: string) {
+        const existingForm = await FormBaseModel.findOne({ 'content.parcel': id_parcel });
+        return existingForm
     }
 }
 

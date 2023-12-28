@@ -5,24 +5,35 @@ import { EFormType } from "@/models/schema/form.chema";
 import userModel from "@/models/user.model";
 import { InputError, Request, Response } from "@/types/controller";
 import handleError from "@/utils/handle_error";
-import FormValidator, { IFormAddItem, IFormCreate, IFormDelete, IFormDeleteItem, IFormUpdate, IFormUpdateItem } from "@/validators/form.validator";
+import FormValidator, { IFormAddItem, IFormAddItems, IFormUserCreate, IFormDelete, IFormDeleteItem, IFormUpdate, IFormUpdateItem, IFormCustomerCreate } from "@/validators/form.validator";
 
 export default class FormController {
-    public static async create(req: Request, res: Response) {
-        const data = <IFormCreate>req.body;
+    public static async createFormToUser(req: Request, res: Response) {
+        const data = <IFormUserCreate>req.body;
         const user = res.locals.user;
-        console.log(user);
-        
+
 
         handleError(res, async () => {
-            if(data.type !== EFormType.SEND_TO_RECEIVER) {
-                const receivers = await userModel.getUsers([data.receiver]);
-                FormValidator.validateReceiverAndTypeForm(receivers[0].role, data.type)
-                FormValidator.validateReceiver(receivers[0]);
-            }
-            // const receivers = await userModel.getUsers([data.receiver]);
-            FormValidator.validateType(data.type);
-            const form_id = await FormModel.createForm(data, user.uid);
+            const roleCreator = user.role;
+            const receiver = await userModel.getUsers([data.receiver]);
+            FormValidator.validateCreatorAndReceiver(receiver[0].role, roleCreator);
+            const form_id = await FormModel.createUserForm(data, user.uid);
+            res.status(200).json({
+                message: "thành công tạo đơn ",
+                data: {
+                    form_id : form_id
+                }
+            })
+        })
+    }
+
+    public static async createFormToCustomer(req: Request, res: Response) {
+        const data = <IFormCustomerCreate>req.body;
+        const user = res.locals.user;
+
+        handleError(res, async () => {
+            const parcels = await parcelModel.getParcels([data.content[0].parcel.toString()])
+            const form_id = await FormModel.createCustomerForm(data, user.uid, parcels[0].receiver.phone );
             res.status(200).json({
                 message: "thành công tạo đơn ",
                 data: {
@@ -39,7 +50,9 @@ export default class FormController {
         
         handleError(res, async () => {
             FormValidator.validateType(data.type, true);
-            const form = await FormModel.getForm([id])
+            const form = await FormModel.getForm([id]);
+            const receiver = await userModel.getUsers([form[0].receiver]);
+            FormValidator.validateReceiverAndTypeForm(receiver[0].role, data.type, true)
             FormValidator.validatePermission(form[0].creator.toString(), user.uid)
             const result = await FormModel.updateReciverOrTypeForm(data, user.uid, id);
             res.status(200).json({
@@ -75,6 +88,8 @@ export default class FormController {
         handleError(res, async() => {
             // const parcels = parcelModel.getParcels([data.parcel.toString()])
             // FormValidator.validateParcelOfForm(parcels);
+            const existingForm = await FormModel.findParcel(data.parcel.toString());
+            FormValidator.validateExistForm(existingForm);
             const form = await FormModel.getForm([id]);
             FormValidator.validatePermission(form[0].creator.toString(), user.uid);
             const result = await FormModel.addItem(data, id);
@@ -83,6 +98,28 @@ export default class FormController {
                 data : result,
             })
         })
+    }
+
+    public static async addItemsForm (req: Request, res: Response) {
+        const data = <IFormAddItems>req.body;
+        const {id} = req.params;
+        const user = res.locals.user;
+        handleError(res, async() => {
+            const form = await FormModel.getForm([id]);
+            FormValidator.validatePermission(form[0].creator.toString(), user.uid);
+            const result = await Promise.all( data.contentsForm.map(async (item) => {
+                const existingForm = await FormModel.findParcel(item.parcel.toString());
+                FormValidator.validateExistForm(existingForm);
+                const result = await FormModel.addItem(item, id);
+                return result
+            }) )
+
+            res.status(200).json({
+                message: "thêm items thành công",
+                data : result,
+            })
+        })
+        
     }
 
     public static async deleteItemForm(req: Request, res : Response) {
@@ -100,13 +137,13 @@ export default class FormController {
         })
     }
 
-    public static async updateItemForm (req: Request, res : Response) { 
+    public static async comfirmItemForm (req: Request, res : Response) { 
         const {id} = req.params;
         const data = <IFormUpdateItem>req.body;
         const user = res.locals.user;
         handleError(res, async() => {
             const form = await FormModel.getForm([id]);
-            FormValidator.validatePermission(form[0].creator.toString(), user.uid);
+            FormValidator.validatePermissionComfirm(form[0].receiver, user.uid );
             const result = await FormModel.updateConfirm(data, id);
             res.status(200).json({
                 message: "thêm item thành công",
@@ -114,4 +151,8 @@ export default class FormController {
             })
         })
     }
+
+
+
+
 }
