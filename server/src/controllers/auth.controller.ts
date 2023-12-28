@@ -39,7 +39,7 @@ export default class AuthController {
         const data = <ILoginByPassword>req.body;
         console.log(data);
 
-        await handleError(res, async () => {
+        handleError(res, async () => {
             AuthValidator.validateLoginPassword(data);
             const user = await authModel.findUserByPassword(data.username, data.password);
             if (user) {
@@ -59,7 +59,7 @@ export default class AuthController {
     static async logout(req: Request, res: Response) {
         const user = res.locals.user;
 
-        await handleError(res, async () => {
+        handleError(res, async () => {
             TokenModel.deleteRefreshToken(user.uid);
             TokenModel.updateVersion(user.uid);
             res.cookie("token", null, withAge(TTL.ZERO));
@@ -72,7 +72,7 @@ export default class AuthController {
         const data = <IRequestReset>req.body;
         console.log(data);
 
-        await handleError(res, async () => {
+        handleError(res, async () => {
             AuthValidator.validateRequestReset(data);
             const user = await authModel.findUserByInfo(data);
             if (user) {
@@ -110,7 +110,7 @@ export default class AuthController {
     static async resetPassword(req: Request, res: Response) {
         const data = <IResetPassword>req.body;
 
-        await handleError(res, async () => {
+        handleError(res, async () => {
             AuthValidator.validateReset(data);
             const user = <IUser>res.locals.user;
 
@@ -121,11 +121,26 @@ export default class AuthController {
         })
     }
 
+    static async getMe(req: Request, res: Response) {
+        const user = res.locals.user;
+
+        handleError(res, async () => {
+            res.json({
+                message: "success",
+                data: {
+                    name: user.name,
+                    username: user.username,
+                    office: user.office
+                }
+            })
+        })
+    }
+
     static async createUser(req: Request, res: Response) {
         const data = <ICreateUser>req.body;
         const user = res.locals.user;
 
-        await handleError(res, async () => {
+        handleError(res, async () => {
             RoleValidator.validateCreateUser(user.role, data);
 
             const userInOtherOffice = await userModel.getUserInOffice(data.office)
@@ -150,7 +165,7 @@ export default class AuthController {
         const data = <IUpdateUser>req.body;
         const editor = res.locals.user;
 
-        await handleError(res, async () => {
+        handleError(res, async () => {
             const users = await userModel.getUsers([id]);
 
             RoleValidator.validateUpdateUser(
@@ -172,7 +187,7 @@ export default class AuthController {
         const data = <IUpdatePassword>req.body;
         const editor = res.locals.user;
 
-        await handleError(res, async () => {
+        handleError(res, async () => {
             const users = await userModel.getUsers([id]);
             RoleValidator.checkActionForThisUser(
                 users[0].creator.toString(),
@@ -191,7 +206,7 @@ export default class AuthController {
         const data = <IUpdateAvatar>req.body;
         const editor = res.locals.user;
 
-        await handleError(res, async () => {
+        handleError(res, async () => {
             const users = await userModel.getUsers([id]);
             RoleValidator.checkActionForThisUser(
                 users[0].creator.toString(),
@@ -212,7 +227,7 @@ export default class AuthController {
     static async deleteUser(req: Request, res: Response) {
         const { id } = req.params;
         const editor = res.locals.user;
-        await handleError(res, async () => {
+        handleError(res, async () => {
             const users = await userModel.getUsers([id]);
             RoleValidator.validateDeleteUser(users[0].creator.toString(), editor);
             const deleteResult = await userModel.delete(id);
@@ -227,7 +242,7 @@ export default class AuthController {
         const data = <IUpdateInfoUser>req.body;
         const editor = res.locals.user;
 
-        await handleError(res, async () => {
+        handleError(res, async () => {
             const updatedUser = await userModel.updateInfo(
                 editor.uid.toString(),
                 data
@@ -243,7 +258,7 @@ export default class AuthController {
         const data = <IUpdateUserName>req.body;
         const editor = res.locals.user;
 
-        await handleError(res, async () => {
+        handleError(res, async () => {
             const updatedUser = await userModel.updateUsername(
                 editor.uid.toString(),
                 data
@@ -259,7 +274,7 @@ export default class AuthController {
         const data = <IUpdateAvatar>req.body;
         const editor = res.locals.user;
 
-        await handleError(res, async () => {
+        handleError(res, async () => {
             let result = await cloudinary.uploader.upload(data.avatar, {
                 folder: "avatar",
             });
@@ -280,24 +295,24 @@ export default class AuthController {
         const data = <IUpdateActive>req.body;
         const editor = res.locals.user;
 
-    await handleError(res, async () => {
-      const users = await userModel.getUsers([id]);
-      RoleValidator.checkActionForThisUser(
-        users[0].creator.toString(),
-        editor.uid
-      );
-      const updatedUser = await userModel.updateActive(id, data);
-      res.status(200).json({
-        message: "success",
-        data: updatedUser,
-      });
-    });
-  }
+        handleError(res, async () => {
+            const users = await userModel.getUsers([id]);
+            RoleValidator.checkActionForThisUser(
+                users[0].creator.toString(),
+                editor.uid
+            );
+            const updatedUser = await userModel.updateActive(id, data);
+            res.status(200).json({
+                message: "success",
+                data: updatedUser,
+            });
+        });
+    }
 
     static async getCreatedPerson(req: Request, res: Response) {
         const user = res.locals.user;
 
-        await handleError(res, async () => {
+        handleError(res, async () => {
             const createdPersons = await userModel.getCreatedPerson(user.uid);
             const result = createdPersons.map((user) => {
                 return {

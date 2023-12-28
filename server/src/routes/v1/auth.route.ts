@@ -13,6 +13,7 @@ router.post("/logout", [checkJWT], AuthControler.logout);
 router.post("/reset", AuthControler.requestReset);
 router.get("/reset", [checkReset], AuthControler.verifyReset);
 router.put("/reset", [checkReset], AuthControler.resetPassword);
+router.get("/me", [checkJWT], AuthControler.getMe)
 
 router.post('/', [checkJWT, checkRole.bind({ role: StrictRole })], AuthControler.createUser); // người tạo là quản lý
 router.put('/:id', [checkJWT, checkRole.bind({ role: StrictRole })], AuthControler.updateUser); //người chỉnh sửa là quản lý 

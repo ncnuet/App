@@ -155,7 +155,7 @@ const StaffInfor = ({ searchParams }: StaffInforProps) => {
                   icon="account_circle"
                   placeholder="Phạm Thị Thảo"
                   defaulValue={fakeData.name}
-                  onInfor={() => {}}
+                  onInfor={() => { }}
                   name="name"
                 ></GdvInput>
                 <span className="text-[11px] text-cgray-400 font-normal">
@@ -168,7 +168,7 @@ const StaffInfor = ({ searchParams }: StaffInforProps) => {
                   isBig
                   icon="alternate_email"
                   placeholder="cogiaothao96@gmail.com"
-                  onInfor={() => {}}
+                  onInfor={() => { }}
                   name="email"
                   defaulValue={fakeData.email}
                 ></GdvInput>
@@ -187,7 +187,7 @@ const StaffInfor = ({ searchParams }: StaffInforProps) => {
                   isBig
                   icon="pin_drop"
                   placeholder="Thanh Vân, Thanh Lâm, Mê Linh, Hà Nội"
-                  onInfor={() => {}}
+                  onInfor={() => { }}
                   name="address"
                   defaulValue={fakeData.address}
                 ></GdvInput>
@@ -203,7 +203,7 @@ const StaffInfor = ({ searchParams }: StaffInforProps) => {
                   isBig
                   icon="smartphone"
                   placeholder="0123456789"
-                  onInfor={() => {}}
+                  onInfor={() => { }}
                   name="phone"
                   defaulValue={fakeData.phoneNumber}
                 ></GdvInput>
@@ -262,7 +262,7 @@ const StaffInfor = ({ searchParams }: StaffInforProps) => {
                   isBig
                   icon="account_circle"
                   placeholder="Phạm Thị Thảo"
-                  onInfor={() => {}}
+                  onInfor={() => { }}
                   disabled={true}
                   defaulValue={fakeData.userName}
                   name="userName"
@@ -279,7 +279,7 @@ const StaffInfor = ({ searchParams }: StaffInforProps) => {
                   isBig
                   icon="password"
                   placeholder="********"
-                  onInfor={() => {}}
+                  onInfor={() => { }}
                   name="password"
                   defaulValue={fakeData.password}
                 ></GdvInput>
