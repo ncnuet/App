@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs'
 import { UserBaseModel } from "./base/user.base";
 import { IResponseData, Request, Response } from "@/types/controller"
 import AuthValidator from "@/validators/auth.validator";
-import RoleValidator, { ICreateUser, IUpdateUser } from '@/validators/user.validator';
+import RoleValidator, { ICreateUser, IUpdateActive, IUpdateAvatar, IUpdateInfoUser, IUpdatePassword, IUpdateUser, IUpdateUserName } from '@/validators/user.validator';
 import { OfficeBaseModel } from './base/office.base';
 import { EUserRole } from '@/types/auth';
 import cloudinary from '@/configs/cloudinary';
@@ -40,6 +40,7 @@ class UserModel {
             phone: data.phone,
             name: data.name,
             office: data.office,
+            address: data.address,
             creator: creator,
             active: true
         })
@@ -48,25 +49,32 @@ class UserModel {
     }
 
     async update(id_user: string, data: IUpdateUser) {
-        let result = null;
 
-        if (data.avatar) {
-            result = await cloudinary.uploader.upload(data.avatar, { folder: 'avatar' });
-        }
 
         const updateData: any = {
             name: data.name,
             role: data.role,
             email: data.email,
             phone: data.phone,
-            active: data.active,
-            username: data.username,
+            address: data.address,
         };
 
-        if (result) {
-            updateData.avatar = result.secure_url;
-        }
         const userAfterUpdate = await UserBaseModel.findByIdAndUpdate(id_user, updateData, { new: true });
+        return userAfterUpdate;
+    }
+
+    async updatePassword(id_user: string, data: IUpdatePassword) {
+        var salt = bcrypt.genSaltSync(10);
+        // console.log(data.password);
+
+        var hashPass = bcrypt.hashSync(data.password, salt);
+        const userAfterUpdate = await UserBaseModel.findByIdAndUpdate(id_user,
+        {
+            password: hashPass,
+            username: data.username,
+        },
+        { new: true });
+
         return userAfterUpdate;
     }
 
@@ -76,6 +84,60 @@ class UserModel {
         console.log(deleteResult);
 
         return deleteResult;
+    }
+
+    async updateInfo(id_user: string, data: IUpdateInfoUser) {
+        const updateData: any = {
+            name: data.name,
+            email: data.email,
+            phone: data.phone,
+            address: data.address,
+            gender: data.gender,
+        };
+        const userAfterUpdate = await UserBaseModel.findByIdAndUpdate(id_user, updateData, { new: true });
+        return userAfterUpdate;
+    }
+
+    async updateUsername(id_user: string, data: IUpdateUserName) {
+        const updateData: any = {
+            username: data.username,
+        }
+        const userAfterUpdate = await UserBaseModel.findByIdAndUpdate(id_user, updateData, { new: true });
+        return userAfterUpdate;
+    }
+
+    async updateAvatar(id_user: string, data: IUpdateAvatar) {
+        // let result = await cloudinary.uploader.upload(data.avatar, { folder: 'avatar' });
+        const updateData: any = {
+            avatar: data.avatar
+        };
+
+        const userAfterUpdate = await UserBaseModel.findByIdAndUpdate(id_user, updateData, { new: true });
+        return userAfterUpdate;
+    }
+
+    async updateActive(id_user: string, data: IUpdateActive) {
+        const updateData: any = {
+            active: data.active,
+        }
+        const userAfterUpdate = await UserBaseModel.findByIdAndUpdate(id_user, updateData, { new: true });
+        return userAfterUpdate;
+    }
+
+    async getCreatedPerson(creator: string) {
+        const result = await UserBaseModel.find(
+            { creator: creator },
+        )
+
+        return result;
+    }
+
+    async getUserInOffice(office: string) {
+        const result = await UserBaseModel.find(
+            { office: office }
+        )
+
+        return result;
     }
 }
 export default new UserModel();

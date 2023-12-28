@@ -8,8 +8,10 @@ import tokenModel from "@/models/token.model";
 import { sendForgetPasswordMail } from "@/utils/send_mail";
 import env from "@/configs/env";
 import { IUser } from "@/types/auth";
-import RoleValidator, { ICreateUser, IUpdateUser } from "@/validators/user.validator";
+import RoleValidator, { ICreateUser, IUpdateActive, IUpdateAvatar, IUpdateInfoUser, IUpdatePassword, IUpdateUser, IUpdateUserName } from "@/validators/user.validator";
 import userModel from "@/models/user.model";
+import cloudinary from "@/configs/cloudinary";
+import officeModel from "@/models/office.model";
 
 interface IUserWithEpx extends IUser {
     exp: number;
@@ -133,9 +135,11 @@ export default class AuthController {
     static async createUser(req: Request, res: Response) {
         const data = <ICreateUser>req.body;
         const user = res.locals.user;
-        
+
         await handleError(res, async () => {
             RoleValidator.validateCreateUser(user.role, data);
+            const userInOtherOffice = await userModel.getUserInOffice(data.office)
+            RoleValidator.validateOnlyManagerInOffice(userInOtherOffice);
             const user_id = await userModel.create(user.uid, data);
 
             res.status(200).json({
@@ -154,7 +158,7 @@ export default class AuthController {
     }
 
     static async updateUser(req: Request, res: Response) {
-        const {id} = req.params;
+        const { id } = req.params;
         const data = <IUpdateUser>req.body;
         const editor = res.locals.user;
 
@@ -166,23 +170,49 @@ export default class AuthController {
 
             res.status(200).json({
                 message: "update success",
-                data: {
-                    uid: id,
-                    username: updatedUser.username,
-                    password: updatedUser.password,
-                    email: updatedUser.email,
-                    role: updatedUser.role,
-                    active: updatedUser.active,
-                    phone: updatedUser.phone,
-                }
+                data: updatedUser
+            })
+        })
+    }
+
+    static async updatePassword(req: Request, res: Response) {
+        const { id } = req.params;
+        const data = <IUpdatePassword>req.body;
+        const editor = res.locals.user;
+
+        await handleError(res, async () => {
+            const users = await userModel.getUsers([id]);
+            RoleValidator.checkActionForThisUser(users[0].creator.toString(), editor.uid);
+            const result = await userModel.updatePassword(id, data);
+            res.status(200).json({
+                message: "update success",
+                data: result
+            })
+        })
+    }
+
+    static async updateAvatar(req: Request, res: Response) {
+        const { id } = req.params;
+        const data = <IUpdateAvatar>req.body;
+        const editor = res.locals.user;
+
+        await handleError(res, async () => {
+            const users = await userModel.getUsers([id]);
+            RoleValidator.checkActionForThisUser(users[0].creator.toString(), editor.uid);
+            let result = await cloudinary.uploader.upload(data.avatar, { folder: 'avatar' });
+            data.avatar = result.secure_url;
+            const updatedUser = await userModel.updateAvatar(id, data);
+            res.status(200).json({
+                message: "success",
+                data: updatedUser,
             })
         })
     }
 
     static async deleteUser(req: Request, res: Response) {
-        const {id} = req.params;
+        const { id } = req.params;
         const editor = res.locals.user;
-        await handleError(res, async() => {
+        await handleError(res, async () => {
             const users = await userModel.getUsers([id]);
             RoleValidator.validateDeleteUser(users[0].creator.toString(), editor);
             const deleteResult = await userModel.delete(id);
@@ -193,27 +223,84 @@ export default class AuthController {
         })
     }
 
-    static async updateSelf(req: Request, res: Response) {
-        const data = <IUpdateUser>req.body;
-        if(req.file) {
-            data.avatar = req.file.path
-        }
-        
+    static async updateSelfInfo(req: Request, res: Response) {
+        const data = <IUpdateInfoUser>req.body;
         const editor = res.locals.user;
-        await handleError(res, async() => {
-            const updatedUser = await userModel.update(editor.uid.toString(), data);
 
+        await handleError(res, async () => {
+            const updatedUser = await userModel.updateInfo(editor.uid.toString(), data);
             res.status(200).json({
-                message: "update success",
-                data: {
-                    uid:editor.uid,
-                    username: updatedUser.username,
-                    email: updatedUser.email,
-                    role: updatedUser.role,
-                    active: updatedUser.active,
-                    phone: updatedUser.phone,
-                }
+                message: "success",
+                data: updatedUser,
             })
         })
     }
+
+    static async updateSelfUserName(req: Request, res: Response) {
+        const data = <IUpdateUserName>req.body;
+        const editor = res.locals.user;
+
+        await handleError(res, async () => {
+            const updatedUser = await userModel.updateUsername(editor.uid.toString(), data);
+            res.status(200).json({
+                message: "success",
+                data: updatedUser,
+            })
+        })
+    }
+
+    static async updateSelfAvatar(req: Request, res: Response) {
+        const data = <IUpdateAvatar>req.body;
+        const editor = res.locals.user;
+
+        await handleError(res, async () => {
+            let result = await cloudinary.uploader.upload(data.avatar, { folder: 'avatar' });
+            data.avatar = result.secure_url;
+            const updatedUser = await userModel.updateAvatar(editor.uid.toString(), data);
+            res.status(200).json({
+                message: "success",
+                data: updatedUser,
+            })
+        })
+    }
+
+    static async updateActive(req: Request, res: Response) {
+        const { id } = req.params;
+        const data = <IUpdateActive>req.body;
+        const editor = res.locals.user;
+
+        await handleError(res, async () => {
+            const users = await userModel.getUsers([id]);
+            RoleValidator.checkActionForThisUser(users[0].creator.toString(), editor.uid)
+            const updatedUser = await userModel.updateActive(id, data);
+            res.status(200).json({
+                message: "success",
+                data: updatedUser,
+            })
+        })
+    }
+
+    static async getCreatedPerson(req: Request, res: Response) {
+        const user = res.locals.user;
+
+        await handleError(res, async () => {
+            const createdPersons = await userModel.getCreatedPerson(user.uid);
+            const result = createdPersons.map(user => {
+                return (
+                    {
+                        id : user._id,
+                        username: user.username,
+                        email : user.email,
+                        avatar: user.avatar,
+                        role: user.role
+                    }
+                )
+            })
+            res.status(200).json({
+                message: "success",
+                data: result,
+            })
+        })
+    }
+
 }

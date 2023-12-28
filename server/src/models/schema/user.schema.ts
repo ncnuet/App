@@ -2,6 +2,13 @@
 import { IUserRole } from '@/types/auth';
 import { Document, ObjectId, Schema } from 'mongoose';
 import { OfficeBaseModel } from '@/models/base/office.base';
+import { IAddress, addressSchema } from './address.schema';
+
+
+export enum EGenderType {
+    MALE = "male",
+    FEMALE = "female",
+}
 
 export interface IUserDB {
     username: string;
@@ -15,6 +22,8 @@ export interface IUserDB {
     active: boolean;
     creator: string;
     avatar: string;
+    address: IAddress;
+    gender: EGenderType;
 }
 
 export interface IUserSchema
@@ -36,5 +45,7 @@ export const userSchema = new Schema<IUserSchema>(
         active: { type: Boolean, require: true },
         creator: { type: Schema.Types.ObjectId },
         avatar: {type: String},
+        address: {type: addressSchema},
+        gender: {type: String}
     },
     { timestamps: true });

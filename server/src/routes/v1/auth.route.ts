@@ -17,9 +17,18 @@ router.put('/reset', [checkReset], AuthControler.resetPassword)
 // router.put('/changePassword', [checkJWT], AuthControler.changePassword);
 // router.post('/create', AuthControler.createAccount);
 
-router.post('/', [checkJWT, checkRole.bind({ role: ["admin", "bod", "head"] })], AuthControler.createUser);
-router.patch('/:id',[checkJWT, checkRole.bind({ role: ["admin", "bod", "head"] })], AuthControler.updateUser);
+router.post('/', [checkJWT, checkRole.bind({ role: ["admin", "bod", "head"] })], AuthControler.createUser);// người tạo là quản lý
+router.patch('/:id',[checkJWT, checkRole.bind({ role: ["admin", "bod", "head"] })], AuthControler.updateUser); //người chỉnh sửa là quản lý 
+router.patch('/:id/password',[checkJWT, checkRole.bind({ role: ["admin", "bod", "head"] })], AuthControler.updatePassword); //người chỉnh sửa là quản lý 
+router.patch('/:id/avatar',[checkJWT, checkRole.bind({ role: ["admin", "bod", "head"] })], AuthControler.updateAvatar); //người chỉnh sửa là quản lý 
 router.delete('/:id',checkJWT, AuthControler.deleteUser);
-router.patch('/',checkJWT, upload.single("avatar"), AuthControler.updateSelf);
+router.patch('/:id/active', [checkJWT, checkRole.bind({ role: ["admin", "bod", "head"] })], AuthControler.updateActive);
+
+router.patch('/avatar',checkJWT, upload.single("avatar"), AuthControler.updateSelfAvatar); // tụ bản thân chỉnh sửa
+router.patch('/', checkJWT, AuthControler.updateSelfInfo); // tụ bản thân chỉnh sửa
+router.patch('/username', checkJWT, AuthControler.updateSelfUserName); // tụ bản thân chỉnh sửa
+
+router.get('/created-people',  checkJWT, AuthControler.getCreatedPerson);
+
 
 export default router;
