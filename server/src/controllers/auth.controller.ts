@@ -1,16 +1,25 @@
 import { ILocalData, Request, Response } from "@/types/controller"
+import { IUser } from "@/types/auth";
 import { TTL, withAge } from '@/configs/cookie';
+
+import config from "@/configs/env";
 import { generateResetToken, generateToken } from '@/utils/generate';
+import { sendForgetPasswordMail } from "@/utils/send_mail";
 import handleError from '@/utils/handle_error';
-import AuthValidator, { ILoginByPassword, IRequestReset, IResetPassword } from "@/validators/auth.validator";
+
 import authModel from '@/models/auth.model';
 import tokenModel from "@/models/token.model";
-import { sendForgetPasswordMail } from "@/utils/send_mail";
-import env from "@/configs/env";
-import { IUser } from "@/types/auth";
-import RoleValidator, { ICreateUser, IUpdateActive, IUpdateAvatar, IUpdateInfoUser, IUpdatePassword, IUpdateUser, IUpdateUserName } from "@/validators/user.validator";
 import userModel from "@/models/user.model";
 import cloudinary from "@/configs/cloudinary";
+
+import RoleValidator, {
+    ICreateUser, IUpdateActive, IUpdateAvatar, IUpdateInfoUser,
+    IUpdatePassword, IUpdateUser, IUpdateUserName
+} from "@/validators/user.validator";
+
+import AuthValidator, {
+    ILoginByPassword, IRequestReset, IResetPassword
+} from "@/validators/auth.validator";
 
 interface IUserWithEpx extends IUser {
     exp: number;
@@ -96,7 +105,7 @@ export default class AuthController {
 
         res
             .cookie("token", req.query.token, withAge(TTL.THREE_MINS))
-            .redirect(env.FRONTEND + "/resetpassword?ttl=" + remaining + "&user=" + username)
+            .redirect(config.FRONTEND + "/resetpassword?ttl=" + remaining + "&user=" + username)
     }
 
     static async resetPassword(req: Request, res: Response) {

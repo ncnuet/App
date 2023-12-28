@@ -8,33 +8,16 @@ interface IUserPayload extends IUser {
     exp?: number
 }
 
-/**
- * Generate a number satisfying [min <= n <= max]
- * @param min 
- * @param max 
- * @returns 
- */
 function generateMinMax(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-/**
- * Generate an UID with given length
- * @param length 
- * @returns 
- */
 export function generate_uid(length: number = 8): string {
     length = (length > 0) ? length : 8;
 
     return [...new Array(length)].map(() => generateMinMax(0, 9).toString()).join("");
 }
 
-/**
- * Generate token
- * @param data 
- * @param hasRefr true if generate refresh token 
- * @returns 
- */
 export function generateToken(user: IUserPayload, gen_RT?: boolean) {
     const { iat, exp, ...data } = user as IUserPayload;
 
@@ -44,11 +27,6 @@ export function generateToken(user: IUserPayload, gen_RT?: boolean) {
     return { accessToken, refreshToken }
 }
 
-/**
- * Generate reset token
- * @param data 
- * @returns 
- */
 export function generateResetToken(user: IUserPayload) {
     const { iat, exp, ...data } = user as IUserPayload;
     return sign(data, config.JWT_RESET_KEY, JWTResetOpt);

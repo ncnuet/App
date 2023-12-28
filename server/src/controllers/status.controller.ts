@@ -1,5 +1,6 @@
 import authModel from '@/models/auth.model';
 import tokenModel from '@/models/token.model';
+
 import { ILoginByPassword } from '@/validators/auth.validator';
 import { Request, Response } from 'express'
 
