@@ -7,6 +7,7 @@ import { InputError } from "@/types/controller";
 export interface IFormUserCreate {
     receiver: string;
     type: string;
+    content: IContentForm[];
 }
 
 export interface IFormCustomerCreate {
@@ -18,8 +19,12 @@ export interface IContentFormUpdate extends IFormUserCreate {
 
 }
 
-export interface IFormUpdate {
+export interface IFormUserUpdate {
     receiver: string;
+    type: string;
+}
+
+export interface IFormCustomerUpdate {
     type: string;
 }
 
@@ -38,15 +43,25 @@ export interface IFormDeleteItem {
     parcel: string;
 }
 
+export interface IFormDeleteItems {
+    parcels: string[];
+}
+
 export interface IFormUpdateItem extends IContentForm {
 
 }
+
+export interface IFormUpdateItems {
+    contentsForm : IFormUpdateItem[]
+}
 export default class FormValidator {
-    static validateType(type: string, und?: boolean) {
+    static validateStatus(type: string, und?: boolean) {
+
         if (und === true && !type) {
             return true
         }
-        if (type !== EFormType.SEND_TO_GATHE_STAF && type !== EFormType.SEND_TO_RECEIVER && type != EFormType.SEND_TO_TRANS_STAF) {
+        if (type !== EFormType.SEND.toString() && type !== EFormType.RETURN.toString()) {
+            console.log(type);
             throw new InputError("Incorrect type of form", "form");
         }
 
@@ -78,33 +93,10 @@ export default class FormValidator {
         }
     }
 
-    static validateReceiverAndTypeForm(role: string, type: string, und?: boolean) {
-        if (und && type) {
-            if ((role === EUserRole.GATHE_STAF && type !== EFormType.SEND_TO_GATHE_STAF)
-                || (role === EUserRole.TRANS_STAF && type !== EFormType.SEND_TO_TRANS_STAF)) {
-                    throw new InputError("Invalid receiver and type form", "form");
-            }
-        }
-        if(und && role) {
-            if ((role === EUserRole.GATHE_STAF && type !== EFormType.SEND_TO_GATHE_STAF)
-            || (role === EUserRole.TRANS_STAF && type !== EFormType.SEND_TO_TRANS_STAF)) {
-                throw new InputError("Invalid receiver and type form", "form");
-        }
-        }
-        if (!und &&
-            ((role === EUserRole.GATHE_STAF && type !== EFormType.SEND_TO_GATHE_STAF)
-                || (role === EUserRole.TRANS_STAF && type !== EFormType.SEND_TO_TRANS_STAF)
-            )
-        ) {
-            
-            throw new InputError("Invalid receiver and type form", "form");
-        }
-    }
-
     static validatePermissionComfirm(receiver: string, editor: string, und?: boolean) {
         if (!und) {
             if (receiver !== editor) {
-                throw new InputError("Invalid permision", "form");
+                throw new InputError("Chỉ người nhận mới có quyền xác nhận", "form");
             }
         }
     }
@@ -118,14 +110,18 @@ export default class FormValidator {
     }
 
     static validateCreatorAndReceiver(roleReceiver: string, roleCreator: string, und?: true) {
-        if(!und) {
-            if(roleCreator === EUserRole.TRANS_STAF && roleReceiver === EUserRole.GATHE_STAF 
-                || roleCreator === EUserRole.TRANS_STAF && roleReceiver === ECustomerType.RECEIVER
-            ) {
-                return true;
-            } else {
-                throw new InputError("người gửi và người nhận có vai trò không hợp lệ", "form")
-            }
+
+        if (und && roleReceiver === null) {
+            return true;
         }
+
+
+        if (roleCreator === EUserRole.TRANS_STAF && roleReceiver === EUserRole.GATHE_STAF
+        ) {
+            return true;
+        } else {
+            throw new InputError("người gửi và người nhận có vai trò không hợp lệ", "form")
+        }
+
     }
 }
