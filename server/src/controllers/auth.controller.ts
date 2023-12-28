@@ -130,7 +130,8 @@ export default class AuthController {
                 data: {
                     name: user.name,
                     username: user.username,
-                    office: user.office
+                    office: user.office,
+                    role: user.role
                 }
             })
         })

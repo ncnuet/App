@@ -1,4 +1,4 @@
-import GdvHeader from "@/layouts/gdv/GdvHeader";
+import GdvHeader from "@/app/(gdv)/components/GdvHeader";
 import GdvSidebar from "@/layouts/gdv/GdvSidebar";
 
 type IProps = {

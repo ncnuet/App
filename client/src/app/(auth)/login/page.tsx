@@ -42,11 +42,12 @@ const LoginPage = () => {
         toast.success("Đăng nhập thành công");
         
         const res_user = await getMe();
-        const user = res_user.data;
+        const user = res_user.data.data;
         dispatch(setProfile({
           name: user.name,
           username: user.username,
-          office: user.office
+          office: user.office,
+          role: user.role
         }))
         
         router.push('/dashboard')

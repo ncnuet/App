@@ -14,13 +14,14 @@ const GdvLayout = ({ children }: IProps) => {
   const user = useAppSelector(profileState)
 
   useEffect(() => {
-    // if (user && user.isLogin) setContent(true);
+    if (user && user.isLogin) setContent(true);
   }, [user])
 
   return (
     showContent && children ||
-    <div className="h-screen w-screen bg-blue-50">
-
+    <div className="h-screen w-screen bg-blue-50 flex flex-col justify-center items-center">
+      <p className="animate-bounce">Loading...</p>
+      <p className="">Đợi chờ là hạnh phúc</p>
     </div>
   );
 };

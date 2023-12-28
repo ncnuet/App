@@ -1,6 +1,9 @@
-import prettyGirl from "@/assets/images/girl.png";
+
 import Logo from "@/icons/Logo";
-import Image from "next/image";
+import { profileState } from "@/redux/features/profile.slice";
+import { useAppSelector } from "@/redux/hooks";
+import NameArea from "./components/Name";
+
 const GdvHeader = () => {
   return (
     <nav className="flex flex-row justify-between h-[52px] select-none px-4 pt-6 xs:p-0">
@@ -19,6 +22,7 @@ const GdvHeader = () => {
           className={"xs:hidden text-cyellow-500 ml-2"}
         ></Logo>
       </div>
+
       <div className="flex flex-row gap-5 items-center h-full">
         <div className="w-fit md:w-[224px] h-12 py-2 px-4 flex flex-row items-center rounded-full border border-[#F0F0F0] bg-white">
           <span className="material-symbols-outlined hover:cursor-pointer">
@@ -30,28 +34,19 @@ const GdvHeader = () => {
             spellCheck={false}
           ></input>
         </div>
+
         <span className="material-symbols-outlined text-[#A0AEC0] hover:cursor-pointer">
           settings
         </span>
+
         <span className="material-symbols-outlined text-[#A0AEC0] hover:cursor-pointer">
           notifications
         </span>
-        <div className="ml-5 flex flex-row gap-2 items-center">
-          <Image
-            src={prettyGirl}
-            alt="pretty girl"
-            className="h-9 w-9 rounded-[18px] object-cover flex-none"
-            loading="lazy"
-          ></Image>
-          <div className="hidden sm:flex flex-col items-start">
-            <span className="line-clamp-1 md:text-clip text-sm text-cblue-600 font-medium">
-              Phạm Thị Thảo
-            </span>
-            <span className="text-xs text-cblue-600 font-normal">BOD</span>
-          </div>
-        </div>
+
+        <NameArea />
       </div>
     </nav>
   );
 };
+
 export default GdvHeader;
