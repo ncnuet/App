@@ -1,5 +1,5 @@
 import GdvHeader from "@/app/(gdv)/components/GdvHeader";
-import GdvSidebar from "@/layouts/gdv/GdvSidebar";
+import GdvSidebar from "@/app/(gdv)/components/GdvSidebar";
 
 type IProps = {
     children: React.ReactNode;

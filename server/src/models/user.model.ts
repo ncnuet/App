@@ -15,13 +15,13 @@ class UserModel {
             {
                 role: 1, email: 1, username: 1,
                 phone: 1, _id: 1, name: 1, office: 1,
-                creator: 1, address: 1
+                creator: 1, address: 1, avatar: 1, active: 1
             })
             .exec()
 
         return user.map(user => {
-            const { _id, email, username, phone, name, role, office, creator, address } = user;
-            return { uid: _id.toString(), email, username, phone, name, role, office, creator, address };
+            const { _id, email, username, phone, name, role, office, creator, address, avatar, active } = user;
+            return { uid: _id.toString(), email, username, phone, name, role, office, creator, address, avatar, active };
         })
     }
 
@@ -55,27 +55,23 @@ class UserModel {
         return userAfterUpdate;
     }
 
-    async updatePassword(id_user: string, data: IUpdatePassword) {
-        var salt = bcrypt.genSaltSync(10);
-        // console.log(data.password);
-
-        var hashPass = bcrypt.hashSync(data.password, salt);
-        const userAfterUpdate = await UserBaseModel.findByIdAndUpdate(id_user,
-        {
-            password: hashPass,
-            username: data.username,
-        },
-        { new: true });
+    async updatePassword(id_user: string, creator: string, data: IUpdatePassword) {
+        var hashPassword = bcrypt.hashSync(data.password, 10);
+        const userAfterUpdate = await UserBaseModel.updateOne(
+            { _id: id_user, creator },
+            {
+                password: hashPassword,
+                username: data.username,
+            });
 
         return userAfterUpdate;
     }
 
-    async delete(id: string) {
+    async delete(id: string, creator: string): Promise<boolean> {
+        const deleteResult = await UserBaseModel.deleteOne(
+            { _id: id, creator: creator });
 
-        const deleteResult = await UserBaseModel.findByIdAndDelete(id);
-        console.log(deleteResult);
-
-        return deleteResult;
+        return deleteResult.deletedCount > 0;
     }
 
     async updateInfo(id_user: string, data: IUpdateInfoUser) {
@@ -98,22 +94,18 @@ class UserModel {
         return userAfterUpdate;
     }
 
-    async updateAvatar(id_user: string, data: IUpdateAvatar) {
-        // let result = await cloudinary.uploader.upload(data.avatar, { folder: 'avatar' });
-        const updateData: any = {
-            avatar: data.avatar
-        };
-
-        const userAfterUpdate = await UserBaseModel.findByIdAndUpdate(id_user, updateData, { new: true });
-        return userAfterUpdate;
+    async updateAvatar(id_user: string, creator: string, data: IUpdateAvatar): Promise<boolean> {
+        const userAfterUpdate = await UserBaseModel.updateOne(
+            { _id: id_user, creator },
+            { avatar: data.avatar });
+        return userAfterUpdate.modifiedCount > 0;
     }
 
-    async updateActive(id_user: string, data: IUpdateActive) {
-        const updateData: any = {
-            active: data.active,
-        }
-        const userAfterUpdate = await UserBaseModel.findByIdAndUpdate(id_user, updateData, { new: true });
-        return userAfterUpdate;
+    async updateActive(id_user: string, creator: string, data: IUpdateActive): Promise<boolean> {
+        const userAfterUpdate = await UserBaseModel.updateOne(
+            { _id: id_user, creator: creator },
+            { active: data.active });
+        return userAfterUpdate.modifiedCount > 0;
     }
 
     async getCreatedPerson(creator: string) {
@@ -130,6 +122,22 @@ class UserModel {
         )
 
         return result;
+    }
+
+    async getManagers() {
+        const user = await UserBaseModel.find(
+            { role: EUserRole.HEAD },
+            {
+                role: 1, email: 1, username: 1,
+                phone: 1, _id: 1, name: 1, office: 1,
+                creator: 1, address: 1, avatar: 1, active: 1
+            })
+            .exec()
+
+        return user.map(user => {
+            const { _id, email, username, phone, name, role, office, creator, address, avatar, active } = user;
+            return { uid: _id.toString(), email, username, phone, name, role, office, creator, address, avatar, active };
+        })
     }
 }
 export default new UserModel();

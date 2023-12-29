@@ -1,19 +1,19 @@
 import { AxiosResponse } from "axios";
 import axios from "@/service/axios";
 import { staffInforQuery } from "./queries/staff.infor";
-export interface IStaffInfor {
+export interface IStaffInfo {
   avatar: string;
   username: string;
   email: string;
   role: string;
-  id: string;
+  uid: string;
 }
 
 export interface IGetStaffAPIProps {
-  data: IStaffInfor[];
+  data: IStaffInfo[];
   message: string;
 }
-export interface IStaffdetailInfor {
+export interface IStaffDetailInfo {
   name: string;
   username: string;
   email: string;
@@ -24,7 +24,7 @@ export interface IStaffdetailInfor {
   address: string;
 }
 
-export interface IDetailStaffInfor {
+export interface IDetailStaffInfo {
   uid: string;
   name: string;
   username: string;
@@ -33,13 +33,13 @@ export interface IDetailStaffInfor {
   phone: string;
 }
 
-export interface IGrapthDetailInfor {
+export interface IGraphDetailInfo {
   data: {
-    users: IDetailStaffInfor[];
+    users: IDetailStaffInfo[];
   };
 }
 
-export interface IEditStaffInfor {
+export interface IEditStaffInfo {
   name: string;
   email: string;
   phone: string;
@@ -51,25 +51,6 @@ export interface IEditStaffPassword {
   password: string;
 }
 
-export async function getStaffInfor(
-  pid: string
-): Promise<AxiosResponse<IGetStaffAPIProps>> {
-  return await axios.get("/auth/created-people", {
-    params: {
-      pid: pid,
-    },
-  });
-}
-
-export async function getDetailStaff(
-  pid: string[]
-): Promise<AxiosResponse<IGrapthDetailInfor>> {
-  return await axios.post("/graphql", {
-    query: staffInforQuery.loc?.source.body,
-    variables: { userIds: pid },
-  });
-}
-
 export async function editStaffInfor(
   pid: string,
   data: any
@@ -77,18 +58,4 @@ export async function editStaffInfor(
   return await axios.put(`/auth/${pid}`, data);
 }
 
-export async function editStaffAccount(
-  pid: string,
-  data: any
-): Promise<AxiosResponse<any>> {
-  return await axios.put(`auth/${pid}/password`, data);
-}
 
-export async function editStaffAvatar(
-  pid: string,
-  avatar: string
-): Promise<AxiosResponse<any>> {
-  return await axios.put(`auth/${pid}/avatar`, {
-    avatar: avatar,
-  });
-}

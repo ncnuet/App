@@ -42,6 +42,7 @@ export interface IUpdatePassword {
 export interface IUpdateActive {
     active: boolean,
 }
+
 export default class RoleValidator extends BaseValidator {
     static checkRole(role: string, und?: boolean) {
         this.checkUnd(role, und, "role", () => {
@@ -64,9 +65,9 @@ export default class RoleValidator extends BaseValidator {
         }
     }
 
-    static checkActionForThisUser(creator_id: string, editor_id: string) {
+    static checkEditable(creator_id: string, editor_id: string) {
         if (creator_id !== editor_id) {
-            throw new InputError("The creator is different from the editor.", "role")
+            throw new InputError("Không có quyển sửa đổi", "role")
         }
     }
 
@@ -92,7 +93,7 @@ export default class RoleValidator extends BaseValidator {
     }
 
     static validateDeleteUser(creator_id: string, editor: IUser) {
-        this.checkActionForThisUser(creator_id, editor.uid);
+        this.checkEditable(creator_id, editor.uid);
     }
 
     static validateOnlyManagerInOffice(user: Object[], role: string, und?: boolean) {

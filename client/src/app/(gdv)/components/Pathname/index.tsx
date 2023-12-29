@@ -1,10 +1,11 @@
 "use client"
 
+import Link from "next/link";
 import { usePathname } from "next/navigation"
 
 export default function Pathname() {
-    const path = usePathname();
-    const subpaths = path.slice(1).split("/");
+    const pathname = usePathname();
+    const subpaths = pathname.slice(1).split("/");
 
     return (
         <div className="flex flex-col gap-2 text-sm font-normal xs:justify-start justify-center">
@@ -13,14 +14,21 @@ export default function Pathname() {
                 {
                     subpaths.length > 1
                         ? subpaths.slice(0, -1).map((item, index) => (
-                            <span key={index} className="text-cblue-600">/ {item}</span>
+                            <Link
+                                href={"/" + subpaths.slice(0, index + 1).join("/")}
+                                key={index}
+                                className="text-cblue-600 cursor-pointer hover:text-blue-400">
+                                / {item}
+                            </Link>
                         ))
                         : <span className="text-cblue-600">/</span>
                 }
             </div>
-            <span className="hidden xs:block text-base text-cblue-600 font-bold">
+            <Link
+                href={pathname}
+                className="hidden xs:block text-base text-cblue-600 font-bold">
                 {subpaths[subpaths.length - 1]}
-            </span>
+            </Link>
         </div>
     )
 }

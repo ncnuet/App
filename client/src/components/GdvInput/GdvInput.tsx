@@ -1,31 +1,30 @@
 type Props = {
   placeholder: string;
-  icon: string;
+  icon: any;
   name?: string;
   value?: string;
   isBig?: boolean;
-  onInfor?: any;
+  onInfo?: any;
   disabled?: boolean;
-  defaulValue?: string;
+  defaultValue?: string;
 };
 
 function GdvInput({
   placeholder,
   icon,
   name,
-  defaulValue,
+  defaultValue,
   isBig = false,
   disabled = false,
-  onInfor = () => {},
+  onInfo = () => { },
   value,
 }: Props) {
   return (
     <div
-      className={`flex flex-row items-center  w-full ${
-        isBig ? "py-[10px]" : "py-[5px]"
-      } px-[10px] rounded-lg bg-cgray-100 text-cgray-500 active:outline-1 active:outline-black`}
+      className={`flex flex-row items-center  w-full ${isBig ? "py-[10px]" : "py-[5px]"
+        } px-[10px] rounded-lg bg-cgray-100 text-cgray-500 active:outline-1 active:outline-black`}
     >
-      <span className="material-symbols-outlined select-none hover:cursor-pointer hover:opacity-70">
+      <span className="select-none hover:cursor-pointer hover:opacity-70 text-xl">
         {icon}
       </span>
       <input
@@ -35,10 +34,10 @@ function GdvInput({
         }
         placeholder={placeholder}
         spellCheck={false}
-        onChange={(e) => onInfor(e.target.value)}
+        onChange={(e) => onInfo(e.target.value)}
         value={value}
         name={name}
-        defaultValue={defaulValue}
+        defaultValue={defaultValue}
       ></input>
     </div>
   );

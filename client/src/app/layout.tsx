@@ -1,6 +1,8 @@
 import "./globals.css";
 import "material-symbols";
 import "react-toastify/dist/ReactToastify.css";
+import 'tippy.js/dist/tippy.css';
+import 'tippy.js/themes/light.css';
 
 import type { Metadata } from "next";
 import { Lexend } from "next/font/google";

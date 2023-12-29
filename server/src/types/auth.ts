@@ -15,7 +15,7 @@ export interface IUser extends IUserWithoutVersion {
 }
 
 export interface IUserWithoutVersion
-    extends Pick<IUserDB, "username" | "role" | "office" | "name"> {
+    extends Pick<IUserDB, "username" | "role" | "office" | "name" | "avatar"> {
     uid: string
 }
 

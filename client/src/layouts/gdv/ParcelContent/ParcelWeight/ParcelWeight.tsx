@@ -27,7 +27,7 @@ const ParcelWeight = ({
                 placeholder="20 gam"
                 icon="scale"
                 isBig
-                onInfor={(result: string) => onActualWeight(result)}
+                onInfo={(result: string) => onActualWeight(result)}
                 value={actualWeight}
               ></GdvInput>
             </div>
@@ -44,7 +44,7 @@ const ParcelWeight = ({
                 placeholder="0 gam"
                 icon="scale"
                 isBig
-                onInfor={(result: string) => onConvertWeight(result)}
+                onInfo={(result: string) => onConvertWeight(result)}
                 value={covertWeight}
               ></GdvInput>
             </div>

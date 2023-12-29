@@ -32,7 +32,7 @@ const ParcelBasisInfor = ({
                 icon="account_circle"
                 isBig
                 value={senderInfor?.name}
-                onInfor={(result: string) => {
+                onInfo={(result: string) => {
                   onSenderInfor("name", result);
                 }}
               ></GdvInput>
@@ -51,7 +51,7 @@ const ParcelBasisInfor = ({
                 icon="smartphone"
                 isBig
                 value={senderInfor?.phone}
-                onInfor={(result: string) => {
+                onInfo={(result: string) => {
                   onSenderInfor("phone", result);
                 }}
               ></GdvInput>
@@ -68,7 +68,7 @@ const ParcelBasisInfor = ({
               placeholder="Thanh Vân, Thanh Lâm, Mê Linh, Hà Nội"
               icon="pin_drop"
               isBig
-              onInfor={(result: string) => {
+              onInfo={(result: string) => {
                 onSenderInfor("address", result);
               }}
               value={senderInfor?.address}
@@ -93,7 +93,7 @@ const ParcelBasisInfor = ({
                 placeholder="Đỗ Nam Trung"
                 icon="account_circle"
                 isBig
-                onInfor={(result: string) => {
+                onInfo={(result: string) => {
                   onReceiverInfor("name", result);
                 }}
                 value={receiverInfor?.name}
@@ -113,7 +113,7 @@ const ParcelBasisInfor = ({
                 icon="smartphone"
                 isBig
                 value={receiverInfor?.phone}
-                onInfor={(result: string) => {
+                onInfo={(result: string) => {
                   onReceiverInfor("phone", result);
                 }}
               ></GdvInput>
@@ -131,7 +131,7 @@ const ParcelBasisInfor = ({
               icon="pin_drop"
               isBig
               value={receiverInfor?.address}
-              onInfor={(result: string) => {
+              onInfo={(result: string) => {
                 onReceiverInfor("address", result);
               }}
             ></GdvInput>

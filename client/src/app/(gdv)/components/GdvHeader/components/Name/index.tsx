@@ -7,9 +7,6 @@ import Tippy from "@tippyjs/react";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { IoIosLogOut } from "react-icons/io";
-
-import 'tippy.js/dist/tippy.css';
-import 'tippy.js/themes/light.css';
 import { useRouter } from "next/navigation";
 
 function OptionMenu() {

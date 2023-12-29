@@ -3,12 +3,13 @@
 import Logo from "@/icons/Logo";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { IoHomeOutline, IoMailOutline, IoSettingsOutline } from "react-icons/io5";
+import { IoHomeOutline, IoMailOutline, IoPeopleCircleOutline, IoSettingsOutline } from "react-icons/io5";
 
 const navLinks = [
   { name: "Dashboard", icon: <IoHomeOutline />, href: "/dashboard" },
   { name: "Đơn gửi", icon: <IoMailOutline />, href: "/gdv" },
   { name: "Cài đặt", icon: <IoSettingsOutline />, href: "/setting" },
+  { name: "Quản lý nhân viên", icon: <IoPeopleCircleOutline />, href: "/manager" },
 ]
 
 const GdvSidebar = () => {
@@ -30,8 +31,8 @@ const GdvSidebar = () => {
             key={index}
             href={item.href}
             className={
-              "w-full p-[10px] rounded-lg shadow-sd2 " +
-              (pathname.startsWith(item.href) ? "bg-white" : "")
+              "w-full p-[10px] rounded-lg " +
+              (pathname.startsWith(item.href) ? "bg-white shadow-sd2" : "")
             }>
             <div className="w-full flex flex-row items-center justify-start gap-3">
               <div className="w-[30px] h-[30px] rounded-[10px] bg-cyellow-500 flex justify-center items-center text-lg font-semibold">

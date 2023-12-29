@@ -111,6 +111,7 @@ export default class AuthController {
           version: "0",
           remember: false,
           office: "",
+          avatar: "",
         });
 
         sendForgetPasswordMail(user, token);
@@ -136,10 +137,10 @@ export default class AuthController {
       .cookie("token", req.query.token, withAge(180 * 1000))
       .redirect(
         config.FRONTEND +
-          "/resetpassword?ttl=" +
-          remaining +
-          "&user=" +
-          username
+        "/resetpassword?ttl=" +
+        remaining +
+        "&user=" +
+        username
       );
   }
 
@@ -226,21 +227,15 @@ export default class AuthController {
     });
   }
 
-  static async updatePassword(req: Request, res: Response) {
+  static async updateAccount(req: Request, res: Response) {
     const { id } = req.params;
     const data = <IUpdatePassword>req.body;
     const editor = res.locals.user;
 
     handleError(res, async () => {
-      const users = await userModel.getUsers([id]);
-      RoleValidator.checkActionForThisUser(
-        users[0].creator.toString(),
-        editor.uid
-      );
-      const result = await userModel.updatePassword(id, data);
+      await userModel.updatePassword(id, editor.uid, data);
       res.status(200).json({
         message: "update success",
-        data: result,
       });
     });
   }
@@ -251,16 +246,10 @@ export default class AuthController {
     const editor = res.locals.user;
 
     handleError(res, async () => {
-      const users = await userModel.getUsers([id]);
-      RoleValidator.checkActionForThisUser(
-        users[0].creator.toString(),
-        editor.uid
-      );
-      let result = await cloudinary.uploader.upload(data.avatar, {
-        folder: "avatar",
-      });
+      let result = await cloudinary.uploader.upload(data.avatar, { folder: "avatar" });
+
       data.avatar = result.secure_url;
-      const updatedUser = await userModel.updateAvatar(id, data);
+      const updatedUser = await userModel.updateAvatar(id, editor.uid, data);
       res.status(200).json({
         message: "success",
         data: updatedUser,
@@ -271,13 +260,11 @@ export default class AuthController {
   static async deleteUser(req: Request, res: Response) {
     const { id } = req.params;
     const editor = res.locals.user;
+
     handleError(res, async () => {
-      const users = await userModel.getUsers([id]);
-      RoleValidator.validateDeleteUser(users[0].creator.toString(), editor);
-      const deleteResult = await userModel.delete(id);
+      await userModel.delete(id, editor.uid);
       res.status(200).json({
-        message: "delete success",
-        data: deleteResult,
+        message: "delete success"
       });
     });
   }
@@ -325,6 +312,7 @@ export default class AuthController {
       data.avatar = result.secure_url;
       const updatedUser = await userModel.updateAvatar(
         editor.uid.toString(),
+        editor.uid.toString(),
         data
       );
       res.status(200).json({
@@ -340,15 +328,9 @@ export default class AuthController {
     const editor = res.locals.user;
 
     handleError(res, async () => {
-      const users = await userModel.getUsers([id]);
-      RoleValidator.checkActionForThisUser(
-        users[0].creator.toString(),
-        editor.uid
-      );
-      const updatedUser = await userModel.updateActive(id, data);
+      await userModel.updateActive(id, editor.uid, data);
       res.status(200).json({
-        message: "success",
-        data: updatedUser,
+        message: "success"
       });
     });
   }
