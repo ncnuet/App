@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import HeaderBanner1 from "./components/HeaderBanner";
-import MainEvent from "./components/HeaderBanner";
+import MainEvent from "./components/MainEvent";
 // import { getTrackingStatus } from "@/redux/services";
 import { TrackingStatus } from "@/redux/services/queries/tracking.parcel";
 
@@ -57,7 +57,7 @@ export default function PackageStatus() {
                     </div>
 
                     <div className="p-3 rounded-xl shadow-sd1 box-border bg-white relative z-20 border border-stroke-color flex gap-5 flex-col">
-                        <MainEvent expanded />
+                        <MainEvent expanded/>
 
                         <div className="flex flex-col gap-2 rounded-lg bg-cgray-100 p-3">
                             <div className="flex justify-between text-sm items-center">
