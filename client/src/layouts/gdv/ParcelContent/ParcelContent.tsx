@@ -84,10 +84,33 @@ const ParcelContent = ({
   const [actualWeight, setActualWeight] = useState<string>("");
   const [covertWeight, setConverWeight] = useState<string>("");
   const [cost, setCost] = useState<number>(0);
-
+  const [costType, setCostType] = useState<ECostType>(ECostType.RECEIVER_PAY);
   // remove everything
   const debounceSender = useDebounce(senderAddress, 500);
   const debounceReceiver = useDebounce(receiverAddress, 500);
+
+  const onChangeCostType = () => {
+    setCostType((prev) => {
+      if (prev === ECostType.RECEIVER_PAY) {
+        return ECostType.SENDER_PAY;
+      }
+      return ECostType.RECEIVER_PAY;
+    });
+  };
+
+  const mainCost = (weight: number) => {
+    let money: number;
+    if (weight <= 100) {
+      return 15000;
+    } else if (weight > 100 && weight <= 200) {
+      return 25000;
+    } else if (weight > 200 && weight <= 500) {
+      money = 30000;
+    } else {
+      money = 45000;
+    }
+    setCost(parseInt((money * 1.1).toFixed(0)) + 900);
+  };
 
   const onSenderReccomend = useCallback(
     (result: string) => {
@@ -260,6 +283,7 @@ const ParcelContent = ({
 
   const onConvertWeight = useCallback((result: string) => {
     setConverWeight(result);
+    mainCost(parseInt(result));
   }, []);
 
   const parcelGoodProps = {
@@ -290,6 +314,7 @@ const ParcelContent = ({
     covertWeight,
     senderAddress,
     receiverAddress,
+    cost,
   };
 
   const onClosePreview = () => {
@@ -314,7 +339,7 @@ const ParcelContent = ({
 
   const submitHandler = async () => {
     const newParcel: INewParcel = {
-      cost: 13000,
+      cost: cost,
       cost_type: ECostType.SENDER_PAY,
       notes: note,
       goods_type:
@@ -405,10 +430,6 @@ const ParcelContent = ({
     }
   }, [debounceReceiver]);
 
-  useEffect(() => {
-    console.log(officialReceiverAddress);
-  }, [officialReceiverAddress]);
-
   return (
     <main className="xs:pl-0 pl-1 overflow-y-scroll flex-grow w-full flex flex-col gap-5 gdv-parcel pr-1">
       <ParcelBasisInfor
@@ -430,7 +451,8 @@ const ParcelContent = ({
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <ParcelGoods {...parcelGoodProps}></ParcelGoods>
         <ParcelWeight
-          cost={cost}
+          onChangeCostType={onChangeCostType}
+          costType={costType}
           actualWeight={actualWeight}
           covertWeight={covertWeight}
           onActualWeight={onActualWeight}

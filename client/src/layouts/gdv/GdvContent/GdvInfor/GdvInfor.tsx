@@ -26,19 +26,20 @@ const GdvInfor = ({ parcel }: IGdvInfor) => {
             {parcel.code.toUpperCase()}
           </h2>
         </div>
-        <button className="outline-none h-[34px] px-[10px] rounded-[8px] flex-none flex flex-row items-center bg-cyellow-500 hover:opacity-80 hover:cursor-pointer">
-          <span className="material-symbols-outlined mr-1">page_info</span>
-          <Link
-            href={{
-              pathname: "/gdv/parcel",
-              query: {
-                pid: parcel.code,
-              },
-            }}
-          >
+        <Link
+          href={{
+            pathname: "/gdv/parcel",
+            query: {
+              pid: parcel.code,
+            },
+          }}
+        >
+          <button className="outline-none h-[34px] px-[10px] rounded-[8px] flex-none flex flex-row items-center bg-cyellow-500 hover:opacity-80 hover:cursor-pointer">
+            <span className="material-symbols-outlined mr-1">page_info</span>
+
             <span className="text-[15px] font-normal">Chi tiết</span>
-          </Link>
-        </button>
+          </button>
+        </Link>
       </div>
       <div className="flex flex-col p-[10px] bg-cgray-200 rounded-[10px] gap-2">
         <div className="flex flex-row justify-between">

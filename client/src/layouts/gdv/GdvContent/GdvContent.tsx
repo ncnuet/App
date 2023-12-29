@@ -7,71 +7,6 @@ import Link from "next/link";
 import { IReviewParcel, getReviewParcels } from "@/redux/services/gdv.view";
 import { EStatusParcel } from "@/redux/services/queries/details.parcel";
 
-const fakeData: IReviewParcel[] = [
-  {
-    code: "EA131513531VN",
-    createdAt: "09:00 AM",
-    creator: "Trần Mỹ Duyên",
-    receiver: {
-      name: "Lưu Thế Lữ",
-      phone: "0123456789",
-    },
-    sender: {
-      name: "Duy Nến",
-      phone: "9876543210",
-    },
-    receiving_add: {
-      commune: {
-        name: "Hoàng Hoa Thám",
-      },
-      district: {
-        name: "Ba Đình",
-      },
-    },
-    sending_add: {
-      commune: {
-        name: "Hoàng Hoa Thám",
-      },
-      district: {
-        name: "Ba Đình",
-      },
-    },
-    status: EStatusParcel.FAILED,
-    cost: 1000,
-  },
-  {
-    code: "EA131513532VN",
-    createdAt: "09:00 AM",
-    creator: "Trần Mỹ Duyên",
-    receiver: {
-      name: "Lưu Thế Lữ",
-      phone: "0123456789",
-    },
-    sender: {
-      name: "Duy Nến",
-      phone: "9876543210",
-    },
-    receiving_add: {
-      commune: {
-        name: "Hoàng Hoa Thám",
-      },
-      district: {
-        name: "Ba Đình",
-      },
-    },
-    sending_add: {
-      commune: {
-        name: "Hoàng Hoa Thám",
-      },
-      district: {
-        name: "Ba Đình",
-      },
-    },
-    status: EStatusParcel.DELIVERING,
-    cost: 1000,
-  },
-];
-
 const GdvConTent = () => {
   const [data, setData] = useState<IReviewParcel[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -79,11 +14,11 @@ const GdvConTent = () => {
   const [isModal, setIsModal] = useState<boolean | null>(null);
   const inforRef = useRef<HTMLDivElement>(null);
   const timeoutRef: { current: NodeJS.Timeout | null } = useRef(null);
-
+  const [page, setPage] = useState<number>(1);
   const getData = async () => {
     try {
       setIsLoading(true);
-      const response = await getReviewParcels(10, 1);
+      const response = await getReviewParcels(10, page);
       if (response.data?.data) {
         setIsLoading(false);
         setData(response.data.data);
@@ -115,9 +50,12 @@ const GdvConTent = () => {
 
   // Wheather screen is long enough for infor
   useEffect(() => {
-    getData();
     return () => clearTimeout(timeoutRef.current as NodeJS.Timeout);
   }, []);
+
+  useEffect(() => {
+    getData();
+  }, [page]);
 
   useEffect(() => {
     if (data) {
@@ -198,16 +136,37 @@ const GdvConTent = () => {
             Hiển thị 10 mục
           </span>
           <div className="ml-auto flex flex-row items-center border border-[#CCD7E2] rounded-lg">
-            <button className="py-[5px] px-[10px] border-r border-r-[#CCD7E2] parcel-bill__content text-cgray-400 flex flex-row hover:opacity-70">
+            <button
+              onClick={() => setPage((prev) => prev - 1)}
+              className={
+                "py-[5px] px-[10px] border-r border-r-[#CCD7E2] parcel-bill__content text-cgray-400 flex flex-row " +
+                `${
+                  page === 1
+                    ? "pointer-events-none opacity-50"
+                    : "pointer-events-auto hover:opacity-70"
+                }`
+              }
+            >
               Trước
             </button>
             <button className="py-[5px] px-[10px] border-r border-r-[#CCD7E2] parcel-bill__content text-cblue-300 bg-indigo-50 flex flex-row hover:opacity-70">
               1
             </button>
-            <button className="py-[5px] px-[10px] border-r border-r-[#CCD7E2] parcel-bill__content text-cgray-400 flex flex-row hover:opacity-70">
+            {/* <button className="py-[5px] px-[10px] border-r border-r-[#CCD7E2] parcel-bill__content text-cgray-400 flex flex-row hover:opacity-70">
               10
-            </button>
-            <button className="py-1 px-[10px] parcel-bill__content text-cgray-400 flex flex-row hover:opacity-70">
+            </button> */}
+            <button
+              onClick={() => setPage((prev) => prev + 1)}
+              className={
+                "py-1 px-[10px] parcel-bill__content text-cgray-400 flex flex-row " +
+                `${
+                  (data?.length !== undefined && data?.length < 10) ||
+                  data === null
+                    ? "opacity-50 pointer-events-none"
+                    : "opacity-100 hover:opacity-70 pointer-events-auto"
+                }`
+              }
+            >
               Tiếp
             </button>
           </div>

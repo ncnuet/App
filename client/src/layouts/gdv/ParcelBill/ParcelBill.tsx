@@ -12,6 +12,7 @@ export interface IParcelBill {
   covertWeight: string;
   senderAddress: string;
   receiverAddress: string;
+  cost: number;
 }
 const ParcelBill = ({ ...props }: IParcelBill) => {
   const formatNumber = (amount: string) => {
@@ -30,6 +31,7 @@ const ParcelBill = ({ ...props }: IParcelBill) => {
       return number.toString();
     }
   };
+  const today = new Date();
   return (
     <section className="flex flex-col border border-black">
       <div className="flex flex-col sm:flex-row border border-b border-b-black">
@@ -196,7 +198,17 @@ const ParcelBill = ({ ...props }: IParcelBill) => {
             <div className="flex flex-row mb-3">
               <div className="flex-1 flex flex-col">
                 <h2 className="parcel-bill__heading ">7. Ngày giờ gửi</h2>
-                <p className="pl-2 parcel-bill__content">07h52p - 18/10/2023</p>
+                <p className="pl-2 parcel-bill__content">
+                  {`${today.getHours()}:${
+                    today.getMinutes() < 10
+                      ? "0" + today.getMinutes().toString()
+                      : today.getMinutes()
+                  }`}{" "}
+                  -{" "}
+                  {`${today.getDate()}/${
+                    today.getMonth() + 1
+                  }/${today.getFullYear()}`}
+                </p>
               </div>
               <div className="flex-1 flex flex-col items-center">
                 <h2 className="parcel-bill__heading ">Chữ ký của người gửi</h2>
@@ -247,7 +259,7 @@ const ParcelBill = ({ ...props }: IParcelBill) => {
                       0
                     </span>
                     <span className="p-1 text-right bg-cgray-100 font-semibold">
-                      12.312
+                      {props.cost}
                     </span>
                   </div>
                 </div>
@@ -276,7 +288,7 @@ const ParcelBill = ({ ...props }: IParcelBill) => {
                       0
                     </span>
                     <span className="p-1 text-right bg-cgray-100 font-semibold">
-                      12.312
+                      {props.cost}
                     </span>
                   </div>
                 </div>

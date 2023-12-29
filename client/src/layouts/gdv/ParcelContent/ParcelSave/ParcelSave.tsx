@@ -105,7 +105,7 @@ const ParcelSave = ({
               <span className="material-symbols-outlined text-[22px]">
                 work_update
               </span>
-              <span className="text-[16px] font-normal">Chỉ lưu</span>
+              <span className="text-[16px] font-normal">Tạo</span>
             </button>
             <button
               onClick={onPreview}

@@ -1,24 +1,26 @@
 import { memo } from "react";
 import GdvInput from "@/components/GdvInput";
-import { INewParcel } from "@/redux/services/gdv.view";
+import { ECostType, INewParcel } from "@/redux/services/gdv.view";
 
 interface IParcelWeight {
-  cost: number;
   actualWeight: string;
   covertWeight: string;
   onActualWeight: any;
   onConvertWeight: any;
   isDisabled?: boolean;
   data?: INewParcel | null;
+  costType?: ECostType;
+  onChangeCostType?: any;
 }
 const ParcelWeight = ({
-  cost,
   actualWeight,
   covertWeight,
   onActualWeight,
   onConvertWeight,
   isDisabled = false,
   data = null,
+  costType,
+  onChangeCostType,
 }: IParcelWeight) => {
   const totalWeight = () => {
     let result = 0;
@@ -29,9 +31,11 @@ const ParcelWeight = ({
   };
 
   const mainCost = (weight: number) => {
-    if (cost <= 200) {
+    if (weight <= 100) {
+      return 15000;
+    } else if (weight > 100 && weight <= 200) {
       return 25000;
-    } else if (cost > 200 && cost <= 500) {
+    } else if (weight > 200 && weight <= 500) {
       return 30000;
     } else {
       return 45000;
@@ -94,10 +98,29 @@ const ParcelWeight = ({
         <div className="flex flex-row items-center justify-between">
           <h2 className="text-lg text-cblue-600 font-bold">Cước phí</h2>
           <div className="flex flex-row gap-[6px]">
-            <div className="w-5 h-5 flex flex-row justify-center items-center rounded-md border-cblue-600 bg-cyellow-500">
-              <span className="material-symbols-outlined text-lg text-white">
-                check
-              </span>
+            <div
+              onClick={onChangeCostType}
+              className={
+                "w-5 h-5 flex flex-row justify-center items-center rounded-md cursor-default " +
+                `${
+                  (!isDisabled && costType === ECostType.RECEIVER_PAY) ||
+                  (isDisabled &&
+                    data?.cost_type ===
+                      ECostType.RECEIVER_PAY.toUpperCase().split(" ").join("_"))
+                    ? "bg-cyellow-500 "
+                    : "bg-cyellow-100 border border-cyellow-500 "
+                }` +
+                `${isDisabled ? "pointer-events-none" : "pointer-events-auto"}`
+              }
+            >
+              {((isDisabled &&
+                data?.cost_type ===
+                  ECostType.RECEIVER_PAY.toUpperCase().split(" ").join("_")) ||
+                (!isDisabled && costType === ECostType.RECEIVER_PAY)) && (
+                <span className="material-symbols-outlined text-lg text-white">
+                  check
+                </span>
+              )}
             </div>
             <span className=" text-sm  text-black font-semibold">
               Người nhận thanh toán
@@ -111,7 +134,7 @@ const ParcelWeight = ({
             </span>
             <span className="text-[15px] text-cgray-500 font-semibold">
               {!isDisabled
-                ? mainCost(parseInt(covertWeight))
+                ? mainCost(parseInt(covertWeight ? covertWeight : "0"))
                 : data?.cost !== undefined
                 ? (((data.cost - 900) * 10) / 11).toFixed(0).toString()
                 : ""}
@@ -137,7 +160,7 @@ const ParcelWeight = ({
             </span>
             <span className="text-[15px] text-cgray-500 font-semibold">
               {!isDisabled
-                ? mainCost(parseInt(covertWeight)) * 0.1
+                ? mainCost(parseInt(covertWeight ? covertWeight : "0")) * 0.1
                 : data?.cost !== undefined
                 ? ((data.cost - 900) / 11).toFixed(0).toString()
                 : ""}
@@ -152,7 +175,9 @@ const ParcelWeight = ({
                 ? data?.cost !== undefined
                   ? data?.cost - 900
                   : ""
-                : mainCost(parseInt(covertWeight)) * 1.1}
+                : (
+                    mainCost(parseInt(covertWeight ? covertWeight : "0")) * 1.1
+                  ).toFixed(0)}
             </span>
           </div>
           <div className="flex flex-row items-center justify-between">
@@ -168,7 +193,11 @@ const ParcelWeight = ({
             <span className="text-[15px] text-cgray-500 font-semibold rounded-full px-[10px] py-[1px] bg-cyellow-500">
               {isDisabled
                 ? data?.cost
-                : mainCost(parseInt(covertWeight)) * 1.1 + 900}
+                : (
+                    mainCost(parseInt(covertWeight ? covertWeight : "0")) *
+                      1.1 +
+                    900
+                  ).toFixed(0)}
             </span>
           </div>
         </div>

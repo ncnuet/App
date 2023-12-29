@@ -60,37 +60,39 @@ const ParcelPage = ({ searchParams }: searchParamsProps) => {
         <span className="flex-1 text-xl text-cblue-600 font-bold">
           Đơn hàng số EB1256165415VN
         </span>
-        <div className="flex flex-row items-center gap-[10px]">
-          <button
-            onClick={() => setIsCancel(true)}
-            className="min-w-[76px] px-[10px] py-[5px] rounded-lg flex flex-row items-center gap-1 bg-cred-400 text-white hover:opacity-80 active:opacity-90"
-          >
-            <span className="material-symbols-outlined text-[22px]">
-              delete
-            </span>
-            <span className="text-[15px] font-normal">Xóa</span>
-          </button>
-          <button
-            onClick={onChangeModal}
-            className="min-w-[76px] px-[10px] py-[5px] rounded-lg flex flex-row items-center gap-1 bg-cyellow-500 text-black hover:opacity-80 active:opacity-90"
-          >
-            <span className="material-symbols-outlined text-[22px]">
-              check_circle
-            </span>
-            <span className="text-[15px] font-normal">Lưu</span>
-          </button>
-          {isSave && (
+        {!isDisabled && (
+          <div className="flex flex-row items-center gap-[10px]">
             <button
-              onClick={onChangePreview}
-              className="min-w-[76px] px-[10px] py-[5px] rounded-lg flex flex-row items-center gap-1 bg-cblue-300 text-black hover:opacity-80 active:opacity-90"
+              onClick={() => setIsCancel(true)}
+              className="min-w-[76px] px-[10px] py-[5px] rounded-lg flex flex-row items-center gap-1 bg-cred-400 text-white hover:opacity-80 active:opacity-90"
             >
               <span className="material-symbols-outlined text-[22px]">
-                pageview
+                delete
               </span>
-              <span className="text-[15px] font-normal">Xem</span>
+              <span className="text-[15px] font-normal">Xóa</span>
             </button>
-          )}
-        </div>
+            <button
+              onClick={onChangeModal}
+              className="min-w-[76px] px-[10px] py-[5px] rounded-lg flex flex-row items-center gap-1 bg-cyellow-500 text-black hover:opacity-80 active:opacity-90"
+            >
+              <span className="material-symbols-outlined text-[22px]">
+                check_circle
+              </span>
+              <span className="text-[15px] font-normal">Lưu</span>
+            </button>
+            {isSave && (
+              <button
+                onClick={onChangePreview}
+                className="min-w-[76px] px-[10px] py-[5px] rounded-lg flex flex-row items-center gap-1 bg-cblue-300 text-black hover:opacity-80 active:opacity-90"
+              >
+                <span className="material-symbols-outlined text-[22px]">
+                  pageview
+                </span>
+                <span className="text-[15px] font-normal">Xem</span>
+              </button>
+            )}
+          </div>
+        )}
       </header>
       <ParcelContent
         data={data}
