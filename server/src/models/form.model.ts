@@ -1,5 +1,6 @@
 import { IFormAddItem, IFormUserCreate, IFormDelete, IFormDeleteItem, IFormUserUpdate, IFormUpdateItem, IFormCustomerCreate, IFormCustomerUpdate, IFormDeleteItems, IFormUpdateItems } from "@/validators/form.validator";
 import { FormBaseModel } from "./base/form.base";
+import { EFormStatus } from "./schema/form.chema";
 const { ObjectId } = require('mongodb');
 
 class FormModel {
@@ -16,6 +17,7 @@ class FormModel {
             creator: creator,
             receiver: data.receiver,
             type: data.type,
+            status: EFormStatus.SENT,
             content: data.content
         })
 
@@ -117,6 +119,32 @@ class FormModel {
     async findParcel(id_parcel: string) {
         const existingForm = await FormBaseModel.findOne({ 'content.parcel': id_parcel });
         return existingForm
+    }
+
+    async getAllOwnForm(creator: string, limit: number, skip: number) {
+        const result = await FormBaseModel.find({ creator })
+            .limit(limit)  
+            .skip(skip);  
+    
+        return result;
+    }
+
+    async getAllReciveForm(receiver: string, limit: number, skip: number) {
+        const result = await FormBaseModel.find({ receiver })
+            .limit(limit)  
+            .skip(skip);  
+    
+        return result;
+    }
+
+    async updateStatus(form_id : string) {
+        const result = await FormBaseModel.findByIdAndUpdate(
+            {_id : form_id},
+            {status: EFormStatus.RECEIVED},
+            { new: true }
+        )
+
+        return result
     }
 }
 

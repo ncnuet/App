@@ -21,6 +21,11 @@ router.put('/:id/delete-items', checkJWT, checkRole.bind({ role: ["admin", "tran
 router.put('/:id/confirm-item', checkJWT, checkRole.bind({ role: ["admin", "trans_staf", "gathe_staf"] }), FormController.confirmItemForm);
 router.put('/:id/confirm-items', checkJWT, checkRole.bind({ role: ["admin", "trans_staf", "gathe_staf"] }), FormController.confirmItemForms);
 
+router.put('/:id/update-status', checkJWT, checkRole.bind({ role: ["admin", "trans_staf", "gathe_staf"] }), FormController.updateStatus)
+
+router.get('/create', checkJWT, checkRole.bind({ role: ["admin", "trans_staf", "gathe_staf"] }), FormController.getAllFormOwn);
+router.get('/receive', checkJWT, checkRole.bind({ role: ["admin", "trans_staf", "gathe_staf"] }), FormController.getAllFormReceive);
+
 
 export default router;
 

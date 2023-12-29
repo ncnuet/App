@@ -17,6 +17,16 @@ export default class FormController {
             const roleCreator = user.role;
             const receiver = await userModel.getUsers([data.receiver]);
             FormValidator.validateCreatorAndReceiver(receiver[0].role, roleCreator);
+
+            if (data.content) {
+                await Promise.all(data.content.map(async (item) => {
+                    const existingForm = await FormModel.findParcel(item.parcel.toString());
+                    FormValidator.validateExistForm(existingForm);
+                    return true
+                }))
+            }
+
+
             const form = await FormModel.createUserForm(data, user.uid);
             res.status(200).json({
                 message: "thành công tạo đơn ",
@@ -122,7 +132,7 @@ export default class FormController {
     public static async addItemsForm(req: Request, res: Response) {
         const data = <IFormAddItems>req.body;
         console.log(data);
-        
+
         const { id } = req.params;
         const user = res.locals.user;
         handleError(res, async () => {
@@ -196,12 +206,12 @@ export default class FormController {
         })
     }
 
-    
+
     public static async confirmItemForms(req: Request, res: Response) {
         const { id } = req.params;
         const data = <IFormUpdateItems>req.body;
         // console.log(data);
-        
+
         const user = res.locals.user;
         handleError(res, async () => {
             const form = await FormModel.getForm([id]);
@@ -209,13 +219,66 @@ export default class FormController {
             const result = await Promise.all(data.contentsForm.map(async (content) => {
                 const result = await FormModel.updateConfirm(content, id);
                 return result
-            }) )
+            }))
 
             res.status(200).json({
                 message: "xác nhận thành công",
                 data: result,
             })
         })
+    }
+
+    public static async getAllFormOwn(req: Request, res: Response) {
+        const user = res.locals.user;
+
+        handleError(res, async () => {
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 10;
+
+            const skip = (page - 1) * limit;
+
+            const result = await FormModel.getAllOwnForm(user.uid, limit, skip);
+
+            res.status(200).json({
+                message: "Thành công",
+                data: result,
+            });
+        });
+    }
+
+    public static async getAllFormReceive(req: Request, res: Response) {
+        const user = res.locals.user;
+
+        handleError(res, async () => {
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 10;
+
+            const skip = (page - 1) * limit;
+
+            const result = await FormModel.getAllReciveForm(user.uid, limit, skip);
+
+            res.status(200).json({
+                message: "Thành công",
+                data: result,
+            });
+        });
+    }
+
+    public static async updateStatus(req: Request, res: Response) {
+        const { id } = req.params;
+        const user = res.locals.user;
+
+        handleError(res, async () => {
+            const form = await FormModel.getForm([id]);
+            FormValidator.validatePermissionComfirm(form[0].receiver, user.uid);
+
+            const result = await FormModel.updateStatus(id)
+
+            res.status(200).json({
+                message: "Thành công",
+                data: result,
+            });
+        });
     }
 
 }
