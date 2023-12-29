@@ -3,6 +3,7 @@ import Image from "next/image";
 import coolGirl from "@/assets/images/cool-girl.jpg";
 import { IReviewParcel } from "@/redux/services/gdv.view";
 import { useMemo } from "react";
+import { EStatusParcel } from "@/redux/services/queries/details.parcel";
 
 interface IGdvCustomerItem {
   parcelActive: IReviewParcel;
@@ -32,16 +33,16 @@ const GdvCustomerItem = ({
     return dateTimeObject;
   }, [parcelData]);
   const handleStatus = useMemo(() => {
-    let status = "Chấp nhận gửi";
+    let status = "Đang vận chuyển";
     switch (parcelData.status) {
-      case "failed":
+      case EStatusParcel.FAILED.toLowerCase():
         status = "Thất bại";
         break;
-      case "delivering":
-        status = "Đang vận chuyển";
+      case EStatusParcel.DELIVERED.toLowerCase():
+        status = "Đã vận chuyển";
         break;
       default:
-        status = "Chấp nhận gửi";
+        status = "Đang vận chuyển";
         break;
     }
     return status;
@@ -79,9 +80,9 @@ const GdvCustomerItem = ({
           className={
             "outline-none h-[26px] px-[10px] py-1 flex flex-row items-center rounded-full text-sm font-bold text-white hover:cursor-default " +
             `${
-              parcelData.status === "failed"
+              parcelData.status === EStatusParcel.FAILED.toLowerCase()
                 ? "bg-cred-400"
-                : parcelData.status === "delivering"
+                : parcelData.status === EStatusParcel.DELIVERING.toLowerCase()
                 ? "bg-cyellow-500"
                 : "bg-cgreen-600"
             }`

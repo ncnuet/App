@@ -16,11 +16,13 @@ const ParcelWeight = ({
   return (
     <div className="flex-1 flex flex-col gap-5">
       <div className="p-6 rounded-[15px] bg-white flex flex-col gap-3">
-        <h2 className="text-lg text-cblue-600 font-bold">Khối lượng thực tế</h2>
+        <h2 className="text-lg text-cblue-600 font-bold">
+          Khối lượng hàng gửi
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className=" flex-1 flex flex-col gap-2">
             <h3 className="text-sm text-cblue-600 font-semibold">
-              Họ tên khách gửi
+              Khối lượng thực tế
             </h3>
             <div className="w-full">
               <GdvInput
