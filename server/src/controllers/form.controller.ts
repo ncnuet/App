@@ -49,15 +49,15 @@ export default class FormController {
       //     })
       //   );
       // }
-      if(data.content) {
-        const parcels = data.content.map( (item) => {
-          return item.parcel.toString()
-        })
-        const addOut = <IStatisticAdd> {
-          parcels: parcels
-        }
-        await statisticModel.addOut(addOut, user.office.toString());
-      }
+      // if(data.content) {
+      //   const parcels = data.content.map( (item) => {
+      //     return item.parcel.toString()
+      //   })
+      //   const addOut = <IStatisticAdd> {
+      //     parcels: parcels
+      //   }
+      //   await statisticModel.addOut(addOut, user.office.toString());
+      // }
 
       const form = await FormModel.createUserForm(data, user.uid);
       res.status(200).json({
@@ -181,11 +181,11 @@ export default class FormController {
       const parcels = data.contentsForm.map( (item) => {
         return item.parcel.toString()
       })
-      const addOut = <IStatisticAdd> {
-        parcels: parcels
-      }
-      await statisticModel.addOut(addOut, user.office.toString());
-      await statisticModel.deleteIn(addOut, user.office);
+      // const addOut = <IStatisticAdd> {
+      //   parcels: parcels
+      // }
+      // await statisticModel.addOut(addOut, user.office.toString());
+      // await statisticModel.deleteIn(addOut, user.office);
 
       const result = await Promise.all(
         data.contentsForm.map(async (item) => {

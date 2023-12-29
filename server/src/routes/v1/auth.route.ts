@@ -28,6 +28,6 @@ router.put('/username', checkJWT, AuthControler.updateSelfUserName); // tá»¥ báº
 
 router.get('/created-people', checkJWT, AuthControler.getCreatedPerson);
 
-router.get('/statistic-send-return',[ checkJWT, checkRole.bind({ role: ["admin", "head"]})], AuthControler.statisticSendReturn2);
+router.get('/statistic-send-return',[ checkJWT, checkRole.bind({ role: ["admin", "head"]})], AuthControler.statisticSendReturn);
 
 export default router;

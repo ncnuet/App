@@ -45,10 +45,6 @@ export default class ParcelController {
         uid: user.uid,
       });
 
-      const addIn = <IStatisticAdd> {
-        parcels: [parcel_id]
-      }
-      await statisticModel.addIn(addIn, user.office.toString());
 
       res.status(200).json({
         message: "Created successfully",
