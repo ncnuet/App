@@ -88,17 +88,6 @@ export default function FormCreate({ onDone }: IProps) {
                     placeholder="0123456789"
                     error_text={errorText}
                 />
-
-                {user.role === "admin" || user.role === "bod"
-                    ? <AuthInput
-                        status={status}
-                        title="Văn phòng"
-                        name="office"
-                        disabled={loading}
-                        placeholder="Điểm giao dịch Hoàng Mai"
-                        error_text={errorText}
-                    /> : <></>}
-
             </div>
 
             <AuthButton title="Tạo tài khoản" isLoading={loading} type="submit" />

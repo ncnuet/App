@@ -7,6 +7,7 @@ import { useAppSelector } from "@/redux/hooks";
 import { createOffice, getSuggestionOffice } from "@/redux/services/office.api";
 import { createUser, getSuggestionUser } from "@/redux/services/user.api";
 import { ResponseData } from "@/utils/axios";
+import axios from "axios";
 import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -15,8 +16,8 @@ interface IProps {
 }
 
 const officeType = [
-    { name: "Điểm giao dịch", value: "Transaction" },
-    { name: "Điểm tập kết", value: "Gathering" }
+    { name: "Điểm giao dịch", value: "transaction" },
+    { name: "Điểm tập kết", value: "gathering" }
 ]
 
 export default function FormCreate({ onDone }: IProps) {
@@ -33,25 +34,46 @@ export default function FormCreate({ onDone }: IProps) {
         const body = Object.fromEntries(formData.entries());
 
         console.log(body);
+        const add = JSON.parse(body.address as string || "[]");
+
+        const wrapper = {
+            name: body.name,
+            address: {
+                country: "vi",
+                province: add[2],
+                district: add[1],
+                commune: add[0],
+            },
+            manager: body.manager,
+            contact: {
+                hotline: body.phone,
+                fax: body.phone,
+                email: body.email
+            },
+            office_type: body.office_type,
+            gather_office: body.gather_office
+        }
 
         try {
-            // createOffice(body)
-            //     .then((res) => {
-            //         if (res.status !== 200) {
-            //             setStatus("failure");
-            //             setErrorText(res.data);
-            //             toast.error("Tạo tài khoản thất bại");
-            //         } else {
-            //             toast.success("Tạo tài khoản thành công");
-            //             onDone && onDone();
-            //         }
-            //     })
-            //     .catch(() => {
-            //         toast.error("Lỗi mất rồi")
-            //     })
-            //     .finally(() => {
-            //         setLoading(false);
-            //     })
+            createOffice(wrapper)
+                .then((res) => {
+                    if (res.status !== 200) {
+                        setStatus("failure");
+                        console.log(res.data);
+                        
+                        // setErrorText(res.data.data);
+                        toast.error("Tạo tài khoản thất bại");
+                    } else {
+                        toast.success("Tạo tài khoản thành công");
+                        onDone && onDone();
+                    }
+                })
+                .catch(() => {
+                    toast.error("Lỗi mất rồi")
+                })
+                .finally(() => {
+                    setLoading(false);
+                })
         } catch (error) {
             console.log(error);
         }
@@ -76,6 +98,20 @@ export default function FormCreate({ onDone }: IProps) {
                 name: item.name,
                 value: item.uid
             }))
+        } else {
+            return [];
+        }
+    }
+
+    async function getSuggestionForAddress(name: string) {
+        const response = await axios.post("/api/address", {}, { params: { keyword: name } })
+        if (response.status === 200) {
+            console.log(response.data);
+            const tm = response.data;
+            return [{
+                name: tm.map((item: any) => item.name).join(', '),
+                value: JSON.stringify(tm.map((item: any) => item.id))
+            }];
         } else {
             return [];
         }
@@ -129,8 +165,8 @@ export default function FormCreate({ onDone }: IProps) {
                 <div className="my-3 flex flex-col gap-2 mb-10 flex-1">
                     <AuthSelect
                         status={status}
-                        title="office_type"
-                        name="name"
+                        title="Loại điểm"
+                        name="office_type"
                         data={officeType}
                         disabled={loading}
                         error_text={errorText}
@@ -145,13 +181,14 @@ export default function FormCreate({ onDone }: IProps) {
                         error_text={errorText}
                     />
 
-                    {/* <AuthSelect
+                    <AuthComplete
                         status={status}
                         title="Địa chỉ"
                         name="address"
                         disabled={loading}
+                        suggestion={getSuggestionForAddress}
                         error_text={errorText}
-                    /> */}
+                    />
                 </div>
             </div>
             <AuthButton title="Tạo tài khoản" isLoading={loading} type="submit" />

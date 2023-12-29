@@ -89,7 +89,9 @@ export default function StaffItem({ data, onDelete }: IProps) {
                     {data.role}
                 </span>
                 <span className="text-sm text-[#718096] font-normal">
-                    {data.office[0].name}
+                    {data.office
+                        ? data.office[0].name
+                        : "Chưa gán vào văn phòng"}
                 </span>
             </div>
             <div className="flex">

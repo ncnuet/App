@@ -76,8 +76,7 @@ export default class RoleValidator extends BaseValidator {
         this.checkName(data.name);
         this.checkName(data.username);
         this.checkEmail(data.email);
-        this.checkPhone(data.phone);
-        this.checkId(data.office, true);
+        this.checkPhone(data.phone)
     }
 
     static validateUpdateUser(creator_id: string, editor: IUser, data: IUpdateUser) {

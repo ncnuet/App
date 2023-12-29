@@ -61,8 +61,12 @@ const StaffInfo = () => {
             <AvatarPicker avatar={data.avatar} pid={data.uid} />
             <Permission
               role={data.role}
-              office={data.office[0].name}
-              address={data.office[0].address.district.name + ", " + data.office[0].address.province.name} />
+              office={data.office ? data.office[0].name : "Chưa gán"}
+              address={
+                data.office
+                  ? data.office[0].address.district.name + ", " + data.office[0].address.province.name
+                  : "Chưa xác định"
+              } />
           </section>
         </>
       )}

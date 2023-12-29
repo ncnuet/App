@@ -1,11 +1,11 @@
 import { IOfficeCreate, IOfficeUpdate } from "@/validators/office.validator";
 import { OfficeBaseModel } from "./base/office.base";
-import { resolveAddress } from "@/utils/resolve_add";
+import { resolveAddress, resolveAddress2 } from "@/utils/resolve_add";
 import { EOfficeType } from "./schema/office.schema";
 
 class OfficeModel {
     async create(data: IOfficeCreate) {
-        const address = resolveAddress(data.address)
+        const address = resolveAddress2(data.address)
 
         const response = await OfficeBaseModel.create({
             name: data.name,
@@ -20,7 +20,7 @@ class OfficeModel {
     };
 
     async update(id: string, data: Omit<IOfficeUpdate, "id">) {
-        const address = resolveAddress(data.address)
+        const address = resolveAddress2(data.address)
 
         const response = await OfficeBaseModel.updateOne({
             _id: id,

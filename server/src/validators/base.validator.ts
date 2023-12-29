@@ -11,6 +11,13 @@ export interface IAddress
     // commune: string;
 }
 
+export interface IAddress2 {
+    country: string;
+    province: string;
+    district: string;
+    commune: string;
+}
+
 export interface IContact extends _IContact { }
 export interface ICustomer extends _ICustomer { }
 
@@ -77,12 +84,28 @@ export default abstract class BaseValidator {
             if (!address.commune) throw new InputError("Address must included commune code", "address.commune");
 
             const _province = findLevel1ById(address.province.id);
-            console.log("----", address.province);
-            
+
             if (!_province) throw new InputError("Invalid province id", "address.province");
             const _district = _province.findLevel2ById(address.district.id)
             if (!_district) throw new InputError("Invalid district id", "address.district");
             const _commune = _district.findLevel3ById(address.commune.id)
+            if (!_commune) throw new InputError("Invalid commune id", "address.commune");
+        } else if (!und) throw new InputError("Must included address", "address");
+    }
+
+    protected static checkAddress2(address: IAddress2, und?: boolean) {
+        if (address) {
+            if (!address.country) throw new InputError("Address must included country code", "address.country");
+            if (!address.province) throw new InputError("Address must include province code", "address.province");
+            if (!address.district) throw new InputError("Address must included district code", "address.district");
+            if (!address.commune) throw new InputError("Address must included commune code", "address.commune");
+
+            const _province = findLevel1ById(address.province);
+
+            if (!_province) throw new InputError("Invalid province id", "address.province");
+            const _district = _province.findLevel2ById(address.district)
+            if (!_district) throw new InputError("Invalid district id", "address.district");
+            const _commune = _district.findLevel3ById(address.commune)
             if (!_commune) throw new InputError("Invalid commune id", "address.commune");
         } else if (!und) throw new InputError("Must included address", "address");
     }

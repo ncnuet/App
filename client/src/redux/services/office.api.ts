@@ -18,8 +18,8 @@ export async function deleteOffice(id: string): Promise<AxiosResponse<OfficeStat
     return await axios.delete("/office/" + id)
 }
 
-export async function createOffice(id: string): Promise<AxiosResponse<OfficeStatusWrapper>> {
-    return await axios.post("/office/" + id)
+export async function createOffice(data: any): Promise<AxiosResponse<OfficeStatusWrapper>> {
+    return await axios.post("/office/", data)
 }
 
 export async function getSuggestionOffice(name: string): Promise<AxiosResponse<OfficeStatusWrapper>> {
