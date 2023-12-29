@@ -1,11 +1,12 @@
 import { InputError } from "@/types/controller";
-import { EUserRole, IUser } from "@/types/auth";
+import { EUserRole, IUser, IUserRole } from "@/types/auth";
 import BaseValidator from "./base.validator";
 import { IAddress } from "@/models/schema/address.schema";
 import { EGenderType, IUserDB } from "@/models/schema/user.schema";
+import { ObjectId } from "mongoose";
 
 export interface ICreateUser
-    extends Pick<IUserDB, "username" | "role" | "email" | "phone" | "name" | "office"> {
+    extends Pick<IUserDB, "username" | "email" | "phone" | "name" | "office" | "role"> {
 }
 
 export interface IUpdateUser {
@@ -71,8 +72,7 @@ export default class RoleValidator extends BaseValidator {
         }
     }
 
-    static validateCreateUser(creatorRole: string, data: ICreateUser) {
-        this.checkRoleForCreate(creatorRole, data.role);
+    static validateCreateUser(data: ICreateUser) {
         this.checkName(data.name);
         this.checkName(data.username);
         this.checkEmail(data.email);
@@ -96,10 +96,10 @@ export default class RoleValidator extends BaseValidator {
         this.checkEditable(creator_id, editor.uid);
     }
 
-    static validateOnlyManagerInOffice(user: Object[], role: string, und?: boolean) {
+    static validateOnlyManagerInOffice(user: (Object & { office: ObjectId })[], office: string, role: IUserRole, und?: boolean) {
         if (!und) {
-            if (user.length > 0 && role === EUserRole.HEAD) {
-                throw new InputError("Đã tồn tại quản lý trong ofice", "user");
+            if (user.length > 0 && user.some(e => e.office.toString() === office) && role === EUserRole.HEAD) {
+                throw new InputError("Đã tồn tại quản lý trong office", "office");
             }
         }
     }

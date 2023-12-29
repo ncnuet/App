@@ -9,7 +9,7 @@ interface IProps {
 export default function Permission({ role, office, address }: IProps) {
     return (
         <div className="flex flex-col gap-3 bg-white rounded-[15px] shadow-sd2">
-            <h2 className="p-[20px] text-base text-cyellow-600 font-semibold border-b border-b-[#CCD7E2]">
+            <h2 className="p-[20px] py-4 text-base text-cyellow-600 font-semibold border-b border-b-100">
                 Vị trí công tác
             </h2>
 

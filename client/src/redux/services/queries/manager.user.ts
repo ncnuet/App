@@ -45,6 +45,23 @@ export const ManagerStatusQuery = gql`
   }
 `
 
+export const StaffStatusQuery = gql`
+  query staff_status ($offices: [String]!) {
+    users(offices: $offices, type: Staff) {
+      name
+      username
+      email
+      uid
+      avatar
+      role
+      active
+      office {
+        name
+      }
+    }
+  }
+`
+
 export const StaffDetailQuery = gql`
   query ($uids: [String]!) {
     users(uids: $uids, type: ID) {
@@ -54,6 +71,15 @@ export const StaffDetailQuery = gql`
       uid
       avatar
       role
+      phone
+      address {
+        province {
+            name
+          }
+          district {
+            name
+          }
+      }
       office {
         name
         address {

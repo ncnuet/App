@@ -10,7 +10,8 @@ import { IoBanOutline, IoBrushOutline, IoCheckmarkCircleOutline, IoRefreshOutlin
 import { toast } from "react-toastify";
 
 interface IProps {
-    data: UserStatus
+    data: UserStatus,
+    onDelete: () => void
 }
 
 const mockStaff: UserStatus = {
@@ -27,7 +28,7 @@ const mockStaff: UserStatus = {
     }]
 };
 
-export default function StaffItem({ data }: IProps) {
+export default function StaffItem({ data, onDelete }: IProps) {
     const [active, setActive] = useState(data.active);
     const [loading, setLoading] = useState(false);
     const [showModel, setShowModel] = useState(false);
@@ -48,9 +49,14 @@ export default function StaffItem({ data }: IProps) {
     function handleDeleteUser() {
         setLoading(true);
         deleteUser(data.uid)
-            .then(() => {
-                setActive(!active);
-                toast.success("Xóa thành công")
+            .then((res) => {
+                if (res.status === 200) {
+                    setActive(!active);
+                    onDelete && onDelete()
+                    toast.success("Xóa thành công")
+                } else {
+                    toast.error("Lỗi mất rồi")
+                }
             })
             .catch((e) => {
                 toast.error(e.message)

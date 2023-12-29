@@ -172,35 +172,30 @@ export default class AuthController {
           username: user.username,
           office: user.office,
           role: user.role,
+          uid: user.uid
         },
       });
     });
   }
 
   static async createUser(req: Request, res: Response) {
-    const data = <ICreateUser>req.body;
     const user = res.locals.user;
+    const data: ICreateUser = {
+      ...<ICreateUser>req.body,
+      role: user.role === "bod" || user.role === "admin" ? "head" : "trans_staf",
+      office: user.role === "bod" || user.role === "admin" ? req.body.office : user.office
+    }
 
     handleError(res, async () => {
-      RoleValidator.validateCreateUser(user.role, data);
+      RoleValidator.validateCreateUser(data);
+      const otherUsers = await userModel.getUserInOffice(data.office);
+      RoleValidator.validateOnlyManagerInOffice(otherUsers, data.office, data.role);
 
-      const userInOtherOffice = await userModel.getUserInOffice(data.office);
-      RoleValidator.validateOnlyManagerInOffice(userInOtherOffice, data.role);
-      RoleValidator.validateEmployeeSameOfficeManager(
-        user.office.toString(),
-        data.office,
-        data.role
-      );
       const user_id = await userModel.create(user.uid, data);
 
       res.status(200).json({
         message: "Tạo tài khoản thành công",
-        data: {
-          uid: user_id,
-          username: data.username,
-          email: data.email,
-          role: data.role,
-        },
+        data: { uid: user_id }
       });
     });
   }
@@ -211,18 +206,10 @@ export default class AuthController {
     const editor = res.locals.user;
 
     handleError(res, async () => {
-      const users = await userModel.getUsers([id]);
-
-      RoleValidator.validateUpdateUser(
-        users[0].creator.toString(),
-        editor,
-        data
-      );
-      const updatedUser = await userModel.update(id, data);
+      await userModel.updateDetail(id, editor.uid, data);
 
       res.status(200).json({
-        message: "update success",
-        data: updatedUser,
+        message: "update success"
       });
     });
   }
@@ -234,6 +221,7 @@ export default class AuthController {
 
     handleError(res, async () => {
       await userModel.updatePassword(id, editor.uid, data);
+
       res.status(200).json({
         message: "update success",
       });

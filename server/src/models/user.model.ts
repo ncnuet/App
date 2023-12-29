@@ -25,6 +25,41 @@ class UserModel {
         })
     }
 
+    async getManagers() {
+        const users = await UserBaseModel.find(
+            { role: EUserRole.HEAD },
+            {
+                role: 1, email: 1, username: 1,
+                phone: 1, _id: 1, name: 1, office: 1,
+                creator: 1, address: 1, avatar: 1, active: 1
+            })
+            .exec()
+
+        return users.map(user => {
+            const { _id, email, username, phone, name, role, office, creator, address, avatar, active } = user;
+            return { uid: _id.toString(), email, username, phone, name, role, office, creator, address, avatar, active };
+        })
+    }
+
+    async getStaff(offices: string[]) {
+        const users = await UserBaseModel.find(
+            {
+                role: { $in: [EUserRole.GATHE_STAF, EUserRole.TRANS_STAF] },
+                office: { $in: offices }
+            },
+            {
+                role: 1, email: 1, username: 1,
+                phone: 1, _id: 1, name: 1, office: 1,
+                creator: 1, address: 1, avatar: 1, active: 1
+            })
+            .exec()
+
+        return users.map(user => {
+            const { _id, email, username, phone, name, role, office, creator, address, avatar, active } = user;
+            return { uid: _id.toString(), email, username, phone, name, role, office, creator, address, avatar, active };
+        })
+    }
+
     async create(creator: string, data: ICreateUser) {
         const response = await UserBaseModel.create({
             username: data.username,
@@ -42,21 +77,23 @@ class UserModel {
         return response._id
     }
 
-    async update(id_user: string, data: IUpdateUser) {
-        const updateData: any = {
-            name: data.name,
-            role: data.role,
-            email: data.email,
-            phone: data.phone,
-            address: data.address,
-        };
-
-        const userAfterUpdate = await UserBaseModel.findByIdAndUpdate(id_user, updateData, { new: true });
-        return userAfterUpdate;
+    async updateDetail(id_user: string, creator: string, data: IUpdateUser): Promise<boolean> {
+        const userAfterUpdate = await UserBaseModel.updateOne(
+            { _id: id_user, creator },
+            {
+                name: data.name,
+                role: data.role,
+                email: data.email,
+                phone: data.phone,
+                // address: data.address,
+            });
+        return userAfterUpdate.modifiedCount > 0;
     }
 
     async updatePassword(id_user: string, creator: string, data: IUpdatePassword) {
-        var hashPassword = bcrypt.hashSync(data.password, 10);
+        var hashPassword = data.password && bcrypt.hashSync(data.password, 10) || void 0;
+        console.log(data);
+
         const userAfterUpdate = await UserBaseModel.updateOne(
             { _id: id_user, creator },
             {
@@ -67,11 +104,25 @@ class UserModel {
         return userAfterUpdate;
     }
 
+    async updateAvatar(id_user: string, creator: string, data: IUpdateAvatar): Promise<boolean> {
+        const userAfterUpdate = await UserBaseModel.updateOne(
+            { _id: id_user, creator },
+            { avatar: data.avatar });
+        return userAfterUpdate.modifiedCount > 0;
+    }
+
     async delete(id: string, creator: string): Promise<boolean> {
         const deleteResult = await UserBaseModel.deleteOne(
             { _id: id, creator: creator });
 
         return deleteResult.deletedCount > 0;
+    }
+
+    async updateActive(id_user: string, creator: string, data: IUpdateActive): Promise<boolean> {
+        const userAfterUpdate = await UserBaseModel.updateOne(
+            { _id: id_user, creator: creator },
+            { active: data.active });
+        return userAfterUpdate.modifiedCount > 0;
     }
 
     async updateInfo(id_user: string, data: IUpdateInfoUser) {
@@ -94,20 +145,6 @@ class UserModel {
         return userAfterUpdate;
     }
 
-    async updateAvatar(id_user: string, creator: string, data: IUpdateAvatar): Promise<boolean> {
-        const userAfterUpdate = await UserBaseModel.updateOne(
-            { _id: id_user, creator },
-            { avatar: data.avatar });
-        return userAfterUpdate.modifiedCount > 0;
-    }
-
-    async updateActive(id_user: string, creator: string, data: IUpdateActive): Promise<boolean> {
-        const userAfterUpdate = await UserBaseModel.updateOne(
-            { _id: id_user, creator: creator },
-            { active: data.active });
-        return userAfterUpdate.modifiedCount > 0;
-    }
-
     async getCreatedPerson(creator: string) {
         const result = await UserBaseModel.find(
             { creator: creator },
@@ -124,20 +161,6 @@ class UserModel {
         return result;
     }
 
-    async getManagers() {
-        const user = await UserBaseModel.find(
-            { role: EUserRole.HEAD },
-            {
-                role: 1, email: 1, username: 1,
-                phone: 1, _id: 1, name: 1, office: 1,
-                creator: 1, address: 1, avatar: 1, active: 1
-            })
-            .exec()
 
-        return user.map(user => {
-            const { _id, email, username, phone, name, role, office, creator, address, avatar, active } = user;
-            return { uid: _id.toString(), email, username, phone, name, role, office, creator, address, avatar, active };
-        })
-    }
 }
 export default new UserModel();

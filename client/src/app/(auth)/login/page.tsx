@@ -47,7 +47,8 @@ const LoginPage = () => {
           name: user.name,
           username: user.username,
           office: user.office,
-          role: user.role
+          role: user.role,
+          uid: user.uid
         }))
         
         router.push('/dashboard')

@@ -3,13 +3,14 @@
 import Logo from "@/icons/Logo";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { IoHomeOutline, IoMailOutline, IoPeopleCircleOutline, IoSettingsOutline } from "react-icons/io5";
+import { IoAccessibilityOutline, IoHomeOutline, IoMailOutline, IoPeopleCircleOutline, IoSettingsOutline } from "react-icons/io5";
 
 const navLinks = [
   { name: "Dashboard", icon: <IoHomeOutline />, href: "/dashboard" },
   { name: "Đơn gửi", icon: <IoMailOutline />, href: "/gdv" },
   { name: "Cài đặt", icon: <IoSettingsOutline />, href: "/setting" },
   { name: "Quản lý nhân viên", icon: <IoPeopleCircleOutline />, href: "/manager" },
+  { name: "Thiết lập cá nhân", icon: <IoAccessibilityOutline />, href: "/me" },
 ]
 
 const GdvSidebar = () => {

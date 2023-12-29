@@ -1,6 +1,5 @@
 import { IQueryableUser } from "@/types/auth";
 import { InputError } from "@/types/controller";
-import { ICreateUser } from "./user.validator";
 import BaseValidator from "./base.validator";
 
 export interface ILoginByPassword {
@@ -34,7 +33,6 @@ export default class AuthValidator extends BaseValidator {
     private static checkRePassword(password: string, re_password: string) {
         if (re_password != password) {
             throw new InputError("Mật khẩu nhập lại cần giống mật khẩu", "re_password");
-
         }
     }
 

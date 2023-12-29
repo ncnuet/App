@@ -6,7 +6,8 @@ export interface MeState {
     name: string,
     username: string,
     office: string,
-    role: string
+    role: "admin" | "head" | string
+    uid: string
 }
 
 interface IPayload {
@@ -19,7 +20,8 @@ const initialState: MeState = {
     name: "guest",
     username: "",
     office: "",
-    role: "guest"
+    role: "guest",
+    uid: "",    
 };
 
 export const profileSlice = createSlice({
@@ -32,6 +34,7 @@ export const profileSlice = createSlice({
             state.username = action.payload.username;
             state.office = action.payload.office;
             state.role = action.payload.role
+            state.uid = action.payload.uid
         },
         logout(state, action) {
             state = initialState

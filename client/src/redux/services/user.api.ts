@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { ManagerStatusQuery, StaffDetailQuery, UserDetail, UserStatus } from "./queries/manager.user";
+import { ManagerStatusQuery, StaffDetailQuery, StaffStatusQuery, UserDetail, UserStatus } from "./queries/manager.user";
 import axios from "@/service/axios";
 
 export interface UserStatusWrapper<T = UserStatus> {
@@ -14,10 +14,17 @@ export async function getManagerStatus(): Promise<AxiosResponse<UserStatusWrappe
     })
 }
 
-export async function getDetailStaff(pid: string[]): Promise<AxiosResponse<UserStatusWrapper<UserDetail>>> {
+export async function getStaffStatus(pid: string): Promise<AxiosResponse<UserStatusWrapper>> {
+    return await axios.post("/graphql", {
+        query: StaffStatusQuery.loc?.source.body,
+        variables: { offices: [pid] }
+    })
+}
+
+export async function getDetailStaff(pids: string[]): Promise<AxiosResponse<UserStatusWrapper<UserDetail>>> {
     return await axios.post("/graphql", {
         query: StaffDetailQuery.loc?.source.body,
-        variables: { uids: pid }
+        variables: { uids: pids }
     });
 }
 
@@ -32,8 +39,16 @@ export async function updateAvatar(id: string, avatar: string) {
 export async function updateAccount(id: string, password: string, username: string) {
     return await axios.put(`/auth/${id}/account`, {
         password: password.trim().length === 0 ? undefined : password,
-        username: password.trim().length === 0 ? undefined : username
+        username: username.trim().length === 0 ? undefined : username
     });
+}
+
+export async function updateDetail(id: string, data: any) {
+    return await axios.put(`/auth/${id}`, data);
+}
+
+export async function createUser(data: object) {
+    return await axios.post(`/auth`, data);
 }
 
 export async function deleteUser(id: string) {

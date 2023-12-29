@@ -6,10 +6,12 @@ import toGraphEnum from "@/utils/to_graph_enum";
 enum EUserSearch {
     ID = "id",
     Head = "head",
+    Staff = "staff",
 }
 
 interface IArgs {
     uids: string[],
+    offices: string[],
     type: EUserSearch
 }
 
@@ -25,9 +27,9 @@ export const userQuery: GraphQLFieldConfig<undefined, any, IArgs> = {
     description: "User Query",
     args: {
         uids: { type: GraphQLList(GraphQLString) },
+        offices: { type: GraphQLList(GraphQLString) },
         type: { type: GraphQLNonNull(UserSearchType) }
     },
-
     resolve: async (parent, args) => {
         switch (args.type) {
             case EUserSearch.Head:
@@ -37,7 +39,10 @@ export const userQuery: GraphQLFieldConfig<undefined, any, IArgs> = {
                 if (args.uids && Array.isArray(args.uids)) {
                     return await userModel.getUsers(args.uids);
                 } else return []
-
+            case EUserSearch.Staff:
+                if (args.offices && Array.isArray(args.offices)) {
+                    return await userModel.getStaff(args.offices);
+                } else return []
             default:
                 return [];
         }
