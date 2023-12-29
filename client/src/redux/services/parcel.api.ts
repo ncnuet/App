@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { parcelStatusQuery, ParcelStatus, ParcelStatusWraper } from "./queries/status.parcel";
+import { parcelStatusQuery, ParcelStatusWraper as ParcelStatusWrapper } from "./queries/status.parcel";
 import { ParcelDetailsWraper, parcelDetailsQuery } from "./queries/details.parcel";
 import axios from "@/service/axios";
 import { AxiosResponse } from "axios";
@@ -11,7 +11,7 @@ export const parcelAPI = createApi({
         baseUrl: process.env.NEXT_PUBLIC_HOST + "/graphql"
     }),
     endpoints: (builder) => ({
-        getParcelStatus: builder.query<ParcelStatusWraper, { pids: string[] }>({
+        getParcelStatus: builder.query<ParcelStatusWrapper, { pids: string[] }>({
             query: ({ pids }) => ({
                 url: "/",
                 body: {
@@ -27,7 +27,7 @@ export const parcelAPI = createApi({
                 url: "/",
                 body: {
                     query: parcelDetailsQuery.loc?.source.body,
-                    variables: { pid }
+                    variables: { pids: [pid] }
                 },
                 method: "POST"
             })
@@ -35,7 +35,7 @@ export const parcelAPI = createApi({
     })
 })
 
-export async function getParcelStatus(pids: string[]): Promise<AxiosResponse<ParcelStatusWraper>> {
+export async function getParcelStatus(pids: string[]): Promise<AxiosResponse<ParcelStatusWrapper>> {
     return await axios.post("/graphql", {
         query: parcelStatusQuery.loc?.source.body,
         variables: { pids }
