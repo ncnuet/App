@@ -31,3 +31,15 @@ export async function getReviewParcels(
     },
   });
 }
+
+export async function sendNewParcel(
+  limit: number = 10,
+  page: number = 1
+): Promise<AxiosResponse<IGrapqlReviewParcel>> {
+  return await axios.get("/parcel", {
+    params: {
+      limit: limit,
+      page: page,
+    },
+  });
+}

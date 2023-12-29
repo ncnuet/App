@@ -7,6 +7,10 @@ import ParcelSave from "./ParcelSave";
 import ParcelWeight from "./ParcelWeight";
 import PreviewLayout from "@/app/(gdv)/[pid]/preview/layout";
 import GdvPage from "@/app/(gdv)/[pid]/preview/page";
+import axios from "axios";
+import useDebounce from "./ParcelHooks/useDebounce";
+import { recommendAddressItem } from "./ParcelBasisInfor/ParcelBasisInfor";
+import { Address } from "@/redux/services/queries/details.parcel";
 
 interface IParcelContent {
   isCancel: boolean | null;
@@ -27,11 +31,10 @@ export interface goods {
 export interface Infor {
   name: string;
   phone: string;
-  address: string;
 }
 
 const emptyGood: goods = { content: "", value: "0", amount: "0", document: "" };
-const emptyInfor: Infor = { name: "", phone: "", address: "" };
+const emptyInfor: Infor = { name: "", phone: "" };
 const ParcelContent = ({
   isCancel,
   isModal,
@@ -48,11 +51,97 @@ const ParcelContent = ({
   const [isGood, setIsGood] = useState<boolean>(false);
   const [senderInfor, setSenderInfor] = useState<Infor>(emptyInfor);
   const [receiverInfor, setReceiverInfor] = useState<Infor>(emptyInfor);
+  const [senderAddress, setSenderAddress] = useState<string>("");
+  const [receiverAddress, setReceiverAddress] = useState<string>("");
+  const [isSenderSelected, setIsSenderSelected] = useState<boolean>(false);
+  const [isReceiverSelected, setIsReceiverSelected] = useState<boolean>(false);
+  const [senderRecommend, setSenderRecommend] = useState<
+    recommendAddressItem[]
+  >([]);
+  const [receiverRecommend, setReceiverRecommend] = useState<
+    recommendAddressItem[]
+  >([]);
+  const [officialSenderAddress, setOfficialSenderAddress] = useState<Address>();
+  const [officialReceiverAddress, setOfficialReceiverAddress] =
+    useState<Address>();
   const [note, setNote] = useState<string>("");
   const [actualWeight, setActualWeight] = useState<string>("");
   const [covertWeight, setConverWeight] = useState<string>("");
 
   // remove everything
+  const debounceSender = useDebounce(senderAddress, 500);
+  const debounceReceiver = useDebounce(receiverAddress, 500);
+
+  const onSenderReccomend = useCallback(
+    (result: string) => {
+      setSenderAddress(result);
+      setSenderRecommend([]);
+      onSaveFormSender(senderRecommend, "sender");
+      setIsSenderSelected(true);
+    },
+    [senderRecommend]
+  );
+
+  const onReceiverReccomend = useCallback(
+    (result: string) => {
+      setReceiverAddress(result);
+      setReceiverRecommend([]);
+      onSaveFormSender(receiverRecommend, "receiver");
+      setIsReceiverSelected(true);
+    },
+    [receiverRecommend]
+  );
+
+  const onSaveFormSender = (data: recommendAddressItem[], type: string) => {
+    var senderForm: Address = {};
+    data.forEach((item) => {
+      switch (item.type) {
+        case "Xã":
+          senderForm = {
+            ...senderForm,
+            commune: { name: item.name, id: item.id },
+          };
+          break;
+        case "Huyện":
+          senderForm = {
+            ...senderForm,
+            district: { name: item.name, id: item.id },
+          };
+          break;
+        case "Tỉnh":
+          senderForm = {
+            ...senderForm,
+            province: { name: item.name, id: item.id },
+          };
+          break;
+        case "Thành phố":
+          senderForm = {
+            ...senderForm,
+            province: { name: item.name, id: item.id },
+          };
+          break;
+      }
+    });
+    if (type === "sender") {
+      setOfficialSenderAddress(senderForm);
+    } else {
+      setOfficialReceiverAddress(senderForm);
+    }
+  };
+
+  const onSenderAddressChange = useCallback(
+    (result: string) => {
+      setSenderAddress(result);
+    },
+    [senderAddress]
+  );
+
+  const onReceiverAddressChange = useCallback(
+    (result: string) => {
+      setReceiverAddress(result);
+    },
+    [receiverAddress]
+  );
 
   const onNote = useCallback((result: string) => {
     setNote(result);
@@ -67,9 +156,6 @@ const ParcelContent = ({
         case "phone":
           setSenderInfor({ ...senderInfor, phone: result });
           break;
-        case "address":
-          setSenderInfor({ ...senderInfor, address: result });
-          break;
       }
     },
     [senderInfor]
@@ -83,9 +169,6 @@ const ParcelContent = ({
           break;
         case "phone":
           setReceiverInfor({ ...receiverInfor, phone: result });
-          break;
-        case "address":
-          setReceiverInfor({ ...receiverInfor, address: result });
           break;
       }
     },
@@ -190,6 +273,30 @@ const ParcelContent = ({
     }, 200);
   };
 
+  const getSenderAddress = async () => {
+    try {
+      const response = await fetch(`/api/address?keyword=${debounceSender}`, {
+        method: "POST",
+      });
+      const data = await response.json();
+      setSenderRecommend(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getReiverAddress = async () => {
+    try {
+      const response = await fetch(`/api/address?keyword=${debounceReceiver}`, {
+        method: "POST",
+      });
+      const data = await response.json();
+      setReceiverRecommend(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     return () => clearTimeout(timeoutRef.current as NodeJS.Timeout);
   }, []);
@@ -205,8 +312,30 @@ const ParcelContent = ({
       setNote("");
       setActualWeight("");
       setConverWeight("");
+      setSenderAddress("");
+      setReceiverAddress("");
     }
   }, [isCancel]);
+
+  useEffect(() => {
+    if (isSenderSelected) {
+      setIsSenderSelected(false);
+    } else {
+      getSenderAddress();
+    }
+  }, [debounceSender]);
+
+  useEffect(() => {
+    if (isReceiverSelected) {
+      setIsReceiverSelected(false);
+    } else {
+      getReiverAddress();
+    }
+  }, [debounceReceiver]);
+
+  useEffect(() => {
+    console.log(officialReceiverAddress);
+  }, [officialReceiverAddress]);
 
   return (
     <main className="xs:pl-0 pl-1 overflow-y-scroll flex-grow w-full flex flex-col gap-5 gdv-parcel pr-1">
@@ -215,6 +344,14 @@ const ParcelContent = ({
         receiverInfor={receiverInfor}
         onSenderInfor={onSenderInfor}
         onReceiverInfor={onReceiverInfor}
+        senderAddress={senderAddress}
+        receiverAddress={receiverAddress}
+        onSenderAddressChange={onSenderAddressChange}
+        onReceiverAddressChange={onReceiverAddressChange}
+        RecommendReceiver={receiverRecommend}
+        RecommendSender={senderRecommend}
+        onReceiverReccomend={onReceiverReccomend}
+        onSenderReccomend={onSenderReccomend}
       ></ParcelBasisInfor>
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <ParcelGoods {...parcelGoodProps}></ParcelGoods>
