@@ -5,6 +5,7 @@ import GdvCustomerItem from "./GdvCustomerItem";
 import GdvInfor from "./GdvInfor";
 import Link from "next/link";
 import { IReviewParcel, getReviewParcels } from "@/redux/services/gdv.view";
+import { EStatusParcel } from "@/redux/services/queries/details.parcel";
 
 const fakeData: IReviewParcel[] = [
   {
@@ -35,7 +36,7 @@ const fakeData: IReviewParcel[] = [
         name: "Ba Đình",
       },
     },
-    status: "Chấp nhận gửi",
+    status: EStatusParcel.FAILED,
     cost: 1000,
   },
   {
@@ -66,7 +67,7 @@ const fakeData: IReviewParcel[] = [
         name: "Ba Đình",
       },
     },
-    status: "Chấp nhận gửi",
+    status: EStatusParcel.DELIVERING,
     cost: 1000,
   },
 ];

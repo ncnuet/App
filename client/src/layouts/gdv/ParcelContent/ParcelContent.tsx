@@ -10,7 +10,11 @@ import GdvPage from "@/app/(gdv)/[pid]/preview/page";
 import axios from "axios";
 import useDebounce from "./ParcelHooks/useDebounce";
 import { recommendAddressItem } from "./ParcelBasisInfor/ParcelBasisInfor";
-import { Address } from "@/redux/services/queries/details.parcel";
+import {
+  Address,
+  EStatusParcel,
+} from "@/redux/services/queries/details.parcel";
+import { INewParcel, sendNewParcel } from "@/redux/services/gdv.view";
 
 interface IParcelContent {
   isCancel: boolean | null;
@@ -61,9 +65,11 @@ const ParcelContent = ({
   const [receiverRecommend, setReceiverRecommend] = useState<
     recommendAddressItem[]
   >([]);
-  const [officialSenderAddress, setOfficialSenderAddress] = useState<Address>();
+  const [officialSenderAddress, setOfficialSenderAddress] = useState<Address>(
+    {}
+  );
   const [officialReceiverAddress, setOfficialReceiverAddress] =
-    useState<Address>();
+    useState<Address>({});
   const [note, setNote] = useState<string>("");
   const [actualWeight, setActualWeight] = useState<string>("");
   const [covertWeight, setConverWeight] = useState<string>("");
@@ -97,6 +103,12 @@ const ParcelContent = ({
     data.forEach((item) => {
       switch (item.type) {
         case "Xã":
+          senderForm = {
+            ...senderForm,
+            commune: { name: item.name, id: item.id },
+          };
+          break;
+        case "Thị trấn":
           senderForm = {
             ...senderForm,
             commune: { name: item.name, id: item.id },
@@ -263,6 +275,8 @@ const ParcelContent = ({
     note,
     actualWeight,
     covertWeight,
+    senderAddress,
+    receiverAddress,
   };
 
   const onClosePreview = () => {
@@ -282,6 +296,51 @@ const ParcelContent = ({
       setSenderRecommend(data);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const submitHandler = async () => {
+    const newParcel: INewParcel = {
+      cost: 13000,
+      cost_type: "receiver pay",
+      notes: note,
+      goods_type:
+        isGood && !isDocument
+          ? "goods"
+          : !isGood && isDocument
+          ? "documents"
+          : "goods, documents",
+      return_type: "return immediately",
+      status: EStatusParcel.DELIVERING,
+      sender: senderInfor,
+      receiver: receiverInfor,
+      sending_add: {
+        ...officialSenderAddress,
+        country: {
+          name: "Việt Nam",
+          id: "vi",
+        },
+      },
+      receiving_add: {
+        ...officialReceiverAddress,
+        country: {
+          name: "Việt Nam",
+          id: "vi",
+        },
+      },
+      goods: goods.map((good) => ({
+        category: "goods",
+        name: good.content,
+        quantity: parseInt(good.amount),
+        weight: 200,
+        value: parseInt(good.value),
+      })),
+    };
+    try {
+      const response = await sendNewParcel(newParcel);
+      return response;
+    } catch (error) {
+      return error;
     }
   };
 
@@ -368,6 +427,7 @@ const ParcelContent = ({
           onSave={onSave}
           onChangeModal={onChangeModal}
           onPreview={onChangePreview}
+          onCreating={submitHandler}
         ></ParcelSave>
       )}
       {isPreview && (

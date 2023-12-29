@@ -95,9 +95,9 @@ const GdvInfor = ({ parcel }: IGdvInfor) => {
       <div className="flex flex-col p-[10px] bg-cgray-200 rounded-[10px] gap-2">
         <div className="flex flex-row justify-between items-center">
           <span className="text-sm text-cgray-600 font-semibold">
-            {parcel.status}
+            Trạng thái
           </span>
-          <GdvStatus isAccepted></GdvStatus>
+          <GdvStatus status={parcel.status}></GdvStatus>
         </div>
         <div className="flex flex-row justify-between">
           <span className="text-sm text-cgray-600 font-semibold">Ngày tạo</span>
