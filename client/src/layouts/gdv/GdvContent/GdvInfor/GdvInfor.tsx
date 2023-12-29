@@ -1,6 +1,7 @@
 "use client";
 import GdvStatus from "@/components/GdvStatus";
 import { IReviewParcel } from "@/redux/services/gdv.view";
+import Link from "next/link";
 import { useMemo } from "react";
 interface IGdvInfor {
   parcel: IReviewParcel;
@@ -27,7 +28,16 @@ const GdvInfor = ({ parcel }: IGdvInfor) => {
         </div>
         <button className="outline-none h-[34px] px-[10px] rounded-[8px] flex-none flex flex-row items-center bg-cyellow-500 hover:opacity-80 hover:cursor-pointer">
           <span className="material-symbols-outlined mr-1">page_info</span>
-          <span className="text-[15px] font-normal">Chi tiết</span>
+          <Link
+            href={{
+              pathname: "/gdv/parcel",
+              query: {
+                pid: parcel.code,
+              },
+            }}
+          >
+            <span className="text-[15px] font-normal">Chi tiết</span>
+          </Link>
         </button>
       </div>
       <div className="flex flex-col p-[10px] bg-cgray-200 rounded-[10px] gap-2">

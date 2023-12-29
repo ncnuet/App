@@ -1,18 +1,42 @@
 import { memo } from "react";
 import GdvInput from "@/components/GdvInput";
+import { INewParcel } from "@/redux/services/gdv.view";
 
 interface IParcelWeight {
+  cost: number;
   actualWeight: string;
   covertWeight: string;
   onActualWeight: any;
   onConvertWeight: any;
+  isDisabled?: boolean;
+  data?: INewParcel | null;
 }
 const ParcelWeight = ({
+  cost,
   actualWeight,
   covertWeight,
   onActualWeight,
   onConvertWeight,
+  isDisabled = false,
+  data = null,
 }: IParcelWeight) => {
+  const totalWeight = () => {
+    let result = 0;
+    data?.goods.forEach((good) => {
+      result += good.weight;
+    });
+    return result;
+  };
+
+  const mainCost = (weight: number) => {
+    if (cost <= 200) {
+      return 25000;
+    } else if (cost > 200 && cost <= 500) {
+      return 30000;
+    } else {
+      return 45000;
+    }
+  };
   return (
     <div className="flex-1 flex flex-col gap-5">
       <div className="p-6 rounded-[15px] bg-white flex flex-col gap-3">
@@ -30,7 +54,12 @@ const ParcelWeight = ({
                 icon="scale"
                 isBig
                 onInfor={(result: string) => onActualWeight(result)}
-                value={actualWeight}
+                value={
+                  isDisabled
+                    ? totalWeight().toString() + " gam" || "0 gam"
+                    : actualWeight
+                }
+                disabled={isDisabled}
               ></GdvInput>
             </div>
             <span className="text-[11px] text-cgray-400 font-normal">
@@ -47,7 +76,12 @@ const ParcelWeight = ({
                 icon="scale"
                 isBig
                 onInfor={(result: string) => onConvertWeight(result)}
-                value={covertWeight}
+                value={
+                  isDisabled
+                    ? totalWeight().toString() + " gam" || "0 gam"
+                    : covertWeight
+                }
+                disabled={isDisabled}
               ></GdvInput>
             </div>
             <span className="text-[11px] text-cgray-400 font-normal">
@@ -76,7 +110,11 @@ const ParcelWeight = ({
               Cước chính
             </span>
             <span className="text-[15px] text-cgray-500 font-semibold">
-              9.500
+              {!isDisabled
+                ? mainCost(parseInt(covertWeight))
+                : data?.cost !== undefined
+                ? (((data.cost - 900) * 10) / 11).toFixed(0).toString()
+                : ""}
             </span>
           </div>
           <div className="flex flex-row items-center justify-between">
@@ -84,7 +122,7 @@ const ParcelWeight = ({
               Phụ phí
             </span>
             <span className="text-[15px] text-cgray-500 font-semibold">
-              1.900
+              900
             </span>
           </div>
           <div className="flex flex-row items-center justify-between">
@@ -97,14 +135,24 @@ const ParcelWeight = ({
             <span className="text-sm text-cblue-600 font-semibold">
               Cước GTGT
             </span>
-            <span className="text-[15px] text-cgray-500 font-semibold">0</span>
+            <span className="text-[15px] text-cgray-500 font-semibold">
+              {!isDisabled
+                ? mainCost(parseInt(covertWeight)) * 0.1
+                : data?.cost !== undefined
+                ? ((data.cost - 900) / 11).toFixed(0).toString()
+                : ""}
+            </span>
           </div>
           <div className="flex flex-row items-center justify-between">
             <span className="text-sm text-cblue-600 font-semibold">
               Tổng cước (gồm VAT)
             </span>
             <span className="text-[15px] text-cgray-500 font-semibold">
-              12.312
+              {isDisabled
+                ? data?.cost !== undefined
+                  ? data?.cost - 900
+                  : ""
+                : mainCost(parseInt(covertWeight)) * 1.1}
             </span>
           </div>
           <div className="flex flex-row items-center justify-between">
@@ -118,7 +166,9 @@ const ParcelWeight = ({
               Tổng thu
             </span>
             <span className="text-[15px] text-cgray-500 font-semibold rounded-full px-[10px] py-[1px] bg-cyellow-500">
-              13.312
+              {isDisabled
+                ? data?.cost
+                : mainCost(parseInt(covertWeight)) * 1.1 + 900}
             </span>
           </div>
         </div>

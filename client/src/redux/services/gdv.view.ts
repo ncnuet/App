@@ -58,8 +58,14 @@ export interface INewParcel {
   notes: string;
   goods_type: string;
   return_type: string;
-  cost: Number;
+  cost: number;
   cost_type: string;
+}
+
+export interface GetDetailApiWrapper {
+  data: {
+    parcels: INewParcel[];
+  };
 }
 
 export async function getReviewParcels(
@@ -82,7 +88,7 @@ export async function sendNewParcel(
 
 export async function getDetailParcel(
   pids: string[]
-): Promise<AxiosResponse<INewParcel>> {
+): Promise<AxiosResponse<GetDetailApiWrapper>> {
   return await axios.post("/graphql", {
     query: gdvParcelQuery.loc?.source.body,
     variables: { pids: pids },

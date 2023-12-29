@@ -1,5 +1,6 @@
 import { memo } from "react";
 import { goods } from "../../ParcelContent";
+import { EGoodsType, INewParcel } from "@/redux/services/gdv.view";
 
 interface IParcelGoods {
   isDocument: boolean;
@@ -13,6 +14,8 @@ interface IParcelGoods {
   goods: goods[];
   note: string;
   onNote: any;
+  isDisabled?: boolean;
+  data?: INewParcel | null;
 }
 
 const ParcelGoods = ({ ...props }: IParcelGoods) => {
@@ -32,6 +35,21 @@ const ParcelGoods = ({ ...props }: IParcelGoods) => {
       return number.toString();
     }
   };
+
+  const GrossValue = () => {
+    let value = 0;
+    props.data?.goods.forEach((good) => {
+      value += good.value;
+    });
+    return value;
+  };
+  const GrossQuantity = () => {
+    let value = 0;
+    props.data?.goods.forEach((good) => {
+      value += good.quantity;
+    });
+    return value;
+  };
   return (
     <div className="flex-1 flex flex-col gap-5">
       <div className="p-6 rounded-[15px] bg-white flex flex-col gap-1">
@@ -44,17 +62,34 @@ const ParcelGoods = ({ ...props }: IParcelGoods) => {
               className={
                 "w-5 h-5 flex flex-row justify-center items-center rounded-md select-none " +
                 `${
-                  props.isDocument
-                    ? "bg-cyellow-500"
-                    : "bg-cyellow-100 border border-cyellow-500"
+                  (!props.isDisabled && props.isDocument) ||
+                  (props.isDisabled &&
+                    props.data?.goods_type ===
+                      EGoodsType.DOCUMENT.toUpperCase())
+                    ? "bg-cyellow-500 "
+                    : "bg-cyellow-100 border border-cyellow-500 "
+                }` +
+                `${
+                  props.isDisabled
+                    ? "pointer-events-none"
+                    : "pointer-events-auto"
                 }`
               }
             >
-              {props.isDocument && (
-                <span className="material-symbols-outlined text-lg text-white">
-                  check
-                </span>
-              )}
+              <>
+                {props.isDisabled &&
+                  props.data?.goods_type ===
+                    EGoodsType.DOCUMENT.toUpperCase() && (
+                    <span className="material-symbols-outlined text-lg text-white">
+                      check
+                    </span>
+                  )}
+                {!props.isDisabled && props.isDocument && (
+                  <span className="material-symbols-outlined text-lg text-white">
+                    check
+                  </span>
+                )}
+              </>
             </div>
             <span className=" text-sm text-black font-semibold">Tài liệu</span>
           </div>
@@ -64,27 +99,44 @@ const ParcelGoods = ({ ...props }: IParcelGoods) => {
               className={
                 "w-5 h-5 flex flex-row justify-center items-center rounded-md select-none " +
                 `${
-                  props.isGood
-                    ? "bg-cyellow-500"
-                    : "bg-cyellow-100 border border-cyellow-500"
+                  (props.isGood && !props.isDisabled) ||
+                  (props.isDisabled &&
+                    props.data?.goods_type === EGoodsType.GOODS.toUpperCase())
+                    ? "bg-cyellow-500 "
+                    : "bg-cyellow-100 border border-cyellow-500 "
+                }` +
+                `${
+                  props.isDisabled
+                    ? "pointer-events-none"
+                    : "pointer-events-auto"
                 }`
               }
             >
-              {props.isGood && (
-                <span className="material-symbols-outlined text-lg text-white">
-                  check
-                </span>
-              )}
+              <>
+                {props.isDisabled &&
+                  props.data?.goods_type === EGoodsType.GOODS.toUpperCase() && (
+                    <span className="material-symbols-outlined text-lg text-white">
+                      check
+                    </span>
+                  )}
+                {!props.isDisabled && props.isGood && (
+                  <span className="material-symbols-outlined text-lg text-white">
+                    check
+                  </span>
+                )}
+              </>
             </div>
             <span className=" text-sm  text-black font-semibold">Hàng hóa</span>
           </div>
-          <button
-            className="ml-auto outline-none py-[2px] px-[10px] rounded-[8px] flex flex-row items-center bg-cyellow-500 hover:opacity-80 hover:cursor-pointer"
-            onClick={props.onNewGoods}
-          >
-            <span className="material-symbols-outlined">add</span>
-            <span className="text-[15px] font-normal flex-none">Đơn mới</span>
-          </button>
+          {!props.isDisabled && (
+            <button
+              className="ml-auto outline-none py-[2px] px-[10px] rounded-[8px] flex flex-row items-center bg-cyellow-500 hover:opacity-80 hover:cursor-pointer"
+              onClick={props.onNewGoods}
+            >
+              <span className="material-symbols-outlined">add</span>
+              <span className="text-[15px] font-normal flex-none">Đơn mới</span>
+            </button>
+          )}
         </div>
         {/* table */}
         <div className="flex flex-col rounded-lg border border-[#CCD7E2] overflow-hidden mt-3">
@@ -103,72 +155,128 @@ const ParcelGoods = ({ ...props }: IParcelGoods) => {
             </span>
           </div>
 
-          {props.goods.map((good, index) => (
-            <div className="flex flex-row w-full bg-white" key={index}>
-              <input
-                spellCheck={false}
-                className="w-2/5 flex flex-row justify-center items-center text-center text-[15px] text-cgray-500 font-normal py-[6px] border-r border-dashed border-[#CCD7E2] outline-[#CCD7E2]"
-                placeholder="Nội dung"
-                onChange={(e) =>
-                  props.onChangeGoods(e.target.value, "content", index)
-                }
-              ></input>
-              <input
-                spellCheck={false}
-                className="w-1/5 flex flex-row justify-center items-center text-center text-[15px] text-cgray-500 font-normal py-[6px] border-r border-dashed border-[#CCD7E2] outline-[#CCD7E2]"
-                placeholder="Giá trị"
-                defaultValue={good.value}
-                onChange={(e) =>
-                  props.onChangeGoods(e.target.value, "value", index)
-                }
-                onBlur={(e) => {
-                  e.target.value = formatNumber(e.target.value);
-                  props.onGrossValue();
-                }}
-              ></input>
-              <input
-                spellCheck={false}
-                className="w-1/5 flex flex-row justify-center items-center text-center text-[15px] text-cgray-500 font-normal py-[6px] border-r border-dashed border-[#CCD7E2] outline-[#CCD7E2]"
-                placeholder="Số lượng"
-                defaultValue={good.amount}
-                onChange={(e) =>
-                  props.onChangeGoods(e.target.value, "amount", index)
-                }
-                onBlur={props.onGrossValue}
-              ></input>
-              <input
-                spellCheck={false}
-                className="w-2/5 flex flex-row justify-center items-center text-center text-[15px] text-cgray-500 font-normal py-[6px] border-r border-dashed border-[#CCD7E2] outline-[#CCD7E2]"
-                placeholder="Giấy tờ"
-                onChange={(e) =>
-                  props.onChangeGoods(e.target.value, "document", index)
-                }
-              ></input>
-            </div>
-          ))}
+          {!props.isDisabled &&
+            props.goods.map((good, index) => (
+              <div className="flex flex-row w-full bg-white" key={index}>
+                <input
+                  spellCheck={false}
+                  className="w-2/5 flex flex-row justify-center items-center text-center text-[15px] text-cgray-500 font-normal py-[6px] border-r border-dashed border-[#CCD7E2] outline-[#CCD7E2]"
+                  placeholder="Nội dung"
+                  onChange={(e) =>
+                    props.onChangeGoods(e.target.value, "content", index)
+                  }
+                ></input>
+                <input
+                  spellCheck={false}
+                  className="w-1/5 flex flex-row justify-center items-center text-center text-[15px] text-cgray-500 font-normal py-[6px] border-r border-dashed border-[#CCD7E2] outline-[#CCD7E2]"
+                  placeholder="Giá trị"
+                  defaultValue={good.value}
+                  onChange={(e) =>
+                    props.onChangeGoods(e.target.value, "value", index)
+                  }
+                  onBlur={(e) => {
+                    e.target.value = formatNumber(e.target.value);
+                    props.onGrossValue();
+                  }}
+                ></input>
+                <input
+                  spellCheck={false}
+                  className="w-1/5 flex flex-row justify-center items-center text-center text-[15px] text-cgray-500 font-normal py-[6px] border-r border-dashed border-[#CCD7E2] outline-[#CCD7E2]"
+                  placeholder="Số lượng"
+                  defaultValue={good.amount}
+                  onChange={(e) =>
+                    props.onChangeGoods(e.target.value, "amount", index)
+                  }
+                  onBlur={props.onGrossValue}
+                ></input>
+                <input
+                  spellCheck={false}
+                  className="w-2/5 flex flex-row justify-center items-center text-center text-[15px] text-cgray-500 font-normal py-[6px] border-r border-dashed border-[#CCD7E2] outline-[#CCD7E2]"
+                  placeholder="Giấy tờ"
+                  onChange={(e) =>
+                    props.onChangeGoods(e.target.value, "document", index)
+                  }
+                ></input>
+              </div>
+            ))}
 
-          <div className="flex flex-row w-full bg-white">
-            <span className="w-2/5 flex flex-row justify-center items-center text-[15px] text-cgray-500 font-normal py-[6px] border-r border-dashed border-[#CCD7E2]">
-              Tổng
-            </span>
-            <span className="w-1/5 flex flex-row justify-center items-center text-[15px] text-cgray-500 font-normal py-[6px] border-r border-dashed border-[#CCD7E2]">
-              {props.grossValue?.value || 0}
-            </span>
-            <span className="w-1/5 flex flex-row justify-center items-center text-[15px] text-cgray-500 font-normal py-[6px] border-r border-dashed border-[#CCD7E2]">
-              {props.grossValue?.amount || 0}
-            </span>
-            <span className="w-2/5 flex flex-row justify-center items-center text-[15px] text-cgray-500 font-normal py-[6px] "></span>
-          </div>
+          {props.isDisabled &&
+            props.data?.goods.map((good, index) => (
+              <div className="flex flex-row w-full bg-white" key={index}>
+                <input
+                  spellCheck={false}
+                  className="w-2/5 flex flex-row justify-center items-center text-center text-[15px] text-cgray-500 font-normal py-[6px] border-r border-dashed border-[#CCD7E2] outline-[#CCD7E2]"
+                  placeholder="Nội dung"
+                  defaultValue={good.name || ""}
+                  disabled
+                ></input>
+                <input
+                  spellCheck={false}
+                  className="w-1/5 flex flex-row justify-center items-center text-center text-[15px] text-cgray-500 font-normal py-[6px] border-r border-dashed border-[#CCD7E2] outline-[#CCD7E2]"
+                  placeholder="Giá trị"
+                  defaultValue={formatNumber(good.value.toString()) || ""}
+                  disabled
+                ></input>
+                <input
+                  spellCheck={false}
+                  className="w-1/5 flex flex-row justify-center items-center text-center text-[15px] text-cgray-500 font-normal py-[6px] border-r border-dashed border-[#CCD7E2] outline-[#CCD7E2]"
+                  placeholder="Số lượng"
+                  defaultValue={good.quantity || ""}
+                  disabled
+                ></input>
+                <input
+                  spellCheck={false}
+                  className="w-2/5 flex flex-row justify-center items-center text-center text-[15px] text-cgray-500 font-normal py-[6px] border-r border-dashed border-[#CCD7E2] outline-[#CCD7E2]"
+                  placeholder="Giấy tờ"
+                  disabled
+                  defaultValue={
+                    good.category === "ELECTRONICE_DEVICE"
+                      ? "đồ điện tử"
+                      : "không" || ""
+                  }
+                ></input>
+              </div>
+            ))}
+
+          {!props.isDisabled && (
+            <div className="flex flex-row w-full bg-white">
+              <span className="w-2/5 flex flex-row justify-center items-center text-[15px] text-cgray-500 font-normal py-[6px] border-r border-dashed border-[#CCD7E2]">
+                Tổng
+              </span>
+              <span className="w-1/5 flex flex-row justify-center items-center text-[15px] text-cgray-500 font-normal py-[6px] border-r border-dashed border-[#CCD7E2]">
+                {props.grossValue?.value || 0}
+              </span>
+              <span className="w-1/5 flex flex-row justify-center items-center text-[15px] text-cgray-500 font-normal py-[6px] border-r border-dashed border-[#CCD7E2]">
+                {props.grossValue?.amount || 0}
+              </span>
+              <span className="w-2/5 flex flex-row justify-center items-center text-[15px] text-cgray-500 font-normal py-[6px] "></span>
+            </div>
+          )}
+          {props.isDisabled && (
+            <div className="flex flex-row w-full bg-white">
+              <span className="w-2/5 flex flex-row justify-center items-center text-[15px] text-cgray-500 font-normal py-[6px] border-r border-dashed border-[#CCD7E2]">
+                Tổng
+              </span>
+              <span className="w-1/5 flex flex-row justify-center items-center text-[15px] text-cgray-500 font-normal py-[6px] border-r border-dashed border-[#CCD7E2]">
+                {formatNumber(GrossValue().toString())}
+              </span>
+              <span className="w-1/5 flex flex-row justify-center items-center text-[15px] text-cgray-500 font-normal py-[6px] border-r border-dashed border-[#CCD7E2]">
+                {GrossQuantity()}
+              </span>
+              <span className="w-2/5 flex flex-row justify-center items-center text-[15px] text-cgray-500 font-normal py-[6px] "></span>
+            </div>
+          )}
         </div>
       </div>
       <div className="p-6 rounded-[15px] bg-white flex flex-col gap-3">
         <h2 className="text-lg text-cblue-600 font-bold">Chú dẫn nghiệp vụ</h2>
         <textarea
           onChange={(e) => props.onNote(e.target.value)}
-          value={props.note}
+          value={props.isDisabled ? props.data?.notes || "" : props.note}
           spellCheck={false}
           placeholder="Chú thích cho chuyển phát"
           className="p-2 rounded-lg bg-cgray-100 h-[124px] text-[15px] text-gray-500 resize-none outline-none border border-[#CCD7E2]"
+          disabled={props.isDisabled}
         ></textarea>
         <span className="text-[11px] text-cgray-400">Ghi chú chuyển phát</span>
       </div>

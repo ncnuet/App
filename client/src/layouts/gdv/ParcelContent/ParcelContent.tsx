@@ -26,6 +26,8 @@ interface IParcelContent {
   isCancel: boolean | null;
   isModal: boolean;
   isPreview: boolean;
+  isDisabled: boolean;
+  data: INewParcel | null;
   onSave: any;
   onChangeModal: any;
   onChangePreview: any;
@@ -46,6 +48,8 @@ export interface Infor {
 const emptyGood: goods = { content: "", value: "0", amount: "0", document: "" };
 const emptyInfor: Infor = { name: "", phone: "" };
 const ParcelContent = ({
+  data,
+  isDisabled = false,
   isCancel,
   isModal,
   isPreview,
@@ -79,6 +83,7 @@ const ParcelContent = ({
   const [note, setNote] = useState<string>("");
   const [actualWeight, setActualWeight] = useState<string>("");
   const [covertWeight, setConverWeight] = useState<string>("");
+  const [cost, setCost] = useState<number>(0);
 
   // remove everything
   const debounceSender = useDebounce(senderAddress, 500);
@@ -243,11 +248,11 @@ const ParcelContent = ({
 
   const onDocument = useCallback(() => {
     setIsDocument((prev) => !prev);
-  }, []);
+  }, [isDocument]);
 
   const onGoods = useCallback(() => {
     setIsGood((prev) => !prev);
-  }, []);
+  }, [isGood]);
 
   const onActualWeight = useCallback((result: string) => {
     setActualWeight(result);
@@ -269,6 +274,8 @@ const ParcelContent = ({
     onNewGoods,
     onGrossValue,
     onNote,
+    data,
+    isDisabled,
   };
 
   const previewProps = {
@@ -405,6 +412,8 @@ const ParcelContent = ({
   return (
     <main className="xs:pl-0 pl-1 overflow-y-scroll flex-grow w-full flex flex-col gap-5 gdv-parcel pr-1">
       <ParcelBasisInfor
+        data={data}
+        isDisabled={isDisabled}
         senderInfor={senderInfor}
         receiverInfor={receiverInfor}
         onSenderInfor={onSenderInfor}
@@ -421,10 +430,13 @@ const ParcelContent = ({
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <ParcelGoods {...parcelGoodProps}></ParcelGoods>
         <ParcelWeight
+          cost={cost}
           actualWeight={actualWeight}
           covertWeight={covertWeight}
           onActualWeight={onActualWeight}
           onConvertWeight={onConvertWeight}
+          data={data}
+          isDisabled={isDisabled}
         ></ParcelWeight>
       </section>
       {isModal && (

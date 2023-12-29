@@ -2,12 +2,29 @@
 import { useEffect, useState } from "react";
 import ParcelContent from "@/layouts/gdv/ParcelContent";
 import Link from "next/link";
-
-const ParcelPage = () => {
+import { INewParcel, getDetailParcel } from "@/redux/services/gdv.view";
+interface searchParamsProps {
+  searchParams: {
+    pid: string;
+  };
+}
+const ParcelPage = ({ searchParams }: searchParamsProps) => {
   const [isCancel, setIsCancel] = useState<boolean | null>(null);
   const [isModal, setIsModal] = useState<boolean>(false);
   const [isSave, setIsSave] = useState<boolean>(false);
   const [isPreview, setIsPreview] = useState<boolean>(false);
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+  const [data, setData] = useState<INewParcel | null>(null);
+  const getData = async (pids: string[]) => {
+    try {
+      const response = await getDetailParcel(pids);
+      if (response.data?.data) {
+        setData(response.data.data.parcels[0]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const onSave = () => {
     setIsSave(true);
@@ -25,6 +42,17 @@ const ParcelPage = () => {
       setIsCancel(false);
     }
   }, [isCancel]);
+  useEffect(() => {
+    if (searchParams.pid) {
+      setIsDisabled(true);
+      getData([searchParams.pid]);
+    }
+  }, []);
+  useEffect(() => {
+    if (data !== null) {
+      console.log(data);
+    }
+  }, [data]);
   return (
     <div className="flex flex-col gap-5 flex-grow overflow-hidden">
       {/* header */}
@@ -65,6 +93,8 @@ const ParcelPage = () => {
         </div>
       </header>
       <ParcelContent
+        data={data}
+        isDisabled={isDisabled}
         isCancel={isCancel}
         isModal={isModal}
         isPreview={isPreview}

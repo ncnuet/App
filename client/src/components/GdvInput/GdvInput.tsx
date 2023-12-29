@@ -30,7 +30,7 @@ function GdvInput({
       </span>
       <input
         className={
-          "px-2 h-full w-full outline-none bg-transparent text-[15px]" +
+          "px-2 h-full w-full outline-none bg-transparent text-[15px] " +
           `${disabled ? "pointer-events-none" : "pointer-events-auto"}`
         }
         placeholder={placeholder}
