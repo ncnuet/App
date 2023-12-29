@@ -6,8 +6,8 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import HeaderBanner1 from "./components/HeaderBanner";
-import MainEvent from "./components/MainEvent";
-import { getTrackingStatus } from "@/redux/services/tracking.api";
+import MainEvent from "./components/HeaderBanner";
+// import { getTrackingStatus } from "@/redux/services";
 import { TrackingStatus } from "@/redux/services/queries/tracking.parcel";
 
 export default function PackageStatus() {
@@ -20,11 +20,11 @@ export default function PackageStatus() {
 
 
     async function getTracking() {
-        const tmp = await getTrackingStatus(pid as string);
-        if (tmp.status === 200) {
-            console.log(tmp.data);            
-            setTracking(tmp.data.data.tracking[0])
-        }
+        // const tmp = await getTrackingStatus(pid as string);
+        // if (tmp.status === 200) {
+        //     console.log(tmp.data);            
+        //     setTracking(tmp.data.data.tracking[0])
+        // }
     }
 
     useEffect(() => {
