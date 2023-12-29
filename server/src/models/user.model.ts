@@ -60,6 +60,30 @@ class UserModel {
         })
     }
 
+    async getUserByName(name: string) {
+        const users = await UserBaseModel.find(
+            {
+                office: null,
+                role: EUserRole.HEAD,
+                $text: {
+                    $search: name || ""
+                }
+            },
+            { score: { $meta: 'textScore' } }
+        ).exec();
+
+        console.log(users, name);
+        
+
+        return users.map(offices => {
+            const { _id, name } = offices
+            return {
+                name,
+                uid: _id.toString()
+            }
+        });
+    }
+
     async create(creator: string, data: ICreateUser) {
         const response = await UserBaseModel.create({
             username: data.username,
@@ -122,6 +146,13 @@ class UserModel {
         const userAfterUpdate = await UserBaseModel.updateOne(
             { _id: id_user, creator: creator },
             { active: data.active });
+        return userAfterUpdate.modifiedCount > 0;
+    }
+
+    async updateNullOffice(office: string) {
+        const userAfterUpdate = await UserBaseModel.updateOne(
+            { office },
+            { office: null });
         return userAfterUpdate.modifiedCount > 0;
     }
 

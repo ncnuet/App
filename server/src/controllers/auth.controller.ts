@@ -191,7 +191,7 @@ export default class AuthController {
     const data: ICreateUser = {
       ...<ICreateUser>req.body,
       role: user.role === "bod" || user.role === "admin" ? "head" : "trans_staf",
-      office: user.role === "bod" || user.role === "admin" ? req.body.office : user.office
+      office: user.role === "bod" || user.role === "admin" ? null : user.office
     }
 
     handleError(res, async () => {
@@ -276,6 +276,18 @@ export default class AuthController {
         message: "success"
       });
     });
+  }
+
+  static async getHeadName(req: Request, res: Response) {
+    const name = req.query.name as string;
+
+    handleError(res, async () => {
+      const users = await userModel.getUserByName(name);
+      res.status(200).json({
+        message: "success",
+        data: { users }
+      });
+    })
   }
 
   // TODO: Uncheck

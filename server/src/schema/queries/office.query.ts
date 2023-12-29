@@ -10,14 +10,14 @@ export const officeQuery: GraphQLFieldConfig<undefined, any, IArgs> = {
     type: GraphQLList(OfficeGraph),
     description: "OfficeQuery",
     args: {
-        poids: { type: GraphQLNonNull(GraphQLList(GraphQLString)) }
+        poids: { type: GraphQLList(GraphQLString) }
     },
 
     resolve: async (source, args) => {
         if (args.poids && Array.isArray(args.poids)) {
             return await OfficeModel.getOffices(args.poids);
         } else {
-            return []
+            return OfficeModel.getOffices();
         }
     }
 }

@@ -15,15 +15,17 @@ router.get("/reset", [checkReset], AuthControler.verifyReset);
 router.put("/reset", [checkReset], AuthControler.resetPassword);
 router.get("/me", [checkJWT], AuthControler.getMe)
 
+
 router.post('/', [checkJWT, checkRole.bind({ role: StrictRole })], AuthControler.createUser);
 router.delete('/:id', [checkJWT, checkRole.bind({ role: StrictRole })], AuthControler.deleteUser);
 router.put('/:id', [checkJWT, checkRole.bind({ role: StrictRole })], AuthControler.updateUser);
 router.put('/:id/active', [checkJWT, checkRole.bind({ role: StrictRole })], AuthControler.updateActive);
 router.put('/:id/avatar', [checkJWT, checkRole.bind({ role: StrictRole })], AuthControler.updateAvatar);
 router.put('/:id/account', [checkJWT, checkRole.bind({ role: StrictRole })], AuthControler.updateAccount);
+router.get("/name", AuthControler.getHeadName);
+
 
 router.put('/avatar', checkJWT, upload.single("avatar"), AuthControler.updateSelfAvatar); // tụ bản thân chỉnh sửa
-
 router.put('/', checkJWT, AuthControler.updateSelfInfo); // tụ bản thân chỉnh sửa
 router.put('/username', checkJWT, AuthControler.updateSelfUserName); // tụ bản thân chỉnh sửa
 

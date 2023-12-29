@@ -1,6 +1,7 @@
 import { IOfficeCreate, IOfficeUpdate } from "@/validators/office.validator";
 import { OfficeBaseModel } from "./base/office.base";
 import { resolveAddress } from "@/utils/resolve_add";
+import { EOfficeType } from "./schema/office.schema";
 
 class OfficeModel {
     async create(data: IOfficeCreate) {
@@ -40,9 +41,11 @@ class OfficeModel {
         return response.acknowledged;
     }
 
-    async getOffices(poid: string[]) {
+    async getOffices(poid?: string[]) {
         const post_offices = await OfficeBaseModel.find(
-            { _id: { $in: poid } }
+            poid
+                ? { _id: { $in: poid } }
+                : {}
         ).exec();
 
         return post_offices.map(offices => {
@@ -52,6 +55,26 @@ class OfficeModel {
                 poid: _id.toString(),
                 manager: manager ? manager.toString() : null,
                 gather_office: gather_office ? gather_office.toString() : null
+            }
+        });
+    }
+
+    async getOfficeGather(name: string) {
+        const post_offices = await OfficeBaseModel.find(
+            {
+                office_type: EOfficeType.Gathering,
+                $text: {
+                    $search: name || ""
+                }
+            },
+            { score: { $meta: 'textScore' } }
+        ).exec();
+
+        return post_offices.map(offices => {
+            const { _id, name } = offices
+            return {
+                name,
+                poid: _id.toString()
             }
         });
     }

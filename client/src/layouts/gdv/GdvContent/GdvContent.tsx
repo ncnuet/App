@@ -5,72 +5,6 @@ import GdvCustomerItem from "./GdvCustomerItem";
 import GdvInfor from "./GdvInfor";
 import Link from "next/link";
 import { IReviewParcel, getReviewParcels } from "@/redux/services/gdv.view";
-import { EStatusParcel } from "@/redux/services/queries/details.parcel";
-
-const fakeData: IReviewParcel[] = [
-  {
-    code: "EA131513531VN",
-    createdAt: "09:00 AM",
-    creator: "Trần Mỹ Duyên",
-    receiver: {
-      name: "Lưu Thế Lữ",
-      phone: "0123456789",
-    },
-    sender: {
-      name: "Duy Nến",
-      phone: "9876543210",
-    },
-    receiving_add: {
-      commune: {
-        name: "Hoàng Hoa Thám",
-      },
-      district: {
-        name: "Ba Đình",
-      },
-    },
-    sending_add: {
-      commune: {
-        name: "Hoàng Hoa Thám",
-      },
-      district: {
-        name: "Ba Đình",
-      },
-    },
-    status: EStatusParcel.FAILED,
-    cost: 1000,
-  },
-  {
-    code: "EA131513532VN",
-    createdAt: "09:00 AM",
-    creator: "Trần Mỹ Duyên",
-    receiver: {
-      name: "Lưu Thế Lữ",
-      phone: "0123456789",
-    },
-    sender: {
-      name: "Duy Nến",
-      phone: "9876543210",
-    },
-    receiving_add: {
-      commune: {
-        name: "Hoàng Hoa Thám",
-      },
-      district: {
-        name: "Ba Đình",
-      },
-    },
-    sending_add: {
-      commune: {
-        name: "Hoàng Hoa Thám",
-      },
-      district: {
-        name: "Ba Đình",
-      },
-    },
-    status: EStatusParcel.DELIVERING,
-    cost: 1000,
-  },
-];
 
 const GdvConTent = () => {
   const [data, setData] = useState<IReviewParcel[] | null>(null);
@@ -113,7 +47,7 @@ const GdvConTent = () => {
     }, 200);
   };
 
-  // Wheather screen is long enough for infor
+  // Whether screen is long enough for infor
   useEffect(() => {
     getData();
     return () => clearTimeout(timeoutRef.current as NodeJS.Timeout);
@@ -229,6 +163,7 @@ const GdvConTent = () => {
           </div>
         </div>
       )}
+
       {data !== null && (
         <div className="hidden gdv:static gdv:block gdv:flex-1 gdv:max-w-none gdv:min-w-0 gdv:transform-none flex-none">
           {parcelActive !== null && <GdvInfor parcel={parcelActive}></GdvInfor>}

@@ -20,7 +20,7 @@ export interface IReviewParcel {
   cost: number;
 }
 
-export interface IGrapqlReviewParcel {
+export interface IGraphqlReviewParcel {
   data: IReviewParcel[];
   message?: string;
 }
@@ -65,7 +65,7 @@ export interface INewParcel {
 export async function getReviewParcels(
   limit: number = 10,
   page: number = 1
-): Promise<AxiosResponse<IGrapqlReviewParcel>> {
+): Promise<AxiosResponse<IGraphqlReviewParcel>> {
   return await axios.get("/parcel", {
     params: {
       limit: limit,

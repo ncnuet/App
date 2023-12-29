@@ -54,3 +54,7 @@ export async function createUser(data: object) {
 export async function deleteUser(id: string) {
     return await axios.delete("/auth/" + id);
 }
+
+export async function getSuggestionUser(name: string): Promise<AxiosResponse<UserStatusWrapper<UserDetail>>> {
+    return await axios.get("/auth/name", { params: { name } })
+}

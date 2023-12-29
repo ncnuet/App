@@ -1,20 +1,26 @@
 "use client"
 
 import Logo from "@/icons/Logo";
+import { profileState } from "@/redux/features/profile.slice";
+import { useAppSelector } from "@/redux/hooks";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { IoAccessibilityOutline, IoHomeOutline, IoMailOutline, IoPeopleCircleOutline, IoSettingsOutline } from "react-icons/io5";
+import {
+  IoAccessibilityOutline, IoBusinessOutline, IoHomeOutline,
+  IoMailOutline, IoPeopleCircleOutline
+} from "react-icons/io5";
 
 const navLinks = [
-  { name: "Dashboard", icon: <IoHomeOutline />, href: "/dashboard" },
-  { name: "Đơn gửi", icon: <IoMailOutline />, href: "/gdv" },
-  { name: "Cài đặt", icon: <IoSettingsOutline />, href: "/setting" },
-  { name: "Quản lý nhân viên", icon: <IoPeopleCircleOutline />, href: "/manager" },
-  { name: "Thiết lập cá nhân", icon: <IoAccessibilityOutline />, href: "/me" },
+  { name: "Dashboard", icon: <IoHomeOutline />, href: "/dashboard", role: ["admin", "bod", "head", "staff"] },
+  { name: "Đơn gửi", icon: <IoMailOutline />, href: "/gdv", role: ["admin", "bod", "head", "staff"] },
+  { name: "Quản lý nhân viên", icon: <IoPeopleCircleOutline />, href: "/manager", role: ["admin", "bod", "head"] },
+  { name: "Quản lý điểm", icon: <IoBusinessOutline />, href: "/office", role: ["admin", "bod"] },
+  { name: "Thiết lập cá nhân", icon: <IoAccessibilityOutline />, href: "/me", role: ["admin", "bod", "head", "staff"] },
 ]
 
 const GdvSidebar = () => {
   const pathname = usePathname();
+  const user = useAppSelector(profileState)
 
   return (
     <aside className="hidden xs:flex flex-col select-none flex-none">
@@ -29,6 +35,7 @@ const GdvSidebar = () => {
       <div className="flex flex-col gap-2">
         {navLinks.map((item, index) => (
           <Link
+            hidden={!item.role.includes(user.role)}
             key={index}
             href={item.href}
             className={
@@ -39,7 +46,9 @@ const GdvSidebar = () => {
               <div className="w-[30px] h-[30px] rounded-[10px] bg-cyellow-500 flex justify-center items-center text-lg font-semibold">
                 {item.icon}
               </div>
-              <h2 className="hidden md:block text-sm font-bold">{item.name}</h2>
+              <h2 className={
+                "hidden md:block text-sm " +
+                (pathname.startsWith(item.href) ? "font-bold" : "text-gray-400")}>{item.name}</h2>
             </div>
           </Link>))}
       </div>

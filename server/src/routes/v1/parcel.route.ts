@@ -10,16 +10,19 @@ router.post(
   [checkJWT, checkRole.bind({ role: ["gathe_staf", "admin", "trans_staf"] })],
   ParcelController.create
 );
+
 router.delete(
   "/:id",
   [checkJWT, checkRole.bind({ role: ["gathe_staf", "admin"] })],
   ParcelController.delete
 );
+
 router.put(
   "/:id",
   [checkJWT, checkRole.bind({ role: ["gathe_staf", "admin"] })],
   ParcelController.update
 );
+
 router.post(
   "/:id",
   [checkJWT, checkRole.bind({ role: ["trans_staf", "admin"] })],

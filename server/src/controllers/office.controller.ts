@@ -7,6 +7,7 @@ import { handleError } from "@/utils/controller";
 import OfficeValidator, {
     IOfficeCreate, IOfficeUpdate
 } from "@/validators/office.validator";
+import officeModel from "@/models/office.model";
 
 export default class OfficeController {
     private static async precheck(data: Omit<IOfficeUpdate, "id"> | IOfficeCreate) {
@@ -43,6 +44,7 @@ export default class OfficeController {
         handleError(res, async () => {
             OfficeValidator.validateDelete({ id });
             const ok = await postOfficeModel.delete(id);
+            const ok2 = await userModel.updateNullOffice(id);
             res.json({ message: ok ? "Created success" : "Unable to delete", data: { id } });
         })
     }
@@ -56,6 +58,17 @@ export default class OfficeController {
             await OfficeController.precheck(data)
             const ok = await postOfficeModel.update(id, data);
             res.json({ message: ok ? "Updated success" : "Unable to update", data: { id } });
+        })
+    }
+
+    public static getOfficeGather(req: Request, res: Response) {
+        const name = req.query.name as string;
+
+        handleError(res, async () => {
+            console.log(req.query);
+            
+            const offices = await officeModel.getOfficeGather(name);
+            res.json({ message: "success", data: { offices } });
         })
     }
 }
