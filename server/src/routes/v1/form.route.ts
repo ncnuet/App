@@ -6,7 +6,7 @@ import express, { Router } from "express";
 const router: Router = express.Router();
 
 router.post('/', checkJWT, checkRole.bind({ role: ["admin", "trans_staf", "gathe_staf"] }),FormController.createFormToUser);
-// router.post('/to-customer', checkJWT, checkRole.bind({ role: ["admin", "trans_staf"] }),FormController.createFormToCustomer);
+
 router.put('/:id/', checkJWT, checkRole.bind({ role: ["admin", "trans_staf", "gathe_staf"] }), FormController.updateReciverOrType);
 // router.put('/:id/to-customer', checkJWT, checkRole.bind({ role: ["admin", "trans_staf", "gathe_staf"] }), FormController.updateType);
 
@@ -25,6 +25,11 @@ router.put('/:id/update-status', checkJWT, checkRole.bind({ role: ["admin", "tra
 
 router.get('/create', checkJWT, checkRole.bind({ role: ["admin", "trans_staf", "gathe_staf"] }), FormController.getAllFormOwn);
 router.get('/receive', checkJWT, checkRole.bind({ role: ["admin", "trans_staf", "gathe_staf"] }), FormController.getAllFormReceive);
+
+router.post('/to-customer', checkJWT, checkRole.bind({ role: ["admin", "trans_staf"] }),FormController.createFormToCustomer); // tạo đơn gửi cho người nhận cuối cunngf
+router.post('/:id/to-customer/update-status', checkJWT, checkRole.bind({ role: ["admin", "trans_staf"] }),FormController.updateStatusFormCustomer); // xác nhận gửi thành công hay thất bại
+
+
 
 
 export default router;

@@ -1,6 +1,6 @@
-import { IFormAddItem, IFormUserCreate, IFormDelete, IFormDeleteItem, IFormUserUpdate, IFormUpdateItem, IFormCustomerCreate, IFormCustomerUpdate, IFormDeleteItems, IFormUpdateItems } from "@/validators/form.validator";
+import { IFormAddItem, IFormUserCreate, IFormDelete, IFormDeleteItem, IFormUserUpdate, IFormUpdateItem, IFormCustomerCreate, IFormCustomerUpdate, IFormDeleteItems, IFormUpdateItems, IFormUpdateStatus } from "@/validators/form.validator";
 import { FormBaseModel } from "./base/form.base";
-import { EFormStatus } from "./schema/form.chema";
+import { EFormStatus, EFormType } from "./schema/form.chema";
 const { ObjectId } = require('mongodb');
 
 class FormModel {
@@ -28,7 +28,7 @@ class FormModel {
         const response = await FormBaseModel.create({
             creator: creator,
             receiver: receiver,
-            type: data.type,
+            type: EFormType.SEND,
             content: data.content,
         })
 
@@ -48,17 +48,17 @@ class FormModel {
         return result;
     }
 
-    async updateTypeForm(data: IFormCustomerUpdate, id_form: string) {
-        const result = await FormBaseModel.findByIdAndUpdate(
-            { _id: id_form },
-            {
-                type: data.type,
-            },
-            { new: true }
-        )
+    // async updateTypeForm(data: IFormCustomerUpdate, id_form: string) {
+    //     const result = await FormBaseModel.findByIdAndUpdate(
+    //         { _id: id_form },
+    //         {
+    //             type: data.type,
+    //         },
+    //         { new: true }
+    //     )
 
-        return result;
-    }
+    //     return result;
+    // }
 
     async deleteForm(data: IFormDelete) {
         const result = await FormBaseModel.findByIdAndDelete(data.id_form)
@@ -121,7 +121,7 @@ class FormModel {
         return existingForm
     }
 
-    async getAllOwnForm(creator: string, limit: number, skip: number) {
+    async getAllOwnForm(creator: string,  limit: number | null = null, skip: number | null = null) {
         const result = await FormBaseModel.find({ creator })
             .limit(limit)  
             .skip(skip);  
@@ -129,18 +129,26 @@ class FormModel {
         return result;
     }
 
-    async getAllReciveForm(receiver: string, limit: number, skip: number) {
-        const result = await FormBaseModel.find({ receiver })
-            .limit(limit)  
-            .skip(skip);  
+    async getAllReciveForm(receiver: string, limit: number | null = null, skip: number | null = null) {
+        let query = FormBaseModel.find({ receiver });
     
+        if (limit !== null) {
+            query = query.limit(limit);
+        }
+    
+        if (skip !== null) {
+            query = query.skip(skip);
+        }
+    
+        const result = await query.exec();
         return result;
     }
+    
 
-    async updateStatus(form_id : string) {
+    async updateStatus(form_id : string, data: IFormUpdateStatus) {
         const result = await FormBaseModel.findByIdAndUpdate(
             {_id : form_id},
-            {status: EFormStatus.RECEIVED},
+            {status: data.status},
             { new: true }
         )
 

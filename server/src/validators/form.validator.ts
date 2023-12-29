@@ -11,7 +11,6 @@ export interface IFormUserCreate {
 }
 
 export interface IFormCustomerCreate {
-    type: string;
     content: IContentForm[];
 }
 
@@ -25,7 +24,8 @@ export interface IFormUserUpdate {
 }
 
 export interface IFormCustomerUpdate {
-    type: string;
+    statusForm: string;
+    statusParcel: string;
 }
 
 export interface IFormDelete {
@@ -53,6 +53,11 @@ export interface IFormUpdateItem extends IContentForm {
 
 export interface IFormUpdateItems {
     contentsForm : IFormUpdateItem[]
+}
+
+export interface IFormUpdateStatus {
+    status: string;
+    statusPacel: string;
 }
 export default class FormValidator {
     static validateStatus(type: string, und?: boolean) {

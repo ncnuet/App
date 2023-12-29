@@ -1,5 +1,8 @@
+import formModel from "@/models/form.model";
 import officeModel from "@/models/office.model";
 import parcelModel from "@/models/parcel.model";
+import { EParcelStatus } from "@/models/schema/parcel.schema";
+import statisticModel, { IStatisticAdd } from "@/models/statistic.model";
 import trackingModel from "@/models/tracking.model";
 import userModel from "@/models/user.model";
 
@@ -41,6 +44,11 @@ export default class ParcelController {
         office: user.office,
         uid: user.uid,
       });
+
+      const addIn = <IStatisticAdd> {
+        parcels: [parcel_id]
+      }
+      await statisticModel.addIn(addIn, user.office.toString());
 
       res.status(200).json({
         message: "Created successfully",
@@ -105,6 +113,47 @@ export default class ParcelController {
     });
   }
 
+  public static async statisticDeliveredFailed(req: Request, res: Response) {
+    const user = res.locals.user;
+
+    handleError(res, async () => {
+      const usersSameOffice = await userModel.getUserInOffice(user.office);
+
+      const result = await Promise.all(
+        usersSameOffice.map(async (user) => {
+          const parcels = await parcelModel.getParcelsByCreator(user.id);
+          return parcels;
+        })
+      );
+
+      const flattenedResult = result.flat();
+      
+      let delivered : Object[] = [];
+      let failed : Object[] = [];
+      
+      flattenedResult.forEach((parcel) => {
+          if (parcel.status === EParcelStatus.DELIVERED) {
+              delivered.push(parcel._id);
+          }
+      
+          if (parcel.status === EParcelStatus.FAILED) {
+              failed.push(parcel._id);
+          }
+      });
+      
+      const statistics = {
+          delivered,
+          failed,
+      };
+      
+
+      res.json({
+        message: "thành công",
+        data: statistics,
+      });
+    })
+  }
+
   public static async getAllParcelFormOffice(req: Request, res: Response) {
     const user = res.locals.user;
     const page = parseInt(req.query.page as string) || 1;
@@ -121,8 +170,6 @@ export default class ParcelController {
       );
 
       const flattenedResult = result.flat();
-
-      console.log(flattenedResult);
 
       flattenedResult.sort((a, b) => {
         const timeA = a.createdAt.getTime();

@@ -32,4 +32,10 @@ router.get(
   ParcelController.getAllParcelFormOffice
 );
 
+router.get(
+  "/statistic",
+  [checkJWT, checkRole.bind({ role: ["gathe_staf", "admin", "trans_staf"] })],
+  ParcelController.statisticDeliveredFailed
+);
+
 export default router;

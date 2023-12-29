@@ -1,5 +1,5 @@
 import { ILocalData, Request, Response } from "@/types/controller";
-import { IUser } from "@/types/auth";
+import { EUserRole, IUser } from "@/types/auth";
 import { TTL, withAge } from "@/configs/cookie";
 import config from "@/configs/env";
 
@@ -30,6 +30,8 @@ import AuthValidator, {
   IRequestReset,
   IResetPassword,
 } from "@/validators/auth.validator";
+import formModel from "@/models/form.model";
+import statisticModel from "@/models/statistic.model";
 
 interface IUserWithEpx extends IUser {
   exp: number;
@@ -136,10 +138,10 @@ export default class AuthController {
       .cookie("token", req.query.token, withAge(180 * 1000))
       .redirect(
         config.FRONTEND +
-          "/resetpassword?ttl=" +
-          remaining +
-          "&user=" +
-          username
+        "/resetpassword?ttl=" +
+        remaining +
+        "&user=" +
+        username
       );
   }
 
@@ -370,6 +372,76 @@ export default class AuthController {
       res.status(200).json({
         message: "success",
         data: result,
+      });
+    });
+  }
+
+  static async statisticSendReturn2(req: Request, res: Response) {
+    const user = res.locals.user;
+    
+    handleError(res, async () => {
+
+      const statistics = await statisticModel.getStatistic([user.office.toString()]);
+
+      res.status(200).json({
+        message: "success",
+        data: {
+          outgoing: statistics[0].out,
+          incoming: statistics[0].in
+        },
+      });
+    })
+
+  }
+
+  static async statisticSendReturn(req: Request, res: Response) {
+    const user = res.locals.user;
+
+    handleError(res, async () => {
+      const users = await userModel.getUserInOffice(user.office);
+
+      const gathe_stafs = users.filter((user) => user.role !== EUserRole.HEAD && user.role !== EUserRole.ADMIN && user.role !== EUserRole.BOD);
+
+      const receiveForms = await Promise.all(gathe_stafs.map(async (gathe_staf) => {
+        const receiveForms = await formModel.getAllReciveForm(gathe_staf._id);
+
+        return receiveForms;
+      }))
+
+      const flattenedReceiveForms = receiveForms.flat();
+      const incomingParcels = flattenedReceiveForms.map((receiveForm) => {
+        const parcels = receiveForm.content.map((item) => {          
+          return item.parcel;
+        })
+
+        return parcels
+      })
+
+      const flatIncomingParcels = incomingParcels.flat();
+
+      const onwForms = await Promise.all(gathe_stafs.map(async (gathe_staf) => {
+        const onwForms = await formModel.getAllOwnForm(gathe_staf._id);
+
+        return onwForms;
+      }))
+
+      const flattenedOnwForms = onwForms.flat();
+      const outgoingParcels = flattenedOnwForms.map((onwForm) => {
+        const parcels = onwForm.content.map((item) => {
+          return item.parcel
+        })
+
+        return parcels
+      })
+
+      const flatOutgoingParcels = outgoingParcels.flat();
+
+      res.status(200).json({
+        message: "success",
+        data: {
+          outgoing: flatOutgoingParcels,
+          incoming: flatIncomingParcels
+        },
       });
     });
   }
