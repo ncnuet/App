@@ -14,7 +14,13 @@ import {
   Address,
   EStatusParcel,
 } from "@/redux/services/queries/details.parcel";
-import { INewParcel, sendNewParcel } from "@/redux/services/gdv.view";
+import {
+  ECostType,
+  EGoodsType,
+  EReturnType,
+  INewParcel,
+  sendNewParcel,
+} from "@/redux/services/gdv.view";
 
 interface IParcelContent {
   isCancel: boolean | null;
@@ -302,16 +308,16 @@ const ParcelContent = ({
   const submitHandler = async () => {
     const newParcel: INewParcel = {
       cost: 13000,
-      cost_type: "receiver pay",
+      cost_type: ECostType.SENDER_PAY,
       notes: note,
       goods_type:
         isGood && !isDocument
-          ? "goods"
+          ? EGoodsType.GOODS
           : !isGood && isDocument
-          ? "documents"
-          : "goods, documents",
-      return_type: "return immediately",
-      status: EStatusParcel.DELIVERING,
+          ? EGoodsType.DOCUMENT
+          : "goods",
+      return_type: EReturnType.RETURN_NOW,
+      status: EStatusParcel.DELIVERING.toLowerCase(),
       sender: senderInfor,
       receiver: receiverInfor,
       sending_add: {
@@ -329,7 +335,7 @@ const ParcelContent = ({
         },
       },
       goods: goods.map((good) => ({
-        category: "goods",
+        category: "electronic devices",
         name: good.content,
         quantity: parseInt(good.amount),
         weight: 200,

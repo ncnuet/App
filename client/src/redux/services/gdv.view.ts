@@ -25,26 +25,41 @@ export interface IGrapqlReviewParcel {
   message?: string;
 }
 
-type goodType = "goods" | "documents" | "goods, documents";
-type costType = "receiver pay" | "sender pay";
+export enum EReturnType {
+  CALL_SENDER = "call sender",
+  CANCEL = "cancel",
+  RETURN_NOW = "return immediately",
+  RETURN_LATER = "return later",
+  RETURN_OUTDATE = "return if out date",
+}
+
+export enum ECostType {
+  SENDER_PAY = "sender pay",
+  RECEIVER_PAY = "receiver pay",
+}
+
+export enum EGoodsType {
+  DOCUMENT = "documentation",
+  GOODS = "goods",
+}
 export interface INewParcel {
-  status: EStatusParcel;
+  status: string;
   sending_add: Address;
   receiving_add: Address;
   receiver: Customer;
   sender: Customer;
   goods: {
     name: string;
-    category: goodType;
+    category: string;
     quantity: number;
     weight: number;
     value: number;
   }[];
   notes: string;
-  goods_type: goodType;
+  goods_type: string;
   return_type: string;
   cost: Number;
-  cost_type: costType;
+  cost_type: string;
 }
 
 export async function getReviewParcels(
