@@ -74,8 +74,8 @@ fragment address on AddressGraph {
 	detail
 }
 
-query parcel_details($pid: String!) {
-	parcels(pid: $pid) {
+query parcel_details($pids: [String]!) {
+	parcels(pids: $pids) {
 		status
 		pid
 		notes

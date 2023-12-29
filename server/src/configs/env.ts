@@ -1,4 +1,4 @@
-import { DotenvParseOutput, config } from 'dotenv';
+import { DotenvParseOutput, config as _nativeCfg } from 'dotenv';
 import path from 'path';
 
 interface ENV_VAL extends DotenvParseOutput {
@@ -14,13 +14,12 @@ interface ENV_VAL extends DotenvParseOutput {
     MG_NAME: string
     MG_USERNAME: string
     MG_PASSWORD: string
-    MONGODB_URI:string
+    MONGODB_URI: string
 
     RD_PORT: string
     RD_HOST: string
     RD_PASSWORD: string
     RD_USERNAME: string
-
 
     JWT_KEY: string
     JWT_REFRESH_KEY: string
@@ -29,20 +28,25 @@ interface ENV_VAL extends DotenvParseOutput {
     MAIL_SERVICE: string
     MAIL_USER: string
     MAIL_PASSWORD: string
+
+    CLOUDINARY_CLOUD_NAME: string
+    CLOUDINARY_API_KEY: string
+    CLOUDINARY_API_SECRET: string
 }
 const { NODE_ENV, ..._override } = process.env;
 const override = _override ? _override as Object : {};
 
-const data = config(
+const data = _nativeCfg(
     NODE_ENV === "dev"
         ? { path: path.resolve(process.cwd(), '.env.dev') }
         : undefined
 ).parsed
 
-
-export const env = process.env.NODE_ENV
-export default {
+const config = {
     ...data,
     ENV: process.env.NODE_ENV,
     ...override
 } as ENV_VAL;
+
+export const env = process.env.NODE_ENV
+export default config;

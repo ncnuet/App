@@ -4,28 +4,34 @@ import GdvInput from "@/components/GdvInput";
 import GdvCustomerItem from "./GdvCustomerItem";
 import GdvInfor from "./GdvInfor";
 import Link from "next/link";
-
-const fakeData = [
-  { code: "EA131513531VN" },
-  { code: "EA131513532VN" },
-  { code: "EA131513533VN" },
-  { code: "EA131513534VN" },
-  { code: "EA131513535VN" },
-  { code: "EA131513536VN" },
-  { code: "EA131513537VN" },
-  { code: "EA131513538VN" },
-  { code: "EA131513539VN" },
-  { code: "EA131513530VN" },
-];
+import { IReviewParcel, getReviewParcels } from "@/redux/services/gdv.view";
 
 const GdvConTent = () => {
-  const [parcelActive, setParcelActive] = useState<string | null>(null);
+  const [data, setData] = useState<IReviewParcel[] | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [parcelActive, setParcelActive] = useState<IReviewParcel | null>(null);
   const [isModal, setIsModal] = useState<boolean | null>(null);
   const inforRef = useRef<HTMLDivElement>(null);
   const timeoutRef: { current: NodeJS.Timeout | null } = useRef(null);
+
+  const getData = async () => {
+    try {
+      setIsLoading(true);
+      const response = await getReviewParcels(10, 1);
+      if (response.data?.data) {
+        setIsLoading(false);
+        setData(response.data.data);
+      } else {
+        setIsLoading(false);
+        setData([]);
+      }
+    } catch (error) {
+      setIsLoading(false);
+    }
+  };
   // select other parcel code
-  const onChangeParcelActive = (parcelCode: string) => {
-    setParcelActive(parcelCode);
+  const onChangeParcelActive = (parcel: IReviewParcel) => {
+    setParcelActive(parcel);
     if (window.innerWidth < 1100) {
       inforRef.current?.classList.remove("gdv-animation");
       setIsModal(true);
@@ -41,17 +47,23 @@ const GdvConTent = () => {
     }, 200);
   };
 
-  // Wheather screen is long enough for infor
+  // Whether screen is long enough for infor
   useEffect(() => {
-    if (parcelActive === null) {
-      if (window.innerWidth >= 1100) {
-        setParcelActive("EA131513531VN");
-      } else {
-        setParcelActive("EA134422333VN");
-      }
-    }
+    getData();
     return () => clearTimeout(timeoutRef.current as NodeJS.Timeout);
   }, []);
+
+  useEffect(() => {
+    if (data) {
+      if (parcelActive === null) {
+        if (window.innerWidth >= 1100) {
+          setParcelActive(data[0]);
+        } else {
+          setParcelActive(data[0]);
+        }
+      }
+    }
+  }, [data]);
 
   return (
     <main className="flex-1 flex flex-row gap-6">
@@ -94,19 +106,28 @@ const GdvConTent = () => {
           </section>
           <div className="-ml-1 pl-1 -mr-7 px-7 max-h-[416px] overflow-y-auto overflow-x-hidden gdv-item">
             <section className="w-full flex flex-col">
-              {fakeData.map((parcel, index) => (
-                <GdvCustomerItem
-                  key={index}
-                  parcelActive={parcelActive || ""}
-                  parcelCode={parcel.code}
-                  onActive={onChangeParcelActive}
-                ></GdvCustomerItem>
-              ))}
+              {parcelActive !== null &&
+                data !== null &&
+                data.map((parcel, index) => (
+                  <GdvCustomerItem
+                    key={index}
+                    parcelActive={parcelActive}
+                    parcelData={parcel}
+                    onActive={onChangeParcelActive}
+                  ></GdvCustomerItem>
+                ))}
+              {isLoading && (
+                <div className="w-full flex flex-row justify-center">
+                  <span className="material-symbols-outlined mt-4 text-cyellow-500 animate-spin">
+                    progress_activity
+                  </span>
+                </div>
+              )}
             </section>
           </div>
         </div>
         {/* separated page */}
-        <section className="mt-4 pl-[10px] w-full flex flex-row items-center">
+        <section className="mt-auto pt-4 pl-[10px] w-full flex flex-row items-center">
           <span className="parcel-bill__content text-cgray-500">
             Hiển thị 10 mục
           </span>
@@ -136,13 +157,18 @@ const GdvConTent = () => {
             className="gdv-infor gdv-animation"
             onClick={(e) => e.stopPropagation()}
           >
-            <GdvInfor parcelCode={parcelActive || ""}></GdvInfor>
+            {parcelActive !== null && (
+              <GdvInfor parcel={parcelActive}></GdvInfor>
+            )}
           </div>
         </div>
       )}
-      <div className="hidden gdv:static gdv:block gdv:flex-1 gdv:max-w-none gdv:min-w-0 gdv:transform-none flex-none">
-        <GdvInfor parcelCode={parcelActive || ""}></GdvInfor>
-      </div>
+
+      {data !== null && (
+        <div className="hidden gdv:static gdv:block gdv:flex-1 gdv:max-w-none gdv:min-w-0 gdv:transform-none flex-none">
+          {parcelActive !== null && <GdvInfor parcel={parcelActive}></GdvInfor>}
+        </div>
+      )}
     </main>
   );
 };

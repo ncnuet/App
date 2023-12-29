@@ -10,6 +10,8 @@ export interface IParcelBill {
   note: string;
   actualWeight: string;
   covertWeight: string;
+  senderAddress: string;
+  receiverAddress: string;
 }
 const ParcelBill = ({ ...props }: IParcelBill) => {
   const formatNumber = (amount: string) => {
@@ -38,7 +40,7 @@ const ParcelBill = ({ ...props }: IParcelBill) => {
               {props.senderInfor?.name || "Trống"}
             </span>
             <span className="parcel-bill__content">
-              {props.senderInfor?.address || "Trống"}
+              {props?.senderAddress || "Trống"}
             </span>
           </div>
           <div className="px-[18px] flex flex-col">
@@ -67,7 +69,7 @@ const ParcelBill = ({ ...props }: IParcelBill) => {
               {props.receiverInfor?.name || "Trống"}
             </span>
             <span className="parcel-bill__content">
-              {props.receiverInfor?.address || "Trống"}
+              {props?.receiverAddress || "Trống"}
             </span>
           </div>
           <div className="px-[18px] flex flex-col">

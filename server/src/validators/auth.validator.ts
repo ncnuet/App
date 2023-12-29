@@ -1,5 +1,6 @@
 import { IQueryableUser } from "@/types/auth";
 import { InputError } from "@/types/controller";
+import BaseValidator from "./base.validator";
 
 export interface ILoginByPassword {
     username: string,
@@ -14,45 +15,40 @@ export interface IResetPassword {
     re_password: string
 }
 
-export default class AuthValidator {
-    private static validateUsername(username: string) {
-        if (!username || username.length < 3 || username.length > 50)
-            throw new InputError("Username có độ dài từ 3 đến 50 ký tự", "username");
-        return true
+export default class AuthValidator extends BaseValidator {
+    private static checkUsername(username: string) {
+        this.checkUnd(username, false, "username", () => {
+            if (username.length < 3 || username.length > 50)
+                throw new InputError("Username có độ dài từ 3 đến 50 ký tự", "username");
+        })
     }
 
-    private static validatePassword(password: string) {
-        if (!password || password.length < 8 || password.length > 50)
-            throw new InputError("Mật khẩu có độ dài từ 8 đến 50 ký tự", "password");
-        return true
+    private static checkPassword(password: string) {
+        this.checkUnd(password, false, "password", () => {
+            if (!password || password.length < 8 || password.length > 50)
+                throw new InputError("Mật khẩu có độ dài từ 8 đến 50 ký tự", "password");
+        })
     }
 
-    private static validateEmail(email: string) {
-        if (!email || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
-            throw new InputError("Email không hợp lệ", "email");
-        }
-        return true
-    }
-    private static validateRePassword(password: string, re_password: string) {
+    private static checkRePassword(password: string, re_password: string) {
         if (re_password != password) {
             throw new InputError("Mật khẩu nhập lại cần giống mật khẩu", "re_password");
-
         }
     }
 
     static validateLoginPassword(data: ILoginByPassword) {
-        AuthValidator.validateUsername(data.username)
-        AuthValidator.validatePassword(data.password)
+        this.checkUsername(data.username)
+        this.checkPassword(data.password)
     }
 
     static validateRequestReset(data: IRequestReset) {
-        data.username &&
-            AuthValidator.validateUsername(data.username) ||
-            AuthValidator.validateEmail(data.email)
+        data.username
+            ? this.checkUsername(data.username)
+            : this.checkEmail(data.email)
     }
 
     static validateReset(data: IResetPassword) {
-        AuthValidator.validatePassword(data.password)
-        AuthValidator.validateRePassword(data.password, data.re_password);
+        this.checkPassword(data.password)
+        this.checkRePassword(data.password, data.re_password);
     }
 }

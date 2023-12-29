@@ -1,20 +1,52 @@
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import GdvInput from "@/components/GdvInput";
 import { Infor } from "../ParcelContent";
 
-type ParcelBasisInforProps = {
+export interface recommendAddressItem {
+  id: string;
+  name: string;
+  type: string;
+}
+
+interface ParcelBasisInforProps {
   senderInfor: Infor | null;
   receiverInfor: Infor | null;
   onSenderInfor: any;
   onReceiverInfor: any;
-};
+  senderAddress: string;
+  receiverAddress: string;
+  onSenderAddressChange: any;
+  onReceiverAddressChange: any;
+  RecommendSender: recommendAddressItem[];
+  RecommendReceiver: recommendAddressItem[];
+  onSenderReccomend: any;
+  onReceiverReccomend: any;
+}
 const ParcelBasisInfor = ({
   senderInfor,
   receiverInfor,
   onSenderInfor,
   onReceiverInfor,
+  senderAddress,
+  receiverAddress,
+  onSenderAddressChange,
+  onReceiverAddressChange,
+  RecommendReceiver,
+  RecommendSender,
+  onSenderReccomend,
+  onReceiverReccomend,
 }: ParcelBasisInforProps) => {
   console.log("basic rerender");
+  const senderCompute = useMemo(() => {
+    let result = "";
+    result = RecommendSender.map((item) => item.name).join(", ");
+    return result;
+  }, [RecommendSender]);
+  const receiverCompute = useMemo(() => {
+    let result = "";
+    result = RecommendReceiver.map((item) => item.name).join(", ");
+    return result;
+  }, [RecommendReceiver]);
   return (
     <section className="grid grid-cols-1  md:grid-cols-2 gap-5">
       <div className="p-6 rounded-[15px] bg-white flex flex-col gap-3">
@@ -32,7 +64,7 @@ const ParcelBasisInfor = ({
                 icon="account_circle"
                 isBig
                 value={senderInfor?.name}
-                onInfor={(result: string) => {
+                onInfo={(result: string) => {
                   onSenderInfor("name", result);
                 }}
               ></GdvInput>
@@ -51,7 +83,7 @@ const ParcelBasisInfor = ({
                 icon="smartphone"
                 isBig
                 value={senderInfor?.phone}
-                onInfor={(result: string) => {
+                onInfo={(result: string) => {
                   onSenderInfor("phone", result);
                 }}
               ></GdvInput>
@@ -63,16 +95,24 @@ const ParcelBasisInfor = ({
         </div>
         <div className="flex flex-col gap-2">
           <h3 className="text-sm text-cblue-600 font-semibold">Địa chỉ</h3>
-          <div className="w-full">
+          <div className="relative w-full">
             <GdvInput
               placeholder="Thanh Vân, Thanh Lâm, Mê Linh, Hà Nội"
               icon="pin_drop"
               isBig
               onInfor={(result: string) => {
-                onSenderInfor("address", result);
+                onSenderAddressChange(result);
               }}
-              value={senderInfor?.address}
+              value={senderAddress}
             ></GdvInput>
+            {RecommendSender.length > 0 && (
+              <div
+                className="absolute left-0 w-full h-full top-full flex flex-row items-center px-3 rounded-lg bg-cyellow-500 cursor-default transition-all hover:opacity-80"
+                onClick={() => onSenderReccomend(senderCompute)}
+              >
+                {senderCompute}
+              </div>
+            )}
           </div>
           <span className="text-[11px] text-cgray-400 font-normal">
             Địa chỉ của khách gửi
@@ -93,7 +133,7 @@ const ParcelBasisInfor = ({
                 placeholder="Đỗ Nam Trung"
                 icon="account_circle"
                 isBig
-                onInfor={(result: string) => {
+                onInfo={(result: string) => {
                   onReceiverInfor("name", result);
                 }}
                 value={receiverInfor?.name}
@@ -113,7 +153,7 @@ const ParcelBasisInfor = ({
                 icon="smartphone"
                 isBig
                 value={receiverInfor?.phone}
-                onInfor={(result: string) => {
+                onInfo={(result: string) => {
                   onReceiverInfor("phone", result);
                 }}
               ></GdvInput>
@@ -125,16 +165,24 @@ const ParcelBasisInfor = ({
         </div>
         <div className="flex flex-col gap-2">
           <h3 className="text-sm text-cblue-600 font-semibold">Địa chỉ</h3>
-          <div className="w-full">
+          <div className="relative w-full">
             <GdvInput
               placeholder="Thanh Vân, Thanh Lâm, Mê Linh, Hà Nội"
               icon="pin_drop"
               isBig
-              value={receiverInfor?.address}
+              value={receiverAddress}
               onInfor={(result: string) => {
-                onReceiverInfor("address", result);
+                onReceiverAddressChange(result);
               }}
             ></GdvInput>
+            {RecommendReceiver.length > 0 && (
+              <div
+                className="absolute left-0 w-full h-full top-full flex flex-row items-center px-3 rounded-lg bg-cyellow-500 cursor-default transition-all hover:opacity-80"
+                onClick={() => onReceiverReccomend(receiverCompute)}
+              >
+                {receiverCompute}
+              </div>
+            )}
           </div>
           <span className="text-[11px] text-cgray-400 font-normal">
             Địa chỉ của khách nhận

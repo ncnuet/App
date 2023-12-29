@@ -1,18 +1,14 @@
 import { GraphQLFloat, GraphQLObjectType, GraphQLString } from "graphql";
+import { IAddressLevel, IAddress } from "@/models/schema/address.schema";
 
-export interface IAddressLevelOutputGraph {
-    id: string;
-    name: string;
-}
+export interface IAddressLevelOutputGraph extends IAddressLevel { }
 
-export interface IAddressOutputGraph {
+export interface IAddressOutputGraph
+    extends Omit<IAddress, "country" | "province" | "district" | "commune"> {
     country: IAddressLevelOutputGraph
     province: IAddressLevelOutputGraph
     district: IAddressLevelOutputGraph
     commune: IAddressLevelOutputGraph
-    detail: string
-    lat: number
-    long: number
 }
 
 export const AddressLevelGraph = new GraphQLObjectType<IAddressLevelOutputGraph>({
@@ -24,8 +20,6 @@ export const AddressLevelGraph = new GraphQLObjectType<IAddressLevelOutputGraph>
         name: { type: GraphQLString }
     }
 })
-
-
 
 export const AddressGraph = new GraphQLObjectType<IAddressOutputGraph>({
     name: 'AddressGraph',

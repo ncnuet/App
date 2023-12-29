@@ -16,18 +16,20 @@ const ParcelWeight = ({
   return (
     <div className="flex-1 flex flex-col gap-5">
       <div className="p-6 rounded-[15px] bg-white flex flex-col gap-3">
-        <h2 className="text-lg text-cblue-600 font-bold">Khối lượng thực tế</h2>
+        <h2 className="text-lg text-cblue-600 font-bold">
+          Khối lượng hàng gửi
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className=" flex-1 flex flex-col gap-2">
             <h3 className="text-sm text-cblue-600 font-semibold">
-              Họ tên khách gửi
+              Khối lượng thực tế
             </h3>
             <div className="w-full">
               <GdvInput
                 placeholder="20 gam"
                 icon="scale"
                 isBig
-                onInfor={(result: string) => onActualWeight(result)}
+                onInfo={(result: string) => onActualWeight(result)}
                 value={actualWeight}
               ></GdvInput>
             </div>
@@ -44,7 +46,7 @@ const ParcelWeight = ({
                 placeholder="0 gam"
                 icon="scale"
                 isBig
-                onInfor={(result: string) => onConvertWeight(result)}
+                onInfo={(result: string) => onConvertWeight(result)}
                 value={covertWeight}
               ></GdvInput>
             </div>

@@ -17,10 +17,12 @@ export type NextFunction = _NextFunction
 
 export class InputError extends Error {
     field: string;
+    value: any;
 
-    constructor(message: string, field: string) {
+    constructor(message: string, field: string, value?: any) {
         super(message);
         Object.setPrototypeOf(this, InputError.prototype);
         this.field = field;
+        this.value = value;
     }
 }

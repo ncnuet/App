@@ -5,12 +5,14 @@ interface IParcelSave {
   onSave: any;
   onChangeModal: any;
   onPreview: any;
+  onCreating: any;
 }
 const ParcelSave = ({
   isModal,
   onSave,
   onChangeModal,
   onPreview,
+  onCreating,
 }: IParcelSave) => {
   const [isPending, setIsPending] = useState(false);
   const [isDone, setIsDone] = useState(false);
@@ -26,14 +28,17 @@ const ParcelSave = ({
     }, 300);
   };
 
-  useEffect(() => {
+  const submithandler = async () => {
     if (isPending) {
-      timeoutRef.current = setTimeout(() => {
-        onSave();
-        setIsPending(false);
-        setIsDone(true);
-      }, 1000);
+      const response = await onCreating();
+      onSave();
+      setIsPending(false);
+      setIsDone(true);
     }
+  };
+
+  useEffect(() => {
+    submithandler();
     return () => clearTimeout(timeoutRef.current as NodeJS.Timeout);
   }, [isPending]);
 
