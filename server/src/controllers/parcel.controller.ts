@@ -122,6 +122,14 @@ export default class ParcelController {
 
       const flattenedResult = result.flat();
 
+      console.log(flattenedResult);
+
+      flattenedResult.sort((a, b) => {
+        const timeA = a.createdAt.getTime();
+        const timeB = b.createdAt.getTime();
+        return timeB - timeA;
+      });
+
       const startIndex = (page - 1) * limit;
       const endIndex = page * limit;
       const paginatedResult = flattenedResult.slice(startIndex, endIndex);
