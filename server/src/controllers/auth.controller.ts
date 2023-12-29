@@ -62,17 +62,24 @@ export default class AuthController {
         data.password
       );
       if (user) {
-        const version = (await TokenModel.getVersion(user.uid)) || "0";
-        const token = generateToken(
-          { ...user, version, remember: data.remember },
-          true
-        );
-        await TokenModel.insertRefreshToken(
-          token.refreshToken,
-          user.uid,
-          user.role
-        );
-        setToken(res, data.remember, token.accessToken, token.refreshToken);
+        if (user.active) {
+          const version = (await TokenModel.getVersion(user.uid)) || "0";
+          const token = generateToken(
+            { ...user, version, remember: data.remember },
+            true
+          );
+          await TokenModel.insertRefreshToken(
+            token.refreshToken,
+            user.uid,
+            user.role
+          );
+          setToken(res, data.remember, token.accessToken, token.refreshToken);
+        } else {
+          res.status(401).json({
+            message: "Tài khoản đã bị khóa",
+            name: "username",
+          });
+        }
       } else {
         res.status(401).json({
           message: "Tài khoản hoặc mật khẩu không chính xác",
@@ -112,6 +119,7 @@ export default class AuthController {
           remember: false,
           office: "",
           avatar: "",
+          active: false
         });
 
         sendForgetPasswordMail(user, token);
@@ -257,6 +265,20 @@ export default class AuthController {
     });
   }
 
+  static async updateActive(req: Request, res: Response) {
+    const { id } = req.params;
+    const data = <IUpdateActive>req.body;
+    const editor = res.locals.user;
+
+    handleError(res, async () => {
+      await userModel.updateActive(id, editor.uid, data);
+      res.status(200).json({
+        message: "success"
+      });
+    });
+  }
+
+  // TODO: Uncheck
   static async updateSelfInfo(req: Request, res: Response) {
     const data = <IUpdateInfoUser>req.body;
     const editor = res.locals.user;
@@ -306,19 +328,6 @@ export default class AuthController {
       res.status(200).json({
         message: "success",
         data: updatedUser,
-      });
-    });
-  }
-
-  static async updateActive(req: Request, res: Response) {
-    const { id } = req.params;
-    const data = <IUpdateActive>req.body;
-    const editor = res.locals.user;
-
-    handleError(res, async () => {
-      await userModel.updateActive(id, editor.uid, data);
-      res.status(200).json({
-        message: "success"
       });
     });
   }
